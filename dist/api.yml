@@ -63,7 +63,7 @@ paths:
           description: A new user has been added to the server
         "400":
           description: The request for add new user has been denied
-  /users/{username}:
+  /users/:
     get:
       tags:
       - Users
@@ -177,7 +177,7 @@ paths:
                 $ref: '#/components/schemas/previewViewPlayer'
         "400":
           description: The request for getting the coach card has been denied
-  /{username}/Favorites/FavoritePlayers:
+  /Favorites/FavoritePlayers:
     get:
       tags:
       - Users
@@ -225,7 +225,7 @@ paths:
                 type: string
         "400":
           description: The request for add new player to fav. list has been denied
-  /{username}/Favorites/FavoriteGames:
+  /Favorites/FavoriteGames:
     get:
       tags:
       - Users
@@ -273,7 +273,7 @@ paths:
                 type: string
         "400":
           description: The request for add new Game to fav. list has been denied
-  /{username}/Favorites/FavoriteTeam:
+  /Favorites/FavoriteTeam:
     get:
       tags:
       - Games
