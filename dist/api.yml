@@ -1,246 +1,647 @@
+---
 openapi: 3.0.0
 info:
-  title: api
-  description: API for  project
+  title: Simple Inventory API
+  description: This is a simple API
+  contact:
+    email: you@your-company.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 tags:
   - name: Users
+    description: Operations available to users
   - name: Auth
+    description: authenticaton 
   - name: League
-  - name: Players
+    description: league data handle
   - name: Teams
+    description: Team 
+  - name: Players
   - name: Games
 paths:
-  /Register:
+  /users:
+    get:
+      tags:
+      - Users
+      summary: Return list of all the users
+      parameters:
+      - name: role
+        in: query
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          enum:
+          - user
+          - poweruser
+          - admin
+      responses:
+        "200":
+          description: The users list returned to user
+          content:
+            application/jason:
+              schema:
+                type: string
+        "400":
+          description: The request for getting the user list has been denied
     post:
       tags:
-        - Auth
+      - Users
       summary: Add new user
-      description: A new user from the client is added to the server
       requestBody:
-        required: true
+        description: New user insert
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/User"
+              $ref: '#/components/schemas/UserRegister'
       responses:
-        "201":
-          description: A new user has been added
+        "200":
+          description: A new user has been added to the server
         "400":
-          description: wrong input parameters
-  /Login:
-    post:
+          description: The request for add new user has been denied
+  /users/{username}:
+    get:
       tags:
-        - Auth
-      summary: Login an exist user
-      description: An exist user login to the system
-      requestBody:
+      - Users
+      summary: Get data of a spacific user
+      description: get from the client a username and returns his data
+      parameters:
+      - name: username
+        in: path
+        description: The name of the user
         required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/LoginScheme"
+        style: simple
+        explode: false
+        schema:
+          type: string
       responses:
         "200":
-          description: >
-            User was found in the DB and authenitcated successfully.
-            The session ID is returned in a cookie named `session`. 
-            You should include this cookie in subsequent requests
-          # headers:
-          #   Set-Cookie:
-          #     schema:
-          #       type: string
-          #       example: session=87s97sdhgf279293f8w0e9
-            # Note that the Set-Cookie header and securitySchemes are not connected in any way, and the Set-Header definition is for documentation purposes only.
-        "401":
-          description: Authentication failed
-  /logout:
-    post:
-      tags:
-        - Auth
-      summary: logout a user from the system and delete his cookie
-      responses:
-        "200":
-          description: "the user has ben successfully logged out"
-  /league/getDetails:
-    get:
-      tags:
-        - league
-      summary: Return the details about the current league
-      responses:
-        "200":
-          description: data about the current league returned
+          description: Data of the spacific user
           content:
-            application/json:
+            application/jason:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/League"
+                type: string
         "400":
-          description: wrong input parameters
-  /users/favoritePlayers:
-    get:
-      tags:
-        - Users
-        - Players
-      summary: Return the favorite players that were saved by user
-      parameters:
-      responses:
-        "200":
-          description: data about the user's favorites players returned
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PlayerPreview"
-        "401":
-          description: user is not authorized
+          description: User not found
+  /login:
     post:
-      summary: save player in the favorites list of a user
       tags:
-        - Users
-        - Players
+      - Auth
+      summary: Logs user into the system
+      description: Logs user into the system
+      operationId: loginUser
       requestBody:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                playerId:
-                  type: string
-                  description: player's id which the user saved
-                  example: 85
-      responses:
-        "201":
-          description: The player successfully saved as favorite
-        "401":
-          description: user is not authorized
-  /teams/teamFullDetails/{teamId}:
-    get:
-      summary: get full deatils about a team
-      description: useful for team page
-      tags:
-        - Teams
-      parameters:
-        - in: path
-          name: teamId
-          description: team's id
-          required: true
-          schema:
-            type: integer
+              $ref: '#/components/schemas/Login'
+        required: true
       responses:
         "200":
-          description: data about the team
+          description: successful operation
+        "400":
+          description: Invalid username/password supplied
+  /user/logOut:
+    post:
+      tags:
+      - Auth
+      summary: Logs user out of the system
+      description: Logs user out of the system
+      operationId: logOutUser
+      responses:
+        "200":
+          description: successful Loged out
+        "400":
+          description: The user must be loged in before log out
+  /LeagueData:
+    get:
+      tags:
+      - League
+      summary: Return main page league data
+      responses:
+        "200":
+          description: The main page legue data returned to user
+          content:
+            application/jason:
+              schema:
+                $ref: '#/components/schemas/LeagueData'
+        "400":
+          description: The request for getting the main page legue data has been denied
+  /CardCoach/{coachname}:
+    get:
+      tags:
+      - Teams
+      summary: Return the card of the coach
+      parameters:
+      - name: coachname
+        in: path
+        description: The name of the coach
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: coach card has been returned
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Team"
-        "404":
-          description: teamId is not exists
+                $ref: '#/components/schemas/previewViewCoach'
+        "400":
+          description: The request for getting the coach card has been denied
+  /CardPlayer/{playername}:
+    get:
+      tags:
+      - Players
+      summary: Return the card of the player
+      parameters:
+      - name: playername
+        in: path
+        description: The name of the player
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: player card has been returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/previewViewPlayer'
+        "400":
+          description: The request for getting the coach card has been denied
+  /{username}/Favorites/FavoritePlayers:
+    get:
+      tags:
+      - Users
+      - Players
+      summary: Return favorites data for the user
+      parameters:
+      - name: username
+        in: path
+        description: The name of the user
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: The favorites players data returned to user
+          content:
+            application/jason:
+              schema:
+                $ref: '#/components/schemas/UserFavoritePlayers'
+        "400":
+          description: The request for getting the main page legue data has been denied
+    post:
+      tags:
+      - Users
+      - Players
+      summary: Add player to faivorite list of user
+      parameters:
+      - name: username
+        in: path
+        description: The name of the user
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: player ID
+      responses:
+        "200":
+          description: The player has been added to favorite list
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: The request for add new player to fav. list has been denied
+  /{username}/Favorites/FavoriteGames:
+    get:
+      tags:
+      - Users
+      - Games
+      summary: Return favorites data for the user
+      parameters:
+      - name: username
+        in: path
+        description: The name of the user
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: The main page favorites data returned to user
+          content:
+            application/jason:
+              schema:
+                $ref: '#/components/schemas/UserFavoritesGames'
+        "400":
+          description: The request for getting the main page legue data has been denied
+    post:
+      tags:
+      - Users
+      - Games
+      summary: Add game to faivorite list of user
+      parameters:
+      - name: username
+        in: path
+        description: The name of the user
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: gameID
+      responses:
+        "200":
+          description: The Game has been added to favorite list
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: The request for add new Game to fav. list has been denied
+  /{username}/Favorites/FavoriteTeam:
+    get:
+      tags:
+      - Games
+      - Users
+      summary: Return favorites teams data for the user
+      parameters:
+      - name: username
+        in: path
+        description: The name of the user
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: The favorites teams data returned to user
+          content:
+            application/jason:
+              schema:
+                $ref: '#/components/schemas/UserFavoritesTeams'
+        "400":
+          description: The request for getting favorite teams data has been denied
+    post:
+      tags:
+      - Users
+      - Games
+      summary: Add team to faivorite list of user
+      parameters:
+      - name: username
+        in: path
+        description: The name of the user
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          description: TeamID
+      responses:
+        "200":
+          description: The team has been added to favorite list
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: The request for add new team to fav. list has been denied
+  /team/{teamID}:
+    get:
+      tags:
+      - Teams
+      parameters:
+      - name: teamID
+        in: path
+        description: The ID of the team
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Data of the spacific Team
+          content:
+            application/jason:
+              schema:
+                $ref: '#/components/schemas/teamData'
+        "400":
+          description: Team not found
+  /search/{keyWord}:
+    get:
+      tags:
+      - Users
+      - Games
+      - Teams
+      - Players
+      - League
+      parameters:
+      - name: keyWord
+        in: path
+        description: The keyWord to the server search engine
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Search Results
+          content:
+            application/jason:
+              schema:
+                $ref: '#/components/schemas/SearchResults'
+        "400":
+          description: Team not found
+  /GameDocumentation/{gameID}:
+    get:
+      tags:
+      - Games
+      summary: Return the decumentation of the game
+      parameters:
+      - name: gameID
+        in: path
+        description: game id to return details about
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Game documentation has been returned to client
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gameDocumentation'
+        "400":
+          description: The request to get the game documantation has been denied
+  /leagueGames/{leagueID}:
+    get:
+      tags:
+      - League
+      summary: Return array with all the games
+      parameters:
+      - name: leagueID
+        in: path
+        description: league ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: return array with all the games in the league
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/leagueGames'
+        "400":
+          description: The request to get league Games has been denied
+  /LeagueManagment/Games:
+    post:
+      tags:
+      - Games
+      summary: Add game to the league managment
+      responses:
+        "200":
+          description: The game added to the league
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          description: The requset to add game to league has been denied
+  /LeagueManagment/{gameID}:
+    post:
+      tags:
+      - Games
+      summary: Add score to game
+      parameters:
+      - name: gameID
+        in: path
+        description: The ID of the game to add score to
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: The game hasa been update with the score
+          content:
+            application/json:
+              schema:
+                type: string
+                example: 2-1
+        "400":
+          description: The requset to add score to game has been denied
+  /LeagueManagment/{gameID}/Events:
+    post:
+      tags:
+      - Games
+      summary: Add event schedule to game
+      parameters:
+      - name: gameID
+        in: path
+        description: The ID of the game to add score to
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Event schedule has been added to the game
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Event schedule object add to game
+        "400":
+          description: The requset to add event schedule  to game has been denied
 components:
   schemas:
-    User:
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+          example: Noam
+        password:
+          type: string
+          example: "123"
+    UserRegister:
       type: object
       properties:
         username:
           maxLength: 8
           minLength: 3
           type: string
-          description: username conatins between 3 to 8 letters only
-          example: ladygaga
+          example: noam
         firstname:
           type: string
-          description: user's first name
-          example: Stefani
+          example: aviran
         lastname:
           type: string
-          description: user's last name
-          example: Germanotta
+          example: giat
         country:
           type: string
-          description: user's country
-          example: USA
+          example: israel
         password:
           maxLength: 10
           minLength: 5
           type: string
-          description:
-            password conatins between 5 to 10 chars, at least one of them
-            is a number and a special char
-          format: password
-          example: lady@56
+          example: 12345$a
         email:
-          pattern: email
           type: string
-          description: user's email
-          example: ladygaga@gmail.com
-        image-url:
-          pattern: URL
+          example: kotlar@post.bgu.ac.il
+        picture:
           type: string
-          description: URL for the user's image
-          example: https://cloudinary.com/
-      description: Model containing user info
-    LoginScheme:
+    LeagueData:
       type: object
       properties:
-        username:
+        leagueName:
           type: string
-          minLength: 3
-          maxLength: 8
-          description: username conatins letters only
-          example: naorbe
-        password:
+          example: Astars
+        seasonName:
           type: string
-          minLength: 5
-          maxLength: 10
-          format: password
-          description: password conatins at least one number and one special char
-          example: naor@55
-    League:
+          example: summer
+        stageName:
+          type: string
+          example: A
+        ameDetails:
+          type: object
+    UserFavoritesGames:
       type: object
       properties:
-        league_name:
-          type: string
-          description: league name
-          example: Superliga
-        current_season_name:
-          type: string
-          description: current season name
-          example: "2020/2021"
-        current_stage_name:
-          type: string
-          description: current stage name
-          example: Championship Round
-    PlayerPreview:
-      type: object
-      properties:
-        name:
-          type: string
-          description: player's name
-          example: Sten Michael Grytebust
-        image:
-          type: string
-          description: player's image
-          format: URL
-          example: https://cdn.sportmonks.com/images/soccer/players/11/84587.png
-        position:
-          type: integer
-          description: player's position in team
-          example: 1
-        team_name:
-          type: string
-          description: player's team name
-          example: København
-    Team:
-      type: object
-      properties:
-        name:
-          type: string
-          description: team name
-          example: København
-        players:
+        matches:
           type: array
           items:
             type: object
-            $ref: "#/components/schemas/PlayerPreview"
+    UserFavoritePlayers:
+      type: object
+      properties:
+        matches:
+          type: array
+          items:
+            type: object
+    UserFavoritesTeams:
+      type: object
+      properties:
+        matches:
+          type: array
+          items:
+            type: object
+    gameData:
+      type: object
+      properties:
+        nameTeam1:
+          type: string
+          example: barcellona
+        nameTeam2:
+          type: string
+          example: real madrid
+        date:
+          type: string
+          example: 1/1/21
+        score:
+          type: string
+          example: 1-2
+    previewViewCoach:
+      type: object
+      properties:
+        fullname:
+          type: string
+        currentTeamName:
+          type: string
+        image:
+          type: object
+    previewViewPlayer:
+      type: object
+      properties:
+        fullname:
+          type: string
+        currentTeamName:
+          type: string
+        image:
+          type: object
+        stageNumber:
+          type: integer
+    teamData:
+      type: object
+      properties:
+        TeamPlayers:
+          type: array
+          items:
+            type: object
+        TeamManager:
+          type: string
+        GameHistory:
+          type: array
+          items:
+            type: object
+        PresentGames:
+          type: array
+          items:
+            type: object
+    SearchResults:
+      type: object
+      properties:
+        Players:
+          type: array
+          items:
+            type: object
+        Coaches:
+          type: array
+          items:
+            type: object
+        Teams:
+          type: array
+          items:
+            type: object
+    gameDocumentation:
+      type: object
+      properties:
+        date:
+          type: string
+          example: 1/1/21
+        time:
+          type: string
+          example: 20:00
+        hostTeam:
+          type: object
+        geustTeam:
+          type: object
+        field:
+          type: string
+        score:
+          type: string
+          description: If null- means the game not occur yet
+          example: 2-0
+        eventSchedule:
+          type: object
+          description: If null- means the game not occur yet. cointains the events in the game
+    leagueGames:
+      type: object
+      properties:
+        Players:
+          type: array
+          items:
+            type: object
