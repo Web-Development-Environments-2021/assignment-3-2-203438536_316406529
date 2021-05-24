@@ -21,23 +21,23 @@ tags:
   - name: Players
   - name: Games
 paths:
-  /users:
+  /users/details:
     get:
       tags:
       - Users
       summary: Return list of all the users
-      parameters:
-      - name: role
-        in: query
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: string
-          enum:
-          - user
-          - poweruser
-          - admin
+      # parameters:
+      # - name: role
+      #   in: query
+      #   required: true
+      #   style: form
+      #   explode: true
+      #   schema:
+      #     type: string
+      #     enum:
+      #     - user
+      #     - poweruser
+      #     - admin
       responses:
         "200":
           description: The users list returned to user
@@ -47,9 +47,10 @@ paths:
                 type: string
         "400":
           description: The request for getting the user list has been denied
+  /register:
     post:
       tags:
-      - Users
+      - Auth
       summary: Add new user
       requestBody:
         description: New user insert
