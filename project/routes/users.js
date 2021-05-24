@@ -23,8 +23,19 @@ router.use(async function (req, res, next) {
 });
 
 /**
- * This path gets body with playerId and save this player in the favorites list of the logged-in user
+ * This path gets return all the players in db
  */
+ router.get("/details", async (req, res, next) => {
+  try {
+    const user_id = req.session.user_id;
+    let usersDetails = {};
+    usersDetails = await users_utils.getAllUsers();
+    res.status(200).send(results);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.post("/favoritePlayers", async (req, res, next) => {
   try {
     const user_id = req.session.user_id;
