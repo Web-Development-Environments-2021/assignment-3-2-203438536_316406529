@@ -1,9 +1,9 @@
 CREATE TABLE [dbo].[Users](
-    [username] [varchar] NOT NULL,
+    [username] [varchar] NOT NULL PRIMARY KEY,
     [firstname] [varchar] NOT NULL,
-    [lastname] [varchar] NOT NULL,
-    [country] [varchar] NOT NULL,
-    [password] [varchar] NOT NULL,
-    [email] [varchar] NOT NULL,
-    [picture] [varchar] NOT NULL
+    [lastname] [varchar] ,
+    [country] [varchar] ,
+    [password] [varchar],
+    [email] [varchar] ,
+    [picture] [varchar] 
 )
