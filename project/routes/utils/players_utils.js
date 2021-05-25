@@ -1,4 +1,5 @@
 const axios = require("axios");
+const e = require("express");
 const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 // const TEAM_ID = "85";
 
@@ -29,10 +30,30 @@ async function getPlayersInfo(players_ids_list) {
     )
   );
   let players_info = await Promise.all(promises);
-  return extractRelevantPlayerData(players_info);
+  return players_info;
+  // return extractRelevantPlayerData(players_info);
 }
 
 function extractRelevantPlayerData(players_info) {
+  return players_info.map((player_info) => {
+    const { fullname, image_path ,common_name, nationality, birthdate } = player_info.data.data;
+    return {
+      name: fullname,
+      image: image_path,
+      common_name: common_name,
+      nationality: nationality, 
+      birthdate: birthdate
+    };
+  });
+}
+
+async function getPlayersByTeam(team_id) {
+  let player_ids_list = await getPlayerIdsByTeam(team_id);
+  let players_info = await getPlayersInfo(player_ids_list);
+  return extractRelevantPlayerData(players_info);
+}
+
+function extractDetailsForTeamPage(players_info){
   return players_info.map((player_info) => {
     const { fullname, image_path, position_id } = player_info.data.data;
     const { name } = player_info.data.data.team.data;
@@ -45,11 +66,18 @@ function extractRelevantPlayerData(players_info) {
   });
 }
 
-async function getPlayersByTeam(team_id) {
-  let player_ids_list = await getPlayerIdsByTeam(team_id);
-  let players_info = await getPlayersInfo(player_ids_list);
-  return players_info;
+async function getCoachNameByTeam(team_id){
+  let coach_name = "";
+  const team = await axios.get(`${api_domain}/teams/${team_id}`, {
+    params: {
+      include: "coach",
+      api_token: process.env.api_token,
+    },
+  });
+  coach_name = team.data.data.coach.data.fullname;
+  return coach_name;
 }
 
 exports.getPlayersByTeam = getPlayersByTeam;
 exports.getPlayersInfo = getPlayersInfo;
+exports.getCoachNameByTeam= getCoachNameByTeam;
