@@ -117,7 +117,7 @@ paths:
           description: successful Loged out
         "400":
           description: The user must be loged in before log out
-  /LeagueData:
+  /league/LeagueData:
     get:
       tags:
       - League
@@ -392,7 +392,7 @@ paths:
                 $ref: '#/components/schemas/gameDocumentation'
         "400":
           description: The request to get the game documantation has been denied
-  /leagueGames/{leagueID}:
+  /league/leagueGames:
     get:
       tags:
       - League
