@@ -484,10 +484,10 @@ components:
       properties:
         username:
           type: string
-          example: Noam
+          example: noam
         password:
           type: string
-          example: "123"
+          example: "12345$a"
     UserRegister:
       type: object
       properties:
