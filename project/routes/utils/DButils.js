@@ -13,6 +13,7 @@ const config = {
 };
 
 const pool = new sql.ConnectionPool(config);
+
 const poolConnect = pool.connect();
 
 exports.execQuery = async function (query) {
