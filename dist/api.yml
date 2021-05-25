@@ -20,6 +20,7 @@ tags:
     description: Team 
   - name: Players
   - name: Games
+  - name: Coaches
 paths:
   /users/details:
     get:
@@ -134,7 +135,7 @@ paths:
   /CardCoach/{coachname}:
     get:
       tags:
-      - Teams
+      - Coaches
       summary: Return the card of the coach
       parameters:
       - name: coachname
@@ -573,7 +574,15 @@ components:
         currentTeamName:
           type: string
         image:
-          type: object
+          type: string
+        commonName:
+          type: string
+        nation:
+          type: string
+        birthDay:
+          type: string
+        countryOB:
+          type: string
     previewViewPlayer:
       type: object
       properties:
