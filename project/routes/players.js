@@ -15,6 +15,18 @@ router.get("/playerDetails/:playerID", async (req, res, next) =>{
   }
 });
 
+router.get("/search/:searchKey", async (req, res, next) => {
+  try{
+    const search_key = req.params.searchKey;
+    const player_details = await players_utils.getPlayerByName(
+      search_key
+    );
+    res.send(player_details);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
 
 

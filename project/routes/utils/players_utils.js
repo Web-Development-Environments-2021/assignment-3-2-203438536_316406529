@@ -76,6 +76,26 @@ async function getPlayerDetailsById(player_id){
   };
 }
 
+async function getPlayerByName(playerName){
+  const players = await axios.get(`${api_domain}/players/search/${playerName}`, {
+    params: {
+      api_token: process.env.api_token,
+    },
+  });
+  try{
+    return players.data.data.map((player) => {
+      const { name , logo_path } = player;
+      return {
+        teamName: name,
+        teamLogo: logo_path
+      };
+    });
+  } catch{
+    return "player not found";
+  }
+}
+
 exports.getPlayersInfo = getPlayersInfo;
 exports.extractDetailsForTeamPage = extractDetailsForTeamPage;
 exports.getPlayerDetailsById = getPlayerDetailsById;
+exports.getPlayerByName = getPlayerByName;
