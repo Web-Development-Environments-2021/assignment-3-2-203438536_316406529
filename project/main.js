@@ -84,7 +84,7 @@ app.use("/league", league);
 app.use("/teams", teams);
 app.use("/players", players);
 app.use("/coaches", coaches);
-app.use("games", games);
+app.use("/games", games);
 app.use(auth);
 
 app.use(function (err, req, res, next) {
