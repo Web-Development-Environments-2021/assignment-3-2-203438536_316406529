@@ -3,13 +3,15 @@ const axios = require("axios");
 const DButils = require("./DButils");
 // const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 
-async function getGamesInfo(games_ids_list) {//return list of games info
-    return games_ids_list.map((gameID) => {
-        const game = await DButils.execQuery(
-            `select * from userFavoriteGames WHERE gameID='${gameID}'`
-          );
-        return game;
-      });
+async function getGamesInfo(games_ids_list) {
+  //return list of games info
+  // we remove the await 
+  return games_ids_list.map((gameID) => {
+    const game = DButils.execQuery(
+        `select * from userFavoriteGames WHERE gameID='${gameID}'`
+    );
+    return game;
+  });
 }
 
 async function AddGame(data){
