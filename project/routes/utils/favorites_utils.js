@@ -2,6 +2,8 @@ const axios = require("axios");
 const e = require("express");
 const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 const teams_utils = require("./teams_utils");
+const players_utils = require("./players_utils");
+
 const DButils = require("./DButils");
 
 
@@ -18,6 +20,13 @@ async function markPlayerAsFavorite(username, palyerID) {
       `insert into userFavoritePlayers values ('${username}',${palyerID})`
     );
   }
+
+async function getFavoritePlayers(username){
+    let players_ids_list = await getFavoritePlayers_ids(username);
+    let players_info = await players_utils.getPlayersInfo(players_ids_list);
+    return players_utils.extractRelevantPlayerData(players_info);
+
+}
 
 async function getFavoritesUserTeams_ids(username) {//return list of teams ids that are in db favorite of the user
     const favorites_Teams_ids = await DButils.execQuery(
@@ -65,3 +74,4 @@ exports.getFavoritesUserTeams = getFavoritesUserTeams;
 exports.markTeamAsFavorite = markTeamAsFavorite;
 exports.getFavoritesUserGames = getFavoritesUserGames;
 exports.markGameAsFavorite = markGameAsFavorite;
+exports.getFavoritePlayers = getFavoritePlayers;

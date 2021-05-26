@@ -2,6 +2,8 @@ const axios = require("axios");
 const DButils = require("./DButils");
 const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 const LEAGUE_ID = 271;
+const favorites_utils = require("./favorites_utils");
+
 
 async function getLeagueData() {
   const league = await axios.get(`${api_domain}/leagues/${LEAGUE_ID}`,
@@ -28,5 +30,8 @@ async function getLeagueData() {
   };
 }
 
-async function getAllLeagueGames(){}
+async function getAllLeagueGames(username){
+  return favorites_utils.getFavoritesUserGames(username);
+}
 exports.getLeagueData = getLeagueData;
+exports.getAllLeagueGames = getAllLeagueGames;

@@ -65,12 +65,8 @@ router.post("/favoritePlayers", async (req, res, next) => {
 router.get("/favoritePlayers", async (req, res, next) => {
   try {
     const user_id = req.session.user_id;
-    let favorite_players = {};
-    const player_ids = await favorites_utils.getFavoritePlayers(user_id);
-    let player_ids_array = [];
-    player_ids.map((element) => player_ids_array.push(element.player_id)); //extracting the players ids into array
-    const results = await players_utils.getPlayersInfo(player_ids_array);
-    res.status(200).send(results);
+    const favorites_Players = await favorites_utils.getFavoritePlayers(user_id);
+    res.status(200).send(favorites_Players);
   } catch (error) {
     next(error);
   }
@@ -82,7 +78,7 @@ router.get("/FavoriteTeams", async (req, res, next) => {
       const favorites_Teams = await favorites_utils.getFavoritesUserTeams(
       user_id
     );
-    res.send(favorites_Teams);
+    res.status(200).send(favorites_Teams);
   } catch (error) {
     next(error);
   }

@@ -11,4 +11,16 @@ router.get("/LeagueData", async (req, res, next) => {
   }
 });
 
+router.get("/leagueGames", async (req, res, next) =>{
+  try{
+    const user_id = req.session.user_id;
+    const games = getAllLeagueGames(user_id);
+    res.send(games);
+  } catch(error){
+      next(error);
+  }
+
+
+});
+
 module.exports = router;
