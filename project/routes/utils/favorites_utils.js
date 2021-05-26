@@ -39,7 +39,29 @@ async function markTeamAsFavorite(username, teamID){//add (username,team_id) to 
   );
 }
 
+async function getFavoritesUserGames(username){
+  let games_ids_list = await getFavoritesUserGames_ids(username);
+  let teams_info = await games_utils.getGamesInfo(games_ids_list);
+  return teams_utils.extractGamesDetails(teams_info);
+
+}
+
+async function markGameAsFavorite(username, GameID){//add (username,GameID) to db
+await DButils.execQuery(
+  `insert into userFavoriteGames values ('${username}',${GameID})`
+);
+}
+
+async function getFavoritesUserGames_ids(username) {//return list of games ids that are in db favorite of the user
+  const favorites_Games_ids = await DButils.execQuery(
+      `select gameID from userFavoriteGames where username='${username}'`
+    );
+    return favorites_Games_ids;
+}
+
 exports.markPlayerAsFavorite = markPlayerAsFavorite;
 exports.getFavoritePlayers_ids = getFavoritePlayers_ids;
 exports.getFavoritesUserTeams = getFavoritesUserTeams;
 exports.markTeamAsFavorite = markTeamAsFavorite;
+exports.getFavoritesUserGames = getFavoritesUserGames;
+exports.markGameAsFavorite = markGameAsFavorite;

@@ -26,12 +26,23 @@ const favorites_utils = require("./utils/favorites_utils");
 /**
  * This path gets return all the players in db
  */
- router.get("/details", async (req, res, next) => {
+ router.get("/allUsersDetails", async (req, res, next) => {//return all users in system details
   try {
-    const user_id = req.session.user_id;
     let usersDetails = {};
     usersDetails = await users_utils.getAllUsers();
-    res.status(200).send(results);
+    res.status(200).send(usersDetails);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/userDetails", async (req,res,next) => {//return the user details
+  try {
+    const user_id = req.session.user_id;
+    // const user_id = "noam"
+    let usersDetails = {};
+    usersDetails = await users_utils.getUserDetails(user_id);
+    res.status(200).send(usersDetails);
   } catch (error) {
     next(error);
   }
@@ -66,7 +77,6 @@ router.get("/favoritePlayers", async (req, res, next) => {
 });
 
 router.get("/FavoriteTeams", async (req, res, next) => {
-  let favorites_Teams_ids = [];
   try {
       const user_id = req.session.user_id;
       const favorites_Teams = await favorites_utils.getFavoritesUserTeams(
@@ -84,6 +94,30 @@ router.post("/FavoriteTeams", async (req, res, next) => {
     const team_id = req.body.team_id;
     await favorites_utils.markTeamAsFavorite(user_id, team_id);
     res.status(201).send("The team successfully saved as favorite")
+  }
+  catch (error){
+    next(error);
+  }
+});
+
+router.get("/FavoriteGames", async (req, res, next) => {
+  try {
+      const user_id = req.session.user_id;
+      const favorites_Games = await favorites_utils.getFavoritesUserGames(
+      user_id
+    );
+    res.send(favorites_Games);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/FavoriteGames", async (req, res, next) => {
+  try{
+    const user_id = req.session.user_id;
+    const game_id = req.body.game_id;
+    await favorites_utils.markGameAsFavorite(user_id, game_id);
+    res.status(201).send("The game successfully saved as favorite")
   }
   catch (error){
     next(error);

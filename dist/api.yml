@@ -22,23 +22,11 @@ tags:
   - name: Games
   - name: Coaches
 paths:
-  /users/details:
+  /users/allUsersDetails:
     get:
       tags:
       - Users
       summary: Return list of all the users
-      # parameters:
-      # - name: role
-      #   in: query
-      #   required: true
-      #   style: form
-      #   explode: true
-      #   schema:
-      #     type: string
-      #     enum:
-      #     - user
-      #     - poweruser
-      #     - admin
       responses:
         "200":
           description: The users list returned to user
@@ -64,21 +52,12 @@ paths:
           description: A new user has been added to the server
         "400":
           description: The request for add new user has been denied
-  /users/:
+  /users/userDetails:
     get:
       tags:
       - Users
       summary: Get data of a spacific user
       description: get from the client a username and returns his data
-      parameters:
-      - name: username
-        in: path
-        description: The name of the user
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
       responses:
         "200":
           description: Data of the spacific user
@@ -178,82 +157,6 @@ paths:
                 $ref: '#/components/schemas/previewViewPlayer'
         "400":
           description: The request for getting player card has been denied
-  /users/FavoritePlayers:
-    get:
-      tags:
-      - Users
-      - Players
-      summary: Return favorites data for the user
-      responses:
-        "200":
-          description: The favorites players data returned to user
-          content:
-            application/jason:
-              schema:
-                $ref: '#/components/schemas/UserFavoritePlayers'
-        "400":
-          description: The request for getting the main page legue data has been denied
-    post:
-      tags:
-      - Users
-      - Players
-      summary: Add player to faivorite list of user
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                team_id:
-                  type: string
-                  description: teams's id which the user saved
-                  example: 85
-      responses:
-        "200":
-          description: The player has been added to favorite list
-          content:
-            application/json:
-              schema:
-                type: string
-        "400":
-          description: The request for add new player to fav. list has been denied
-  /users/FavoriteGames:
-    get:
-      tags:
-      - Users
-      - Games
-      summary: Return favorites data for the user
-      responses:
-        "200":
-          description: The main page favorites data returned to user
-          content:
-            application/jason:
-              schema:
-                $ref: '#/components/schemas/UserFavoritesGames'
-        "400":
-          description: The request for getting the main page legue data has been denied
-    post:
-      tags:
-      - Users
-      - Games
-      summary: Add game to faivorite list of user
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                team_id:
-                  type: string
-                  description: teams's id which the user saved
-                  example: 85
-      responses:
-        "200":
-          description: The Game has been added to favorite list
-          content:
-            application/json:
-              schema:
-                type: string
-        "400":
-          description: The request for add new Game to fav. list has been denied
   /users/FavoriteTeams:
     get:
       tags:
@@ -313,7 +216,32 @@ paths:
                 $ref: '#/components/schemas/teamData'
         "400":
           description: Team not found
-  /search/{keyWord}:
+  /search/teams/{keyWord}:
+    get:
+      tags:
+      - Games
+      - Teams
+      - Players
+      - League
+      parameters:
+      - name: keyWord
+        in: path
+        description: The keyWord to the server search engine
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Search Results
+          content:
+            application/jason:
+              schema:
+                $ref: '#/components/schemas/SearchResults'
+        "400":
+          description: Team not found
+  /search/players/{keyWord}:
     get:
       tags:
       - Users
@@ -447,6 +375,85 @@ paths:
                 description: Event schedule object add to game
         "400":
           description: The requset to add event schedule  to game has been denied
+  /users/FavoritePlayers:
+    get:
+      tags:
+      - Users
+      - Players
+      summary: Return favorites data for the user
+      responses:
+        "200":
+          description: The favorites players data returned to user
+          content:
+            application/jason:
+              schema:
+                $ref: '#/components/schemas/UserFavoritePlayers'
+        "400":
+          description: The request for getting the main page legue data has been denied
+    post:
+      tags:
+      - Users
+      - Players
+      summary: Add player to faivorite list of user
+      requestBody:
+        description: The team id to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                team_id:
+                  type: string
+                  description: teams's id which the user saved
+                  example: 85
+      responses:
+        "200":
+          description: The player has been added to favorite list
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: The request for add new player to fav. list has been denied
+  /users/FavoriteGames:
+    get:
+      tags:
+      - Users
+      - Games
+      summary: Return favorites data for the user
+      responses:
+        "200":
+          description: The main page favorites data returned to user
+          content:
+            application/jason:
+              schema:
+                $ref: '#/components/schemas/UserFavoritesGames'
+        "400":
+          description: The request for getting the main page legue data has been denied
+    post:
+      tags:
+      - Users
+      - Games
+      summary: Add game to faivorite list of user
+      requestBody:
+        description: The team id to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                team_id:
+                  type: string
+                  description: teams's id which the user saved
+                  example: 85
+      responses:
+        "200":
+          description: The Game has been added to favorite list
+        "400":
+          description: The request for add new Game to fav. list has been denied
+  
 components:
   schemas:
     Login:
