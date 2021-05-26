@@ -216,22 +216,20 @@ paths:
                 $ref: '#/components/schemas/teamData'
         "400":
           description: Team not found
-  /search/teams/{keyWord}:
+  /teams/search/{searchKey}:
     get:
       tags:
-      - Games
       - Teams
-      - Players
-      - League
       parameters:
-      - name: keyWord
+      - name: searchKey
         in: path
-        description: The keyWord to the server search engine
+        description: The keyWord to search team by (name)
         required: true
         style: simple
         explode: false
         schema:
           type: string
+        example: AaB
       responses:
         "200":
           description: Search Results
@@ -240,24 +238,21 @@ paths:
               schema:
                 $ref: '#/components/schemas/SearchResults'
         "400":
-          description: Team not found
-  /search/players/{keyWord}:
+          description: Term not found
+  /players/search/{keyWord}:
     get:
       tags:
-      - Users
-      - Games
-      - Teams
       - Players
-      - League
       parameters:
-      - name: keyWord
+      - name: ketWord
         in: path
-        description: The keyWord to the server search engine
+        description: The keyWord to search player by (name)
         required: true
         style: simple
         explode: false
         schema:
           type: string
+        example: AaB
       responses:
         "200":
           description: Search Results

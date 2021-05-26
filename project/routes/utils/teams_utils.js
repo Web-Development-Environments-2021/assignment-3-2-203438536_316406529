@@ -1,5 +1,6 @@
 const axios = require("axios");
 const e = require("express");
+const { trace } = require("../teams");
 const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 const players_utils = require("./players_utils");
 
@@ -65,6 +66,7 @@ function extractTeamDetails(teams_info) {
     };
   });
 }
+
 async function getUpcomingTeamGames(team_id){
   const team = await axios.get(`${api_domain}/teams/${team_id}`, {
     params: {
@@ -91,6 +93,24 @@ async function getUpcomingTeamGames(team_id){
   return team_upcomming_games;
 }
 
+async function getTeamByName(teamName){
+  const teams = await axios.get(`${api_domain}/teams/search/${teamName}`, {
+    params: {
+      api_token: process.env.api_token,
+    },
+  });
+  try{
+    return teams.data.data.map((team) => {
+      const { name , logo_path } = team;
+      return {
+        teamName: name,
+        teamLogo: logo_path
+      };
+    });
+  } catch{
+    return "team not found";
+  }
+}
 
 
 exports.getPlayersByTeam = getPlayersByTeam;
@@ -98,3 +118,4 @@ exports.getCoachNameByTeam= getCoachNameByTeam;
 exports.getTeamsInfo = getTeamsInfo;
 exports.extractTeamDetails = extractTeamDetails;
 exports.getUpcomingTeamGames = getUpcomingTeamGames;
+exports.getTeamByName = getTeamByName;
