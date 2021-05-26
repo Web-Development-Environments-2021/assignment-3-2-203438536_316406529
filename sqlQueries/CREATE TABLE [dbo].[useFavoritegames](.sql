@@ -1,5 +1,5 @@
-CREATE TABLE [dbo].[useFavoritegames](
-    [username] [varchar] NOT NULL PRIMARY KEY,
-    [gameID] [varchar] NOT NULL PRIMARY KEY
+CREATE TABLE [dbo].[userFavoriteGames](
+    [username] [varchar](255) NOT NULL PRIMARY KEY,
+    [gameID] [varchar](255) NOT NULL PRIMARY KEY
 
 )

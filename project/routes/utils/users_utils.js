@@ -9,4 +9,13 @@ async function getAllUsers() {
   return users;
 }
 
+async function getUserDetails(username) {
+  const user = await DButils.execQuery(
+    `select * from dbo.Users WHERE username='${username}'`
+  );
+  return user;
+}
+
+
 exports.getAllUsers = getAllUsers;
+exports.getUserDetails = getUserDetails;
