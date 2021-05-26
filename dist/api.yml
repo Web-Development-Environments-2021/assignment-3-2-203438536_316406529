@@ -132,7 +132,7 @@ paths:
                 $ref: '#/components/schemas/LeagueData'
         "400":
           description: The request for getting the main page legue data has been denied
-  /CardCoach/{coachname}:
+  /coaches/CardCoach/{coachname}:
     get:
       tags:
       - Coaches
@@ -155,13 +155,13 @@ paths:
                 $ref: '#/components/schemas/previewViewCoach'
         "400":
           description: The request for getting the coach card has been denied
-  /playerDetails/{playerId}:
+  /players/playerDetails/{playerID}:
     get:
       tags:
       - Players
       summary: Return the card of the player
       parameters:
-      - name: playername
+      - name: playerID
         in: path
         description: The name of the player
         required: true
@@ -177,8 +177,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/previewViewPlayer'
         "400":
-          description: The request for getting the coach card has been denied
-  /Favorites/FavoritePlayers:
+          description: The request for getting player card has been denied
+  /users/FavoritePlayers:
     get:
       tags:
       - Users
@@ -226,7 +226,7 @@ paths:
                 type: string
         "400":
           description: The request for add new player to fav. list has been denied
-  /Favorites/FavoriteGames:
+  /users/FavoriteGames:
     get:
       tags:
       - Users
@@ -274,7 +274,7 @@ paths:
                 type: string
         "400":
           description: The request for add new Game to fav. list has been denied
-  /Favorites/FavoriteTeam:
+  /users/FavoriteTeams:
     get:
       tags:
       - Teams
@@ -370,7 +370,7 @@ paths:
                 $ref: '#/components/schemas/SearchResults'
         "400":
           description: Team not found
-  /GameDocumentation/{gameID}:
+  /games/GameDocumentation/{gameID}:
     get:
       tags:
       - Games
