@@ -285,7 +285,7 @@ paths:
                 $ref: '#/components/schemas/gameDocumentation'
         "400":
           description: The request to get the game documantation has been denied
-  /league/leagueGames:
+  /games/league/leagueGames:
     get:
       tags:
       - League
@@ -308,11 +308,30 @@ paths:
                 $ref: '#/components/schemas/leagueGames'
         "400":
           description: The request to get league Games has been denied
-  /LeagueManagment/Games:
+  /games/LeagueManagment/addGame:
     post:
       tags:
       - Games
       summary: Add game to the league managment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: 
+                date:
+                  type: string
+                hour:
+                  type: string
+                away_team_id:
+                  type: number
+                home_team_id: 
+                  type: number
+                field: 
+                  type: string
+                referee_name:
+                  type: string
       responses:
         "200":
           description: The game added to the league
@@ -322,7 +341,7 @@ paths:
                 type: object
         "400":
           description: The requset to add game to league has been denied
-  /LeagueManagment/{gameID}:
+  /games/LeagueManagment/{gameID}:
     post:
       tags:
       - Games
@@ -346,7 +365,7 @@ paths:
                 example: 2-1
         "400":
           description: The requset to add score to game has been denied
-  /LeagueManagment/{gameID}/Events:
+  /games/LeagueManagment/addEvent/{gameID}:
     post:
       tags:
       - Games
