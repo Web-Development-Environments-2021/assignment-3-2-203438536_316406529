@@ -14,8 +14,7 @@ router.get("/teamFullDetails/:teamId", async (req, res, next) => {
       req.params.teamId
     );
     //we should keep implementing team page.....
-    res.send(team_players);
-    res.send(team_coach)
+    res.send({team_players: team_players,team_coach: team_coach});
   } catch (error) {
     next(error);
   }
