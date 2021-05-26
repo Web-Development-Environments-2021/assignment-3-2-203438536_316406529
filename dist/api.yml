@@ -132,13 +132,13 @@ paths:
                 $ref: '#/components/schemas/LeagueData'
         "400":
           description: The request for getting the main page legue data has been denied
-  /coaches/CardCoach/{coachname}:
+  /coaches/coachDetails/{coachID}:
     get:
       tags:
       - Coaches
       summary: Return the card of the coach
       parameters:
-      - name: coachname
+      - name: coachID
         in: path
         description: The name of the coach
         required: true

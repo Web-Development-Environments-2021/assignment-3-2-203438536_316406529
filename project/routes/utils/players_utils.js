@@ -52,7 +52,6 @@ function extractRelevantPlayerData(players_info){
 }
 
 async function getPlayerDetailsById(player_id){
-  let player_details = [];
   //get player data from Football-API
   const player = await axios.get(`${api_domain}/players/${player_id}`, {
     params: {
