@@ -1,21 +1,11 @@
 const axios = require("axios");
 const e = require("express");
 const api_domain = "https://soccer.sportmonks.com/api/v2.0";
+const teams_utils = require("./teams_utils");
+
 // const TEAM_ID = "85";
 
-async function getPlayerIdsByTeam(team_id) {
-  let player_ids_list = [];
-  const team = await axios.get(`${api_domain}/teams/${team_id}`, {
-    params: {
-      include: "squad",
-      api_token: process.env.api_token,
-    },
-  });
-  team.data.data.squad.data.map((player) =>
-    player_ids_list.push(player.player_id)
-  );
-  return player_ids_list;
-}
+
 
 async function getPlayersInfo(players_ids_list) {
   let promises = [];
@@ -30,11 +20,12 @@ async function getPlayersInfo(players_ids_list) {
     )
   );
   let players_info = await Promise.all(promises);
+  
   return players_info;
   // return extractRelevantPlayerData(players_info);
 }
 
-function extractRelevantPlayerData(players_info) {
+function extractDetailsForTeamPage(players_info) {
   return players_info.map((player_info) => {
     const { fullname, image_path ,common_name, nationality, birthdate } = player_info.data.data;
     return {
@@ -47,13 +38,7 @@ function extractRelevantPlayerData(players_info) {
   });
 }
 
-async function getPlayersByTeam(team_id) {
-  let player_ids_list = await getPlayerIdsByTeam(team_id);
-  let players_info = await getPlayersInfo(player_ids_list);
-  return extractRelevantPlayerData(players_info);
-}
-
-function extractDetailsForTeamPage(players_info){
+function extractRelevantPlayerData(players_info){
   return players_info.map((player_info) => {
     const { fullname, image_path, position_id } = player_info.data.data;
     const { name } = player_info.data.data.team.data;
@@ -66,18 +51,32 @@ function extractDetailsForTeamPage(players_info){
   });
 }
 
-async function getCoachNameByTeam(team_id){
-  let coach_name = "";
-  const team = await axios.get(`${api_domain}/teams/${team_id}`, {
+async function getPlayerDetailsById(player_id){
+  let player_details = [];
+  //get player data from Football-API
+  const player = await axios.get(`${api_domain}/players/${player_id}`, {
     params: {
-      include: "coach",
+      include: "team",
       api_token: process.env.api_token,
     },
   });
-  coach_name = team.data.data.coach.data.fullname;
-  return coach_name;
+  const {fullname, image_path, common_name, position_id, nationality, height, 
+    weight, birthcountry,  birthdate } = player.data.data;
+  const { name } = player.data.data.team.data;
+  return{
+    fullname: fullname,
+    image_path: image_path,
+    common_name: common_name,
+    position_id: position_id,
+    nationality: nationality,
+    height: height,
+    birthcountry: birthcountry,
+    birthdate: birthdate,
+    team_name: name,
+    weight: weight//check how to hundle undefine weight for player(client side or player.js)
+  };
 }
 
-exports.getPlayersByTeam = getPlayersByTeam;
 exports.getPlayersInfo = getPlayersInfo;
-exports.getCoachNameByTeam= getCoachNameByTeam;
+exports.extractDetailsForTeamPage = extractDetailsForTeamPage;
+exports.getPlayerDetailsById = getPlayerDetailsById;
