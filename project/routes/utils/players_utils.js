@@ -39,16 +39,23 @@ function extractDetailsForTeamPage(players_info) {
 }
 
 function extractRelevantPlayerData(players_info){
+
   return players_info.map((player_info) => {
-    const { fullname, image_path, position_id } = player_info.data.data;
-    const { name } = player_info.data.data.team.data;
-    return {
-      name: fullname,
-      image: image_path,
-      position: position_id,
-      team_name: name,
-    };
-  });
+    try{
+      const { common_name , nationality, birthdate, birthplace, height, weight } = player_info;
+      return {
+        common_name: common_name,
+        nationality: nationality,
+        birthdate: birthdate,
+        birthplace: birthplace,
+        height: height,
+        weight: weight,
+      };
+    }
+    catch{
+      return "player not found";
+    }
+    });
 }
 
 async function getPlayerDetailsById(player_id){
@@ -83,19 +90,14 @@ async function getPlayerByName(playerName){
     },
   });
   try{
-    return players.data.data.map((player) => {
-      const { name , logo_path } = player;
-      return {
-        teamName: name,
-        teamLogo: logo_path
-      };
-    });
+    return extractRelevantPlayerData(players.data.data);
   } catch{
-    return "player not found";
+    return "players not found";
   }
 }
 
 exports.getPlayersInfo = getPlayersInfo;
 exports.extractDetailsForTeamPage = extractDetailsForTeamPage;
+exports.extractRelevantPlayerData = extractRelevantPlayerData;
 exports.getPlayerDetailsById = getPlayerDetailsById;
 exports.getPlayerByName = getPlayerByName;
