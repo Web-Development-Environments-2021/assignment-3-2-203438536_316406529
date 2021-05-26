@@ -155,7 +155,7 @@ paths:
                 $ref: '#/components/schemas/previewViewCoach'
         "400":
           description: The request for getting the coach card has been denied
-  /CardPlayer/{playername}:
+  /playerDetails/{playerId}:
     get:
       tags:
       - Players
