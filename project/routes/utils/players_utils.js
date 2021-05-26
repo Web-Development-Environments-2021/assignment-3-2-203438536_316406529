@@ -84,10 +84,14 @@ async function getPlayerByName(playerName){
   });
   try{
     return players.data.data.map((player) => {
-      const { name , logo_path } = player;
+      const { common_name , nationality, birthdate, birthplace, height, weight } = player;
       return {
-        teamName: name,
-        teamLogo: logo_path
+        common_name: common_name,
+        nationality: nationality,
+        birthdate: birthdate,
+        birthplace: birthplace,
+        height: height,
+        weight: weight,
       };
     });
   } catch{
