@@ -239,12 +239,12 @@ paths:
                 $ref: '#/components/schemas/SearchResults'
         "400":
           description: Term not found
-  /players/search/{keyWord}:
+  /players/search/{searchKey}:
     get:
       tags:
       - Players
       parameters:
-      - name: ketWord
+      - name: searchKey
         in: path
         description: The keyWord to search player by (name)
         required: true
@@ -252,7 +252,7 @@ paths:
         explode: false
         schema:
           type: string
-        example: AaB
+        example: James Forrest
       responses:
         "200":
           description: Search Results
