@@ -53,11 +53,8 @@ const users = require("./routes/users");
 const league = require("./routes/league");
 const teams = require("./routes/teams");
 
-//alive check 
-app.get("/alive", (req,res) =>{
-  res.send("server alive!");
-})
 //#endregion
+
 //#region cookie middleware
 app.use(function (req, res, next) {
   if (req.session && req.session.user_id) {

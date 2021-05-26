@@ -277,7 +277,7 @@ paths:
   /Favorites/FavoriteTeam:
     get:
       tags:
-      - Games
+      - Teams
       - Users
       summary: Return favorites teams data for the user
       parameters:
@@ -301,7 +301,7 @@ paths:
     post:
       tags:
       - Users
-      - Games
+      - Teams
       summary: Add team to faivorite list of user
       parameters:
       - name: username
@@ -322,7 +322,7 @@ paths:
                 type: string
         "400":
           description: The request for add new team to fav. list has been denied
-  /team/{teamID}:
+  /teams/teamFullDetails/{teamID}:
     get:
       tags:
       - Teams
