@@ -78,4 +78,16 @@ router.get("/FavoriteTeams", async (req, res, next) => {
   }
 });
 
+router.post("/FavoriteTeams", async (req, res, next) => {
+  try{
+    const user_id = req.session.user_id;
+    const team_id = req.body.team_id;
+    await favorites_utils.markTeamAsFavorite(user_id, team_id);
+    res.status(201).send("The team successfully saved as favorite")
+  }
+  catch (error){
+    next(error);
+  }
+});
+
 module.exports = router;

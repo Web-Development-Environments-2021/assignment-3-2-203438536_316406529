@@ -65,8 +65,34 @@ function extractTeamDetails(teams_info) {
     };
   });
 }
+async function getUpcomingTeamGames(team_id){
+  const team = await axios.get(`${api_domain}/teams/${team_id}`, {
+    params: {
+      include: 'upcoming',
+      api_token: process.env.api_token,
+    },
+  })
+  const team_upcomming_games = team.data.data.upcoming.data;
+  
+  return teams_info.map((team_upcomming_games) => {
+    const { localteam_id, visitorteam_id, date, time, venue_id } = team_upcomming_games.data.data;
+    return {
+      localteam_id: localteam_id,
+      visitorteam_id: visitorteam_id,
+      visitorteam_id: visitorteam_id,
+      date: date, 
+      time: time,
+      venue_id: venue_id
+    };
+  });
+  
+
+
+  return team_upcomming_games;
+}
 
 exports.getPlayersByTeam = getPlayersByTeam;
 exports.getCoachNameByTeam= getCoachNameByTeam;
 exports.getTeamsInfo = getTeamsInfo;
 exports.extractTeamDetails = extractTeamDetails;
+exports.getUpcomingTeamGames = getUpcomingTeamGames;

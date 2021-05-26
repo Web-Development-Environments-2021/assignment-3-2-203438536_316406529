@@ -184,15 +184,6 @@ paths:
       - Users
       - Players
       summary: Return favorites data for the user
-      parameters:
-      - name: username
-        in: path
-        description: The name of the user
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
       responses:
         "200":
           description: The favorites players data returned to user
@@ -207,16 +198,15 @@ paths:
       - Users
       - Players
       summary: Add player to faivorite list of user
-      parameters:
-      - name: username
-        in: path
-        description: The name of the user
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-          description: player ID
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                team_id:
+                  type: string
+                  description: teams's id which the user saved
+                  example: 85
       responses:
         "200":
           description: The player has been added to favorite list
@@ -232,15 +222,6 @@ paths:
       - Users
       - Games
       summary: Return favorites data for the user
-      parameters:
-      - name: username
-        in: path
-        description: The name of the user
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
       responses:
         "200":
           description: The main page favorites data returned to user
@@ -255,16 +236,15 @@ paths:
       - Users
       - Games
       summary: Add game to faivorite list of user
-      parameters:
-      - name: username
-        in: path
-        description: The name of the user
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-          description: gameID
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                team_id:
+                  type: string
+                  description: teams's id which the user saved
+                  example: 85
       responses:
         "200":
           description: The Game has been added to favorite list
@@ -280,15 +260,6 @@ paths:
       - Teams
       - Users
       summary: Return favorites teams data for the user
-      parameters:
-      - name: username
-        in: path
-        description: The name of the user
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
       responses:
         "200":
           description: The favorites teams data returned to user
@@ -303,23 +274,21 @@ paths:
       - Users
       - Teams
       summary: Add team to faivorite list of user
-      parameters:
-      - name: username
-        in: path
-        description: The name of the user
+      requestBody:
+        description: The team id to be added
         required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-          description: TeamID
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                team_id:
+                  type: string
+                  description: teams's id which the user saved
+                  example: 85
       responses:
-        "200":
+        "201":
           description: The team has been added to favorite list
-          content:
-            application/json:
-              schema:
-                type: string
         "400":
           description: The request for add new team to fav. list has been denied
   /teams/teamFullDetails/{teamID}:
