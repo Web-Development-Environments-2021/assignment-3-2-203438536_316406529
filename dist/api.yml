@@ -322,10 +322,10 @@ paths:
               properties: 
                 date:
                   type: string
-                  format: date
+                  #format: date
                 hour:
                   type: string
-                  format: time
+                  #format: time
                 away_team:
                   type: string
                 home_team: 
