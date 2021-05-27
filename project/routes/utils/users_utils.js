@@ -16,6 +16,10 @@ async function getUserDetails(username) {
   return user;
 }
 
+// async function getUserFavoriteGames(){
+//   return await DButils.execQuery(`select * from dbo.userFavoriteGames`);
+// }
+
 
 exports.getAllUsers = getAllUsers;
 exports.getUserDetails = getUserDetails;

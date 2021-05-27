@@ -12,4 +12,11 @@ router.post("/LeagueManagment/addGame", async (req, res, next) => {
     }
 })
 
+// router.post("/games/LeagueManagment/addScore", async (req, res, next) =>{
+//     try{
+//     }catch(error){
+//         next(error);
+//     }
+// })
+
 module.exports = router;
