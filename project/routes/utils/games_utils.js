@@ -18,6 +18,7 @@ async function AddGame(data){
   try{
     // const {date, hour, away_team_id, home_team_id, field} = data;
     // let ref = data.referee_name;
+    const hour = data.hour;
     await DButils.execQuery(
       `insert into dbo.games2 (game_date, game_hour, home_team, away_team, field, referee_name) 
        values ('${data.date}', '${data.hour}', '${data.home_team}', '${data.away_team}', '${data.field}', '${data.referee_name}') `);

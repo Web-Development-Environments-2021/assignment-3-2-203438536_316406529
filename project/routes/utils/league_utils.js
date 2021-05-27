@@ -23,15 +23,25 @@ async function getLeagueData() {
   );
   let currentDate= new Date().toISOString();
   //need to fix this query
-  const nextGame = await DButils.execQuery(`select top 1 game_date, game_hour, home_team, away_team \
-  from dbo.games2 WHERE game_date >= '${currentDate}'  ORDER BY game_date ASC` 
+  const nextGame = await DButils.execQuery(`select top 1 game_date, game_hour, home_team, away_team, field \
+  from dbo.games2 WHERE game_date >= '${currentDate}'  ORDER BY game_date ASC, game_hour ASC` 
   );
+  const {game_hour,game_date, home_team, away_team, field} = nextGame[0];
+  let game_hour_split = String(game_hour).slice(16,25);
+  let game_date_split = String(game_date).slice(0,15);
+
   return {
     league_name: league.data.data.name,
     current_season_name: league.data.data.season.data.name,
     current_stage_name: stage.data.data.name,
     // next game details should come from DB
-    nextComingGame: nextGame
+    nextComingGame: {
+      game_date: game_date_split,
+      game_hour: game_hour_split,
+      home_team: home_team,
+      away_team: away_team,
+      field: field
+    }
   };
 }
 
