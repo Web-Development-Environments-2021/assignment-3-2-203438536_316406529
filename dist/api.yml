@@ -322,12 +322,14 @@ paths:
               properties: 
                 date:
                   type: string
+                  format: date
                 hour:
                   type: string
-                away_team_id:
-                  type: number
-                home_team_id: 
-                  type: number
+                  format: time
+                away_team:
+                  type: string
+                home_team: 
+                  type: string
                 field: 
                   type: string
                 referee_name:
@@ -341,20 +343,24 @@ paths:
                 type: object
         "400":
           description: The requset to add game to league has been denied
-  /games/LeagueManagment/{gameID}:
+  /games/LeagueManagment/addScore:
     post:
       tags:
       - Games
       summary: Add score to game
-      parameters:
-      - name: gameID
-        in: path
-        description: The ID of the game to add score to
+      requestBody:
         required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: 
+                game_id:
+                  type: number
+                home_team_goal:
+                  type: number
+                away_team_goal:
+                  type: number
       responses:
         "200":
           description: The game hasa been update with the score
@@ -563,7 +569,7 @@ components:
           type: string
         currentTeamName:
           type: string
-        image:
+        image_url:
           type: string
         commonName:
           type: string
@@ -578,12 +584,33 @@ components:
       properties:
         fullname:
           type: string
-        currentTeamName:
+          example: yosi cohen
+        image_url:
           type: string
-        image:
-          type: object
-        stageNumber:
-          type: integer
+        commonName:
+          type: string
+          example: yoss
+        position_id: 
+          type: number
+          example: 4
+        nationality:
+          type: string
+          example: israeli
+        height:
+          type: string
+          example: 1.78
+        birthcountry:
+          type: string 
+          example: israel 
+        birthdate:
+          type: string
+          example: 1-2-1993
+        team_name:
+          type: string
+          example: Celtic
+        weight:
+          type: string
+          example: 80
     teamData:
       type: object
       properties:

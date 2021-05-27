@@ -19,11 +19,21 @@ async function AddGame(data){
     // const {date, hour, away_team_id, home_team_id, field} = data;
     // let ref = data.referee_name;
     await DButils.execQuery(
-      `insert into dbo.games2 (game_date, game_hour, home_team_id, away_team_id, field, referee_name) 
-       values ('${data.date}', '${data.hour}', '${data.home_team_id}', '${data.away_team_id}', '${data.field}', '${data.referee_name}') `);
+      `insert into dbo.games2 (game_date, game_hour, home_team, away_team, field, referee_name) 
+       values ('${data.date}', '${data.hour}', '${data.home_team}', '${data.away_team}', '${data.field}', '${data.referee_name}') `);
   }catch(error){
     error;
   }
 }
+
+// async function AddScore(data){
+//   try{
+//     const gameId = data.body.game_id;
+//     const awayTeamGoal = data.body.away_team_goal;
+//     const homeTeamGoal = data.body.home_team_goal;
+//     await DButils.execQuery(` `);
+
+//   }
+// }
 
 exports.AddGame = AddGame;

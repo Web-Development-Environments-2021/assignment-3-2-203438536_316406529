@@ -21,17 +21,23 @@ async function getLeagueData() {
       },
     }
   );
-  // const next_game = await DButils.execQuery('')
+  let currentDate= new Date().toISOString();
+  //need to fix this query
+  const nextGame = await DButils.execQuery(`select top 1 game_date, game_hour, home_team, away_team \
+  from dbo.games2 WHERE game_date >= '${currentDate}'  ORDER BY game_date ASC` 
+  );
   return {
     league_name: league.data.data.name,
     current_season_name: league.data.data.season.data.name,
     current_stage_name: stage.data.data.name,
     // next game details should come from DB
+    nextComingGame: nextGame
   };
 }
 
 async function getAllLeagueGames(username){
-  return favorites_utils.getFavoritesUserGames(username);
+  //return favorites_utils.getFavoritesUserGames(username);
+
 }
 exports.getLeagueData = getLeagueData;
 exports.getAllLeagueGames = getAllLeagueGames;
