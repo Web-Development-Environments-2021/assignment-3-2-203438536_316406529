@@ -96,6 +96,10 @@ async function getPlayerByName(playerName){
   }
 }
 
+async function getPlayersByPosition(positionId){
+  const players = await axios.get(`${api_domain}/players`)
+}
+
 exports.getPlayersInfo = getPlayersInfo;
 exports.extractDetailsForTeamPage = extractDetailsForTeamPage;
 exports.extractRelevantPlayerData = extractRelevantPlayerData;

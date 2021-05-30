@@ -27,6 +27,15 @@ router.get("/search/:searchKey", async (req, res, next) => {
   }
 });
 
+router.get("/search/:positionID", async (req, res, next) => {
+  try{
+    const positionId = req.params.positionID;
+    const player_details = await players_utils.getPlayersByPosition(positionId);
+    res.send(player_details);
+  }catch(error){
+    next(error);
+  }
+});
 module.exports = router;
 
 
