@@ -3,14 +3,12 @@ var router = express.Router();
 const DButils = require("../routes/utils/DButils");
 const bcrypt = require("bcryptjs");
 
-router.post("/Register", async (req, res, next) => {
+router.post("/register", async (req, res, next) => {
   try {
     // parameters exists
     // valid parameters
     // username exists
-    const users = await DButils.execQuery(
-      "SELECT username FROM dbo.Users"
-    );
+    const users = await DButils.execQuery("SELECT username FROM dbo.Users");
 
     if (users.find((x) => x.username === req.body.username))
       throw { status: 409, message: "Username taken" };
@@ -32,7 +30,7 @@ router.post("/Register", async (req, res, next) => {
   }
 });
 
-router.post("/Login", async (req, res, next) => {
+router.post("/login", async (req, res, next) => {
   try {
     const user = (
       await DButils.execQuery(
@@ -57,7 +55,7 @@ router.post("/Login", async (req, res, next) => {
   }
 });
 
-router.post("/Logout", function (req, res) {
+router.post("user/logOut", function (req, res) {
   req.session.reset(); // reset the session info --> send cookie when  req.session == undefined!!
   res.send({ success: true, message: "logout succeeded" });
 });
