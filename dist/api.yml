@@ -106,11 +106,26 @@ paths:
         "200":
           description: The main page legue data returned to user
           content:
-            application/jason:
+            application/json:
               schema:
                 $ref: '#/components/schemas/LeagueData'
         "400":
           description: The request for getting the main page legue data has been denied
+  /league/currentStageDetails:
+    get: 
+      tags:
+      - League
+      summary: Return details about games in current stage
+      responses:
+        "200":
+          description: Current games details returned succesfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/currentStageDetails'
+        "400":
+          description: The request for getting current stage games has been denied
+
   /coaches/coachDetails/{coachID}:
     get:
       tags:
@@ -216,7 +231,7 @@ paths:
                 $ref: '#/components/schemas/teamData'
         "400":
           description: Team not found
-  /teams/search/{searchKey}:
+  /teams/search/{searchKey}:  
     get:
       tags:
       - Teams
@@ -473,7 +488,7 @@ paths:
           description: The Game has been added to favorite list
         "400":
           description: The request for add new Game to fav. list has been denied
-  
+
 components:
   schemas:
     Login:
@@ -550,18 +565,18 @@ components:
     gameData:
       type: object
       properties:
-        nameTeam1:
+        home_team:
           type: string
           example: barcellona
-        nameTeam2:
+        away_team:
           type: string
           example: real madrid
-        date:
+        game_date:
           type: string
-          example: 1/1/21
-        score:
+          example: 2021-3-7
+        field:
           type: string
-          example: 1-2
+          example: Tedi
     previewViewCoach:
       type: object
       properties:
@@ -658,10 +673,15 @@ components:
           type: object
         field:
           type: string
-        score:
-          type: string
+          example: Tedi
+        home_team_goal:
+          type: number
           description: If null- means the game not occur yet
-          example: 2-0
+          example: 2
+        away_team_goal:
+          type: number
+          description: If null- means the game not occur yet
+          example: 1
         eventSchedule:
           type: object
           description: If null- means the game not occur yet. cointains the events in the game
@@ -670,5 +690,13 @@ components:
       properties:
         Players:
           type: array
+          items:
+            type: object
+
+    currentStageDetails:
+      type: object
+      properties:
+        games:
+          type: object
           items:
             type: object

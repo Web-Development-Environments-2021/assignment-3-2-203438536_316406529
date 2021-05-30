@@ -45,9 +45,24 @@ async function getLeagueData() {
   };
 }
 
+async function getCurrentStageGames(){
+  const currentDate = new Date().toISOString();
+  const futureStagegames = await DButils.execQuery(`select game_date, game_hour, home_team, away_team, field \
+  from dbo.games2 WHERE game_date >= '${currentDate}'  ORDER BY game_date ASC` 
+  );
+  const pastStageGames = await DButils.execQuery(`select game_date, game_hour, home_team, away_team, field \
+  from dbo.games2 WHERE game_date < '${currentDate}'  ORDER BY game_date ASC` 
+  );
+  return{
+    pastGamesList: pastStageGames,
+    futureGamesList: futureStagegames,
+  }
+}
+
 async function getAllLeagueGames(username){
   //return favorites_utils.getFavoritesUserGames(username);
-
 }
+
 exports.getLeagueData = getLeagueData;
 exports.getAllLeagueGames = getAllLeagueGames;
+exports.getCurrentStageGames = getCurrentStageGames;

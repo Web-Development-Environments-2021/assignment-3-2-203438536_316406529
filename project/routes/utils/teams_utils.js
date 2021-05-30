@@ -3,6 +3,7 @@ const e = require("express");
 const { trace } = require("../teams");
 const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 const players_utils = require("./players_utils");
+const DButils = require("./DButils");
 
 
 async function getPlayersByTeam(team_id) {
@@ -68,29 +69,11 @@ function extractTeamDetails(teams_info) {
 }
 
 async function getUpcomingTeamGames(team_id){
-  const team = await axios.get(`${api_domain}/teams/${team_id}`, {
-    params: {
-      include: 'upcoming',
-      api_token: process.env.api_token,
-    },
-  })
-  const team_upcomming_games = team.data.data.upcoming.data;
-  
-  return teams_info.map((team_upcomming_games) => {
-    const { localteam_id, visitorteam_id, date, time, venue_id } = team_upcomming_games.data.data;
-    return {
-      localteam_id: localteam_id,
-      visitorteam_id: visitorteam_id,
-      visitorteam_id: visitorteam_id,
-      date: date, 
-      time: time,
-      venue_id: venue_id
-    };
-  });
-  
-
-
-  return team_upcomming_games;
+  const team = await axios.get(`${api_domain}/teams/${team_id}`);
+  const {name} = team.data.data;
+  const comingTeamGames = await DButils.execQuery(`select game_date, game_hour, home_team, away_team, field \
+  from dbo.games2 WHERE home_team = '${name}'  ORDER BY game_date ASC`);
+  return comingTeamGames;
 }
 
 async function getTeamByName(teamName){
