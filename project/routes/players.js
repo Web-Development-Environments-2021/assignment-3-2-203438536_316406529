@@ -18,6 +18,8 @@ router.get("/playerDetails/:playerID", async (req, res, next) =>{
 router.get("/search/:searchKey", async (req, res, next) => {
   try{
     const search_key = req.params.searchKey;
+    const location = req.params.location;
+    const teamName = req.params.teamName;
     const player_details = await players_utils.getPlayerByName(
       search_key
     );
@@ -27,15 +29,49 @@ router.get("/search/:searchKey", async (req, res, next) => {
   }
 });
 
-router.get("/search/:positionID", async (req, res, next) => {
+router.get("/search/:searchKey/:location", async (req, res, next) => {
   try{
-    const positionId = req.params.positionID;
-    const player_details = await players_utils.getPlayersByPosition(positionId);
+    const search_key = req.params.searchKey;
+    const location = req.params.location;
+    // const teamName = req.params.teamName;
+    const player_details = await players_utils.getPlayerByNameLocation(
+      search_key, location
+    );
     res.send(player_details);
-  }catch(error){
+  } catch (error) {
     next(error);
   }
 });
+
+router.get("/search/:searchKey/:teamName", async (req, res, next) => {
+  try{
+    const search_key = req.params.searchKey;
+    const location = req.params.location;
+    const teamName = req.params.teamName;
+    const player_details = await players_utils.getPlayerByNameTeam(
+      search_key ,teamName
+    );
+    res.send(player_details);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/search/:searchKey/:location/:teamName", async (req, res, next) => {
+  try{
+    const search_key = req.params.searchKey;
+    const location = req.params.location;
+    const teamName = req.params.teamName;
+    const player_details = await players_utils.getPlayerByNameLocationTeam(
+      search_key, location,teamName
+    );
+    res.send(player_details);
+  } catch (error) {
+    next(error);
+  }
+});
+
+
 module.exports = router;
 
 

@@ -125,7 +125,6 @@ paths:
                 $ref: '#/components/schemas/currentStageDetails'
         "400":
           description: The request for getting current stage games has been denied
-
   /coaches/coachDetails/{coachID}:
     get:
       tags:
@@ -254,6 +253,7 @@ paths:
                 $ref: '#/components/schemas/SearchResults'
         "400":
           description: Term not found
+  
   /players/search/{searchKey}:
     get:
       tags:
@@ -277,6 +277,108 @@ paths:
                 $ref: '#/components/schemas/SearchResults'
         "400":
           description: Team not found
+  /players/search/{searchKey}/{location}:
+    get:
+      tags:
+      - Players
+      parameters:
+      - name: searchKey
+        in: path
+        description: The keyWord to search player by (name)
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: James Forrest
+      - name: location
+        in: path
+        description: The location of the player on the filed
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: Midfielder
+      responses:
+        "200":
+          description: Search Results
+          content:
+            application/jason:
+              schema:
+                $ref: '#/components/schemas/SearchResults'
+        "400":
+          description: Team not found
+  /players/search/{searchKey}/{team}:
+    get:
+      tags:
+      - Players
+      parameters:
+      - name: searchKey
+        in: path
+        description: The keyWord to search player by (name)
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: James Forrest
+      - name: team
+        in: path
+        description: The team of the player
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: AaB
+      responses:
+        "200":
+          description: Search Results
+          content:
+            application/jason:
+              schema:
+                $ref: '#/components/schemas/SearchResults'
+        "400":
+          description: Team not found
+  /players/search/{searchKey}/{team}/{location}:
+    get:
+      tags:
+      - Players
+      parameters:
+      - name: searchKey
+        in: path
+        description: The keyWord to search player by (name)
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: James Forrest
+      - name: team
+        in: path
+        description: The team of the player
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: AaB
+      - name: location
+        in: path
+        description: The location of the player on the filed
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: Midfielder
+      responses:
+        "200":
+          description: Search Results
+          content:
+            application/jason:
+              schema:
+                $ref: '#/components/schemas/SearchResults'
+        "400":
+          description: Team not found
+  
   /games/GameDocumentation/{gameID}:
     get:
       tags:

@@ -1,3 +1,4 @@
+
 const axios = require("axios");
 const e = require("express");
 const api_domain = "https://soccer.sportmonks.com/api/v2.0";
@@ -43,6 +44,8 @@ function extractRelevantPlayerData(players_info){
   return players_info.map((player_info) => {
     try{
       const { common_name , nationality, birthdate, birthplace, height, weight } = player_info;
+      // const team = player_info.team.data.name;
+      // const playerPosition = player_info.position.data.name;
       return {
         common_name: common_name,
         nationality: nationality,
@@ -50,12 +53,83 @@ function extractRelevantPlayerData(players_info){
         birthplace: birthplace,
         height: height,
         weight: weight,
-      };
+        // playerPosition: playerPosition,
+        // team: team,
+      }
     }
     catch{
       return "player not found";
     }
-    });
+  });
+}
+
+function extractRelevantPlayerDataLocation(players_info){
+
+  return players_info.map((player_info) => {
+    try{
+      const { common_name , nationality, birthdate, birthplace, height, weight } = player_info;
+      const playerPosition = player_info.position.data.name;
+      return {
+        common_name: common_name,
+        nationality: nationality,
+        birthdate: birthdate,
+        birthplace: birthplace,
+        height: height,
+        weight: weight,
+        playerPosition: playerPosition,
+        // team: team,
+      }
+    }
+    catch{
+      return "player not found";
+    }
+  });
+}
+
+function extractRelevantPlayerDataTeam(players_info){
+
+  return players_info.map((player_info) => {
+    try{
+      const { common_name , nationality, birthdate, birthplace, height, weight } = player_info;
+      const team = player_info.team.data.name;
+      return {
+        common_name: common_name,
+        nationality: nationality,
+        birthdate: birthdate,
+        birthplace: birthplace,
+        height: height,
+        weight: weight,
+        team: team,
+      }
+    }
+    catch{
+      return "player not found";
+    }
+  });
+}
+
+function extractRelevantPlayerDataTeamLocation(players_info){
+
+  return players_info.map((player_info) => {
+    try{
+      const { common_name , nationality, birthdate, birthplace, height, weight } = player_info;
+      const team = player_info.team.data.name;
+      const playerPosition = player_info.position.data.name;
+      return {
+        common_name: common_name,
+        nationality: nationality,
+        birthdate: birthdate,
+        birthplace: birthplace,
+        height: height,
+        weight: weight,
+        team: team,
+        playerPosition: playerPosition,
+      }
+    }
+    catch{
+      return "player not found";
+    }
+  });
 }
 
 async function getPlayerDetailsById(player_id){
@@ -86,18 +160,104 @@ async function getPlayerDetailsById(player_id){
 async function getPlayerByName(playerName){
   const players = await axios.get(`${api_domain}/players/search/${playerName}`, {
     params: {
+      // include: "position, team",
       api_token: process.env.api_token,
     },
   });
   try{
+    // const playersData = extractRelevantPlayerData(players.data.data);
+    // // if(PlayerPosition != "{location}"){
+    // //   playersData =  playersData.filter(player => player.playerPosition == PlayerPosition);
+    // // }
+    // return playersData;
     return extractRelevantPlayerData(players.data.data);
   } catch{
     return "players not found";
   }
 }
 
-async function getPlayersByPosition(positionId){
-  const players = await axios.get(`${api_domain}/players`)
+async function getPlayerByNameLocation(playerName,PlayerPosition){
+  const players = await axios.get(`${api_domain}/players/search/${playerName}`, {
+    params: {
+      include: "position",
+      api_token: process.env.api_token,
+    },
+  });
+  try{
+    const playersData = extractRelevantPlayerDataLocation(players.data.data);
+    if(PlayerPosition != "{location}"){
+        const filterdPlayersData =  playersData.filter(player => {
+          try{
+            if(player.playerPosition == PlayerPosition ){
+              return true;
+            }
+            return false;
+          }catch{
+            return false;
+          }
+        });
+        return filterdPlayersData;
+    }
+    return playersData;
+  } catch{
+    return "players not found";
+  }
+}
+
+async function getPlayerByNameTeam(playerName,team){
+  const players = await axios.get(`${api_domain}/players/search/${playerName}`, {
+    params: {
+      include: "team",
+      api_token: process.env.api_token,
+    },
+  });
+  try{
+    const playersData = extractRelevantPlayerDataTeam(players.data.data);
+    if(team != "{team}"){
+        const filterdPlayersData =  playersData.filter(player => {
+          try{
+            if(player.team == team ){
+              return true;
+            }
+            return false;
+          }catch{
+            return false;
+          }
+        });
+        return filterdPlayersData;
+    }
+    return playersData;
+  } catch{
+    return "players not found";
+  }
+}
+
+async function getPlayerByNameLocationTeam(playerName,location,team){
+  const players = await axios.get(`${api_domain}/players/search/${playerName}`, {
+    params: {
+      include: "team, location",
+      api_token: process.env.api_token,
+    },
+  });
+  try{
+    const playersData = extractRelevantPlayerDataTeamLocation(players.data.data);
+    if(team != "{team}" && location != "{location}"){
+        const filterdPlayersData =  playersData.filter(player => {
+          try{
+            if(player.team == team && player.playerPosition == location){
+              return true;
+            }
+            return false;
+          }catch{
+            return false;
+          }
+        });
+        return filterdPlayersData;
+    }
+    return playersData;
+  } catch{
+    return "players not found";
+  }
 }
 
 exports.getPlayersInfo = getPlayersInfo;
@@ -105,3 +265,6 @@ exports.extractDetailsForTeamPage = extractDetailsForTeamPage;
 exports.extractRelevantPlayerData = extractRelevantPlayerData;
 exports.getPlayerDetailsById = getPlayerDetailsById;
 exports.getPlayerByName = getPlayerByName;
+exports.getPlayerByNameLocation = getPlayerByNameLocation;
+exports.getPlayerByNameTeam = getPlayerByNameTeam;
+exports.getPlayerByNameLocationTeam = getPlayerByNameLocationTeam;
