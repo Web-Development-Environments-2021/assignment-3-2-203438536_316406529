@@ -23,7 +23,7 @@ const gamees_utils = require("./utils/games_utils");
 // });
 
 router.post("/LeagueManagment/addGame", async (req, res, next) => {
-  if (req.session.user_id === "admin") {
+  if (req.session.username === "admin") {
     try {
       data = await req.body;
       await gamees_utils.AddGame(data);
