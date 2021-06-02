@@ -13,11 +13,11 @@ tags:
   - name: Users
     description: Operations available to users
   - name: Auth
-    description: authenticaton 
+    description: authenticaton
   - name: League
     description: league data handle
   - name: Teams
-    description: Team 
+    description: Team
   - name: Players
   - name: Games
   - name: Coaches
@@ -25,7 +25,7 @@ paths:
   /users/allUsersDetails:
     get:
       tags:
-      - Users
+        - Users
       summary: Return list of all the users
       responses:
         "200":
@@ -39,14 +39,14 @@ paths:
   /register:
     post:
       tags:
-      - Auth
+        - Auth
       summary: Add new user
       requestBody:
         description: New user insert
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserRegister'
+              $ref: "#/components/schemas/UserRegister"
       responses:
         "200":
           description: A new user has been added to the server
@@ -55,7 +55,7 @@ paths:
   /users/userDetails:
     get:
       tags:
-      - Users
+        - Users
       summary: Get data of a spacific user
       description: get from the client a username and returns his data
       responses:
@@ -70,7 +70,7 @@ paths:
   /login:
     post:
       tags:
-      - Auth
+        - Auth
       summary: Logs user into the system
       description: Logs user into the system
       operationId: loginUser
@@ -78,7 +78,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Login'
+              $ref: "#/components/schemas/Login"
         required: true
       responses:
         "200":
@@ -88,7 +88,7 @@ paths:
   /user/logOut:
     post:
       tags:
-      - Auth
+        - Auth
       summary: Logs user out of the system
       description: Logs user out of the system
       operationId: logOutUser
@@ -100,7 +100,7 @@ paths:
   /league/LeagueData:
     get:
       tags:
-      - League
+        - League
       summary: Return main page league data
       responses:
         "200":
@@ -108,13 +108,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LeagueData'
+                $ref: "#/components/schemas/LeagueData"
         "400":
           description: The request for getting the main page legue data has been denied
   /league/currentStageDetails:
-    get: 
+    get:
       tags:
-      - League
+        - League
       summary: Return details about games in current stage
       responses:
         "200":
@@ -122,60 +122,60 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/currentStageDetails'
+                $ref: "#/components/schemas/currentStageDetails"
         "400":
           description: The request for getting current stage games has been denied
   /coaches/coachDetails/{coachID}:
     get:
       tags:
-      - Coaches
+        - Coaches
       summary: Return the card of the coach
       parameters:
-      - name: coachID
-        in: path
-        description: The name of the coach
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
+        - name: coachID
+          in: path
+          description: The name of the coach
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
       responses:
         "200":
           description: coach card has been returned
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/previewViewCoach'
+                $ref: "#/components/schemas/previewViewCoach"
         "400":
           description: The request for getting the coach card has been denied
   /players/playerDetails/{playerID}:
     get:
       tags:
-      - Players
+        - Players
       summary: Return the card of the player
       parameters:
-      - name: playerID
-        in: path
-        description: The name of the player
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
+        - name: playerID
+          in: path
+          description: The name of the player
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
       responses:
         "200":
           description: player card has been returned
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/previewViewPlayer'
+                $ref: "#/components/schemas/previewViewPlayer"
         "400":
           description: The request for getting player card has been denied
   /users/FavoriteTeams:
     get:
       tags:
-      - Teams
-      - Users
+        - Teams
+        - Users
       summary: Return favorites teams data for the user
       responses:
         "200":
@@ -183,13 +183,13 @@ paths:
           content:
             application/jason:
               schema:
-                $ref: '#/components/schemas/UserFavoritesTeams'
+                $ref: "#/components/schemas/UserFavoritesTeams"
         "400":
           description: The request for getting favorite teams data has been denied
     post:
       tags:
-      - Users
-      - Teams
+        - Users
+        - Teams
       summary: Add team to faivorite list of user
       requestBody:
         description: The team id to be added
@@ -211,224 +211,224 @@ paths:
   /teams/teamFullDetails/{teamID}:
     get:
       tags:
-      - Teams
+        - Teams
       parameters:
-      - name: teamID
-        in: path
-        description: The ID of the team
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
+        - name: teamID
+          in: path
+          description: The ID of the team
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
       responses:
         "200":
           description: Data of the spacific Team
           content:
             application/jason:
               schema:
-                $ref: '#/components/schemas/teamData'
+                $ref: "#/components/schemas/teamData"
         "400":
           description: Team not found
-  /teams/search/{searchKey}:  
+  /teams/search/{searchKey}:
     get:
       tags:
-      - Teams
+        - Teams
       parameters:
-      - name: searchKey
-        in: path
-        description: The keyWord to search team by (name)
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-        example: AaB
+        - name: searchKey
+          in: path
+          description: The keyWord to search team by (name)
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+          example: AaB
       responses:
         "200":
           description: Search Results
           content:
             application/jason:
               schema:
-                $ref: '#/components/schemas/SearchResults'
+                $ref: "#/components/schemas/SearchResults"
         "400":
           description: Term not found
-  
+
   /players/search/{searchKey}:
     get:
       tags:
-      - Players
+        - Players
       parameters:
-      - name: searchKey
-        in: path
-        description: The keyWord to search player by (name)
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-        example: James Forrest
+        - name: searchKey
+          in: path
+          description: The keyWord to search player by (name)
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+          example: James Forrest
       responses:
         "200":
           description: Search Results
           content:
             application/jason:
               schema:
-                $ref: '#/components/schemas/SearchResults'
+                $ref: "#/components/schemas/SearchResults"
         "400":
           description: Team not found
   /players/search/{searchKey}/{location}:
     get:
       tags:
-      - Players
+        - Players
       parameters:
-      - name: searchKey
-        in: path
-        description: The keyWord to search player by (name)
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-        example: James Forrest
-      - name: location
-        in: path
-        description: The location of the player on the filed
-        style: simple
-        explode: false
-        schema:
-          type: string
-        example: Midfielder
+        - name: searchKey
+          in: path
+          description: The keyWord to search player by (name)
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+          example: James Forrest
+        - name: location
+          in: path
+          description: The location of the player on the filed
+          style: simple
+          explode: false
+          schema:
+            type: string
+          example: Midfielder
       responses:
         "200":
           description: Search Results
           content:
             application/jason:
               schema:
-                $ref: '#/components/schemas/SearchResults'
+                $ref: "#/components/schemas/SearchResults"
         "400":
           description: Team not found
   /players/search/{searchKey}/{team}:
     get:
       tags:
-      - Players
+        - Players
       parameters:
-      - name: searchKey
-        in: path
-        description: The keyWord to search player by (name)
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-        example: James Forrest
-      - name: team
-        in: path
-        description: The team of the player
-        style: simple
-        explode: false
-        schema:
-          type: string
-        example: AaB
+        - name: searchKey
+          in: path
+          description: The keyWord to search player by (name)
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+          example: James Forrest
+        - name: team
+          in: path
+          description: The team of the player
+          style: simple
+          explode: false
+          schema:
+            type: string
+          example: AaB
       responses:
         "200":
           description: Search Results
           content:
             application/jason:
               schema:
-                $ref: '#/components/schemas/SearchResults'
+                $ref: "#/components/schemas/SearchResults"
         "400":
           description: Team not found
   /players/search/{searchKey}/{team}/{location}:
     get:
       tags:
-      - Players
+        - Players
       parameters:
-      - name: searchKey
-        in: path
-        description: The keyWord to search player by (name)
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-        example: James Forrest
-      - name: team
-        in: path
-        description: The team of the player
-        style: simple
-        explode: false
-        schema:
-          type: string
-        example: AaB
-      - name: location
-        in: path
-        description: The location of the player on the filed
-        style: simple
-        explode: false
-        schema:
-          type: string
-        example: Midfielder
+        - name: searchKey
+          in: path
+          description: The keyWord to search player by (name)
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+          example: James Forrest
+        - name: team
+          in: path
+          description: The team of the player
+          style: simple
+          explode: false
+          schema:
+            type: string
+          example: AaB
+        - name: location
+          in: path
+          description: The location of the player on the filed
+          style: simple
+          explode: false
+          schema:
+            type: string
+          example: Midfielder
       responses:
         "200":
           description: Search Results
           content:
             application/jason:
               schema:
-                $ref: '#/components/schemas/SearchResults'
+                $ref: "#/components/schemas/SearchResults"
         "400":
           description: Team not found
-  
+
   /games/GameDocumentation/{gameID}:
     get:
       tags:
-      - Games
+        - Games
       summary: Return the decumentation of the game
       parameters:
-      - name: gameID
-        in: path
-        description: game id to return details about
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
+        - name: gameID
+          in: path
+          description: game id to return details about
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
       responses:
         "200":
           description: Game documentation has been returned to client
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/gameDocumentation'
+                $ref: "#/components/schemas/gameDocumentation"
         "400":
           description: The request to get the game documantation has been denied
   /games/league/leagueGames:
     get:
       tags:
-      - League
+        - League
       summary: Return array with all the games
       parameters:
-      - name: leagueID
-        in: path
-        description: league ID
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
+        - name: leagueID
+          in: path
+          description: league ID
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
       responses:
         "200":
           description: return array with all the games in the league
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/leagueGames'
+                $ref: "#/components/schemas/leagueGames"
         "400":
           description: The request to get league Games has been denied
   /games/LeagueManagment/addGame:
     post:
       tags:
-      - Games
+        - Games
       summary: Add game to the league managment
       requestBody:
         required: true
@@ -436,21 +436,27 @@ paths:
           application/json:
             schema:
               type: object
-              properties: 
+              properties:
                 date:
                   type: string
+                  example: 2021-5-31
                   #format: date
                 hour:
                   type: string
+                  example: "20:30:00"
                   #format: time
                 away_team:
                   type: string
-                home_team: 
+                  example: Real Madrid
+                home_team:
                   type: string
-                field: 
+                  example: Barcellona
+                field:
                   type: string
+                  example: Tedi
                 referee_name:
                   type: string
+                  example: Yossi Cohen
       responses:
         "200":
           description: The game added to the league
@@ -463,7 +469,7 @@ paths:
   /games/LeagueManagment/addScore:
     post:
       tags:
-      - Games
+        - Games
       summary: Add score to game
       requestBody:
         required: true
@@ -471,7 +477,7 @@ paths:
           application/json:
             schema:
               type: object
-              properties: 
+              properties:
                 game_id:
                   type: number
                 home_team_goal:
@@ -491,17 +497,17 @@ paths:
   /games/LeagueManagment/addEvent/{gameID}:
     post:
       tags:
-      - Games
+        - Games
       summary: Add event schedule to game
       parameters:
-      - name: gameID
-        in: path
-        description: The ID of the game to add score to
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
+        - name: gameID
+          in: path
+          description: The ID of the game to add score to
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
       responses:
         "200":
           description: Event schedule has been added to the game
@@ -515,8 +521,8 @@ paths:
   /users/FavoritePlayers:
     get:
       tags:
-      - Users
-      - Players
+        - Users
+        - Players
       summary: Return favorites data for the user
       responses:
         "200":
@@ -524,13 +530,13 @@ paths:
           content:
             application/jason:
               schema:
-                $ref: '#/components/schemas/UserFavoritePlayers'
+                $ref: "#/components/schemas/UserFavoritePlayers"
         "400":
           description: The request for getting the main page legue data has been denied
     post:
       tags:
-      - Users
-      - Players
+        - Users
+        - Players
       summary: Add player to faivorite list of user
       requestBody:
         description: The team id to be added
@@ -556,8 +562,8 @@ paths:
   /users/FavoriteGames:
     get:
       tags:
-      - Users
-      - Games
+        - Users
+        - Games
       summary: Return favorites data for the user
       responses:
         "200":
@@ -565,13 +571,13 @@ paths:
           content:
             application/jason:
               schema:
-                $ref: '#/components/schemas/UserFavoritesGames'
+                $ref: "#/components/schemas/UserFavoritesGames"
         "400":
           description: The request for getting the main page legue data has been denied
     post:
       tags:
-      - Users
-      - Games
+        - Users
+        - Games
       summary: Add game to faivorite list of user
       requestBody:
         description: The team id to be added
@@ -707,7 +713,7 @@ components:
         commonName:
           type: string
           example: yoss
-        position_id: 
+        position_id:
           type: number
           example: 4
         nationality:
@@ -717,8 +723,8 @@ components:
           type: string
           example: 1.78
         birthcountry:
-          type: string 
-          example: israel 
+          type: string
+          example: israel
         birthdate:
           type: string
           example: 1-2-1993
