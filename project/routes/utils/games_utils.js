@@ -6,9 +6,7 @@ async function getGamesInfo(games_ids_list) {
   //return list of games info
   // we remove the await
   let promises = [];
-  games_ids_list.map((row) => 
-    promises.push(getGameDetaildByID(row.gameID))
-  );
+  games_ids_list.map((row) => promises.push(getGameDetaildByID(row.gameID)));
   let games_info = await Promise.all(promises);
   return games_info;
 }
@@ -101,9 +99,13 @@ async function checkIfEventAvailable(data) {
   //We decided to allow adding event only if the game date is before or equal to the current name
   //The game_hour + game minute of the event is equal to the event hour
   const { game_id, date, hour, game_minute, player_id } = data;
-  const currentDate = new Date().toISOString();
-  const gameDate = new Date(date).toISOString();
-  if (currentDate >= gameDate && game_hour <= hour + game_minute) {
+  const eventInsertDate = new Date(date).toISOString();
+  const game = await DButils.execQuery(
+    `select game_date, game_hour from dbo.games where game_id = ${game_id}`
+  );
+  const gameDate = new Date(game[0].game_date).toISOString();
+  const 
+  if (eventInsertDate >= gameDate && hour <= game[0].game_hour + game_minute) {
     //game didnt occur
     return true;
   } else {
@@ -117,3 +119,4 @@ exports.checkIfGameOccur = checkIfGameOccur;
 exports.getGamesInfo = getGamesInfo;
 exports.getGameDetaildByID = getGameDetaildByID;
 exports.AddEventToGame = AddEventToGame;
+exports.checkIfEventAvailable = checkIfEventAvailable;
