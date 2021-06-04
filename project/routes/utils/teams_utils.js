@@ -40,15 +40,18 @@ async function getCoachNameByTeam(team_id){
 
 async function getTeamsInfo(teams_ids_list){
   let promises = [];
-  teams_ids_list.map((id) =>
-    promises.push(
-      axios.get(`${api_domain}/teams/${id}`, {
-        params: {
-          api_token: process.env.api_token,
-        },
-      })
-    )
-  );
+  teams_ids_list.map((id) => {
+    const team = axios.get(`${api_domain}/teams/${id}`, {
+      params: {
+        include: "league",
+        api_token: process.env.api_token,
+      },
+    })
+    if (team.data.data.league.data.id == 271){
+      promises.push(team);
+    }
+  }
+);
   let teams_info = await Promise.all(promises);
   
   return teams_info;
