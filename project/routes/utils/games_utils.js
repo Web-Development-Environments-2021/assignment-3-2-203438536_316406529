@@ -38,12 +38,14 @@ async function AddScoresToGame(gameId, homeGoal, awayGoal) {
 }
 
 async function checkIfGameOccur(game_id) {
+  game_id_num = Number(game_id);
   const gameDetails = await DButils.execQuery(
-    `SELECT game_date, game_hour from dbo.games WHERE game_id = ${game_id}`
+    `SELECT game_date, game_hour from dbo.games WHERE game_id = ${game_id_num}`
   );
-  if (gameDetails) {
+  const games = await DButils.execQuery(`select * from dbo.games`);
+  if (gameDetails[0]) {
     const currentDate = new Date().toISOString();
-    let gameDate = gameDetails.toISOString();
+    let gameDate = new Date(gameDetails[0].game_date).toISOString();
     if (currentDate > gameDate) {
       return true;
     } else {
@@ -59,3 +61,4 @@ async function checkIfGameOccur(game_id) {
 exports.AddGame = AddGame;
 exports.AddScoresToGame = AddScoresToGame;
 exports.checkIfGameOccur = checkIfGameOccur;
+exports.getGamesInfo = getGamesInfo;
