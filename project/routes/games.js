@@ -47,9 +47,9 @@ router.post("/LeagueManagment/addScore", async (req, res, next) => {
           home_team_goal,
           away_team_goal
         );
-        res.status(201).send("Score update to game with id" + game_id);
+        res.status(200).send("Score update to game with id " + game_id);
       } else {
-        res.status(400).send("Game didn't occur yet..");
+        res.status(400).send("Invalid game ID");
       }
     } catch (error) {
       next(error);
