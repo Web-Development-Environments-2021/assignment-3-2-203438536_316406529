@@ -531,13 +531,16 @@ paths:
                   example: 2020-2-18
                 hour:
                   type: string
-                  example: 21:45:00
+                  example: "21:45:00"
                 game_minute:
                   type: number
                   example: 37
-                event_description:
+                event_type:
                   type: string
-                  example: red card to messi
+                  example: red card
+                player_id:
+                  type: number
+
       responses:
         "200":
           description: Event has been added to the game

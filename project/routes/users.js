@@ -72,7 +72,9 @@ router.post("/favoritePlayers", async (req, res, next) => {
 router.get("/favoritePlayers", async (req, res, next) => {
   try {
     const username = req.session.username;
-    const favorites_Players = await favorites_utils.getFavoritePlayers(username);
+    const favorites_Players = await favorites_utils.getFavoritePlayers(
+      username
+    );
     res.status(200).send(favorites_Players);
   } catch (error) {
     next(error);
