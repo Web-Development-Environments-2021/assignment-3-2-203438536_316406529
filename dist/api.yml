@@ -139,6 +139,7 @@ paths:
           explode: false
           schema:
             type: string
+            example: 1467946
       responses:
         "200":
           description: coach card has been returned

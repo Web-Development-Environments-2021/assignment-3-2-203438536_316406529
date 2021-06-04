@@ -12,7 +12,10 @@ async function getCoachDetailsById(coach_id){
     const {fullname, image_path, common_name, nationality, birthcountry,  birthdate } = coach.data.data;
     // get team data 
     const coach_team = await getCoachTeam(coach.data.data.team_id);
-    const {name} = coach_team.data.data;
+    let {name} = coach_team.data.data;
+    if (coach_team.data.data.league.data.id != 271){
+      name =  'coach have no team in your league';
+    }
     return{
       fullname: fullname,
       image_path: image_path,
@@ -27,6 +30,7 @@ async function getCoachDetailsById(coach_id){
 async function getCoachTeam(team_id){
     const coach_team = await axios.get(`${api_domain}/teams/${team_id}`,{
         params:{
+            include: "league",
             api_token: process.env.api_token,
         },
     });
