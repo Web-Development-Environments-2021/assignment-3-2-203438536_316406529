@@ -4,20 +4,26 @@ const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 const teams_utils = require("./teams_utils");
 const players_utils = require("./players_utils");
 
+const games_utils = require("./games_utils");
+
 const DButils = require("./DButils");
 
 
 
 async function getFavoritePlayers_ids(username) {
-    const player_ids = await DButils.execQuery(
-      `select palyerID from userFavoritePlayers where username='${username}'`
+    let player_ids = await DButils.execQuery(
+      `select playerID from userFavoritePlayers where username='${username}'`
     );
+    player_ids = player_ids.map((player) => {
+      return player.playerID
+    });
+      
     return player_ids;
   }
 
-async function markPlayerAsFavorite(username, palyerID) {
+async function markPlayerAsFavorite(username, playerID) {
     await DButils.execQuery(
-      `insert into userFavoritePlayers values ('${username}',${palyerID})`
+      `insert into userFavoritePlayers values ('${username}',${playerID})`
     );
   }
 
@@ -32,7 +38,7 @@ async function getFavoritesUserTeams_ids(username) {//return list of teams ids t
     const favorites_Teams_ids = await DButils.execQuery(
         `select teamID from userFavoriteTeams where username='${username}'`
       );
-      return favorites_Teams_ids;
+      return Array.from(favorites_Teams_ids);
   }
 
 async function getFavoritesUserTeams(username){
@@ -65,7 +71,7 @@ async function getFavoritesUserGames_ids(username) {//return list of games ids t
   const favorites_Games_ids = await DButils.execQuery(
       `select gameID from userFavoriteGames where username='${username}'`
     );
-    return favorites_Games_ids;
+    return Array.from(favorites_Games_ids);
 }
 
 exports.markPlayerAsFavorite = markPlayerAsFavorite;
