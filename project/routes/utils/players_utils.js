@@ -46,6 +46,7 @@ function extractRelevantPlayerData(players_info){
       const { common_name , nationality, birthdate, birthplace, height, weight } = player_info;
       // const team = player_info.team.data.name;
       // const playerPosition = player_info.position.data.name;
+      const leagueID = player_info.team.data.league.data.id;
       return {
         common_name: common_name,
         nationality: nationality,
@@ -53,6 +54,7 @@ function extractRelevantPlayerData(players_info){
         birthplace: birthplace,
         height: height,
         weight: weight,
+        leagueID: leagueID,
         // playerPosition: playerPosition,
         // team: team,
       }
@@ -69,6 +71,8 @@ function extractRelevantPlayerDataLocation(players_info){
     try{
       const { common_name , nationality, birthdate, birthplace, height, weight } = player_info;
       const playerPosition = player_info.position.data.name;
+      const leagueID = player_info.team.data.league.data.id;
+
       return {
         common_name: common_name,
         nationality: nationality,
@@ -77,6 +81,7 @@ function extractRelevantPlayerDataLocation(players_info){
         height: height,
         weight: weight,
         playerPosition: playerPosition,
+        leagueID: leagueID,
         // team: team,
       }
     }
@@ -92,6 +97,8 @@ function extractRelevantPlayerDataTeam(players_info){
     try{
       const { common_name , nationality, birthdate, birthplace, height, weight } = player_info;
       const team = player_info.team.data.name;
+      const leagueID = player_info.team.data.league.data.id;
+
       return {
         common_name: common_name,
         nationality: nationality,
@@ -100,6 +107,7 @@ function extractRelevantPlayerDataTeam(players_info){
         height: height,
         weight: weight,
         team: team,
+        leagueID: leagueID,
       }
     }
     catch{
@@ -115,6 +123,8 @@ function extractRelevantPlayerDataTeamLocation(players_info){
       const { common_name , nationality, birthdate, birthplace, height, weight } = player_info;
       const team = player_info.team.data.name;
       const playerPosition = player_info.position.data.name;
+      const leagueID = player_info.team.data.league.data.id;
+
       return {
         common_name: common_name,
         nationality: nationality,
@@ -124,6 +134,7 @@ function extractRelevantPlayerDataTeamLocation(players_info){
         weight: weight,
         team: team,
         playerPosition: playerPosition,
+        leagueID: leagueID,
       }
     }
     catch{
@@ -136,13 +147,17 @@ async function getPlayerDetailsById(player_id){
   //get player data from Football-API
   const player = await axios.get(`${api_domain}/players/${player_id}`, {
     params: {
-      include: "team",
+      include: "team.league",
       api_token: process.env.api_token,
     },
   });
   const {fullname, image_path, common_name, position_id, nationality, height, 
     weight, birthcountry,  birthdate } = player.data.data;
   const { name } = player.data.data.team.data;
+  const leagueID = player.data.data.team.data.league.data.id;
+  if(leagueID != 271){
+    return "The Player is not in league 271";
+  }
   return{
     fullname: fullname,
     image_path: image_path,
@@ -153,14 +168,14 @@ async function getPlayerDetailsById(player_id){
     birthcountry: birthcountry,
     birthdate: birthdate,
     team_name: name,
-    weight: weight//check how to hundle undefine weight for player(client side or player.js)
+    weight: weight
   };
 }
 
 async function getPlayerByName(playerName){
   const players = await axios.get(`${api_domain}/players/search/${playerName}`, {
     params: {
-      // include: "position, team",
+      include: "team.league",
       api_token: process.env.api_token,
     },
   });
@@ -170,7 +185,18 @@ async function getPlayerByName(playerName){
     // //   playersData =  playersData.filter(player => player.playerPosition == PlayerPosition);
     // // }
     // return playersData;
-    return extractRelevantPlayerData(players.data.data);
+    const playersData = extractRelevantPlayerData(players.data.data);
+    const filterdPlayersData =  playersData.filter(player => {
+      try{
+        if(player.leagueID == 271){
+          return true;
+        }
+        return false;
+      }catch{
+        return false;
+      }
+    });
+    return filterdPlayersData;
   } catch{
     return "players not found";
   }
@@ -179,7 +205,7 @@ async function getPlayerByName(playerName){
 async function getPlayerByNameLocation(playerName,PlayerPosition){
   const players = await axios.get(`${api_domain}/players/search/${playerName}`, {
     params: {
-      include: "position",
+      include: "position, team.league",
       api_token: process.env.api_token,
     },
   });
@@ -188,7 +214,7 @@ async function getPlayerByNameLocation(playerName,PlayerPosition){
     if(PlayerPosition != "{location}"){
         const filterdPlayersData =  playersData.filter(player => {
           try{
-            if(player.playerPosition == PlayerPosition ){
+            if(player.playerPosition == PlayerPosition && player.leagueID == 271){
               return true;
             }
             return false;
@@ -207,7 +233,7 @@ async function getPlayerByNameLocation(playerName,PlayerPosition){
 async function getPlayerByNameTeam(playerName,team){
   const players = await axios.get(`${api_domain}/players/search/${playerName}`, {
     params: {
-      include: "team",
+      include: "team, team.league",
       api_token: process.env.api_token,
     },
   });
@@ -216,7 +242,7 @@ async function getPlayerByNameTeam(playerName,team){
     if(team != "{team}"){
         const filterdPlayersData =  playersData.filter(player => {
           try{
-            if(player.team == team ){
+            if(player.team == team  && player.leagueID == 271){
               return true;
             }
             return false;
@@ -235,7 +261,7 @@ async function getPlayerByNameTeam(playerName,team){
 async function getPlayerByNameLocationTeam(playerName,location,team){
   const players = await axios.get(`${api_domain}/players/search/${playerName}`, {
     params: {
-      include: "team, location",
+      include: "team, location, team.league",
       api_token: process.env.api_token,
     },
   });
@@ -244,7 +270,7 @@ async function getPlayerByNameLocationTeam(playerName,location,team){
     if(team != "{team}" && location != "{location}"){
         const filterdPlayersData =  playersData.filter(player => {
           try{
-            if(player.team == team && player.playerPosition == location){
+            if(player.team == team && player.playerPosition == location && player.leagueID == 271){
               return true;
             }
             return false;
