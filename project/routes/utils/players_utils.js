@@ -44,7 +44,6 @@ function extractRelevantPlayerData(players_info){
   return players_info.map((player_info) => {
     try{
       const { common_name , nationality, birthdate, birthplace, height, weight } = player_info;
-      // const team = player_info.team.data.name;
       // const playerPosition = player_info.position.data.name;
       const leagueID = player_info.team.data.league.data.id;
       return {
@@ -152,13 +151,14 @@ async function getPlayerDetailsById(player_id){
     },
   });
   const {fullname, image_path, common_name, position_id, nationality, height, 
-    weight, birthcountry,  birthdate } = player.data.data;
+    weight, birthcountry,  birthdate, id } = player.data.data;
   const { name } = player.data.data.team.data;
   const leagueID = player.data.data.team.data.league.data.id;
   if(leagueID != 271){
     return "The Player is not in league 271";
   }
   return{
+    id: id,
     fullname: fullname,
     image_path: image_path,
     common_name: common_name,
@@ -261,7 +261,7 @@ async function getPlayerByNameTeam(playerName,team){
 async function getPlayerByNameLocationTeam(playerName,location,team){
   const players = await axios.get(`${api_domain}/players/search/${playerName}`, {
     params: {
-      include: "team, location, team.league",
+      include: "team, position, team.league",
       api_token: process.env.api_token,
     },
   });

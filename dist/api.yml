@@ -157,12 +157,13 @@ paths:
       parameters:
         - name: playerID
           in: path
-          description: The name of the player
+          description: The id of the player
           required: true
           style: simple
           explode: false
           schema:
             type: string
+          example: 84658
       responses:
         "200":
           description: player card has been returned
@@ -256,7 +257,7 @@ paths:
         "400":
           description: Term not found
 
-  /players/search/{searchKey}:
+  /players/search/name/{searchKey}:
     get:
       tags:
         - Players
@@ -269,7 +270,7 @@ paths:
           explode: false
           schema:
             type: string
-          example: James Forrest
+          example: Peter Ankersen
       responses:
         "200":
           description: Search Results
@@ -279,7 +280,7 @@ paths:
                 $ref: "#/components/schemas/SearchResults"
         "400":
           description: Team not found
-  /players/search/{searchKey}/{location}:
+  /players/search/locationPlayer/{searchKey}/{location}:
     get:
       tags:
         - Players
@@ -292,7 +293,7 @@ paths:
           explode: false
           schema:
             type: string
-          example: James Forrest
+          example: Peter Ankersen
         - name: location
           in: path
           description: The location of the player on the filed
@@ -300,7 +301,7 @@ paths:
           explode: false
           schema:
             type: string
-          example: Midfielder
+          example: Defender
       responses:
         "200":
           description: Search Results
@@ -310,7 +311,7 @@ paths:
                 $ref: "#/components/schemas/SearchResults"
         "400":
           description: Team not found
-  /players/search/{searchKey}/{team}:
+  /players/search/PlayerInTeam/{searchKey}/{team}:
     get:
       tags:
         - Players
@@ -323,7 +324,7 @@ paths:
           explode: false
           schema:
             type: string
-          example: James Forrest
+          example: Peter Ankersen
         - name: team
           in: path
           description: The team of the player
@@ -331,7 +332,7 @@ paths:
           explode: false
           schema:
             type: string
-          example: AaB
+          example: København
       responses:
         "200":
           description: Search Results
@@ -341,7 +342,7 @@ paths:
                 $ref: "#/components/schemas/SearchResults"
         "400":
           description: Team not found
-  /players/search/{searchKey}/{team}/{location}:
+  /players/search/locationAndTeam/{searchKey}/{team}/{location}:
     get:
       tags:
         - Players
@@ -354,7 +355,7 @@ paths:
           explode: false
           schema:
             type: string
-          example: James Forrest
+          example: Peter Ankersen
         - name: team
           in: path
           description: The team of the player
@@ -362,7 +363,7 @@ paths:
           explode: false
           schema:
             type: string
-          example: AaB
+          example: København
         - name: location
           in: path
           description: The location of the player on the filed
@@ -370,7 +371,7 @@ paths:
           explode: false
           schema:
             type: string
-          example: Midfielder
+          example: Defender
       responses:
         "200":
           description: Search Results

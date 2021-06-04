@@ -70,7 +70,12 @@ function extractTeamDetails(teams_info) {
 }
 
 async function getUpcomingTeamGames(team_id) {
-  const team = await axios.get(`${api_domain}/teams/${team_id}`);
+  const team = await axios.get(`${api_domain}/teams/${team_id}`, {
+    params: {
+      api_token: process.env.api_token,
+    },
+  });
+  // const team = await axios.get(`${api_domain}/teams/${team_id}`);
 
   const { name } = team.data.data;
   const comingTeamGames =
