@@ -82,32 +82,21 @@ router.post("/LeagueManagment/addEvent", async (req, res, next) => {
     try {
       const data = await req.body;
       const game_id = data.game_id;
-      const checkIfGameOccur = await games_utils.checkIfGameOccur(game_id);
-      if (checkIfGameOccur) {
-        await games_utils.AddEventToGame(
-          game_id,
-          data.date,
-          data.hour,
-          data.game_minute,
-          data.event_description
-        );
+      const availableToAddEvent = await games_utils.checkIfEventAvailable(data);
+      if (availableToAddEvent) {
+        await games_utils.AddEventToGame(data);
         res
           .status(201)
           .send("The event has been added to game with id " + game_id);
       } else {
-        res.status(401).send("Can't add event to game that hasn't occur");
+        res
+          .status(401)
+          .send("Can't add event that game. Please check the details.");
       }
     } catch (error) {
       next(error);
     }
   }
 });
-
-// router.post("/games/LeagueManagment/addScore", async (req, res, next) =>{
-//     try{
-//     }catch(error){
-//         next(error);
-//     }
-// })
 
 module.exports = router;
