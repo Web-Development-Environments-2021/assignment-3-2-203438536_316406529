@@ -381,6 +381,21 @@ paths:
         "400":
           description: Team not found
 
+  /league/getSeachOutoCompleteData:
+    get:
+      tags: 
+        - League
+      summary: return all palyers names,teams names, playersPositions in league 271
+      responses:
+        "200":
+          description: return array with all the players names
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/seachAoutoComplete"
+        "400":
+          description: The request to get palyers names,teams names, playersPositions has been denied
+
   /games/GameDocumentation/{gameID}:
     get:
       tags:
@@ -807,6 +822,17 @@ components:
         eventSchedule:
           type: object
           description: If null- means the game not occur yet. cointains the events in the game
+    
+    seachAoutoComplete:
+      type: object
+      properties:
+        teamsNames:
+          type: array
+        playersNames:
+          type: array
+        positions:
+          type: array
+
     leagueGames:
       type: object
       properties:
