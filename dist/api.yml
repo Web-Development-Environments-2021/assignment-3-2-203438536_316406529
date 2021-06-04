@@ -828,10 +828,16 @@ components:
       properties:
         teamsNames:
           type: array
+          items:
+            type: string
         playersNames:
           type: array
+          items:
+            type: string
         positions:
           type: array
+          items:
+            type: string
 
     leagueGames:
       type: object
