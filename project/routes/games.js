@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-const gamees_utils = require("./utils/games_utils");
+const games_utils = require("./utils/games_utils");
 
 // router.use(async function (req, res, next) {
 //   if (req.session.user_id === "admin") {
@@ -26,13 +26,60 @@ router.post("/LeagueManagment/addGame", async (req, res, next) => {
   if (req.session.username === "admin") {
     try {
       data = await req.body;
-      await gamees_utils.AddGame(data);
+      await games_utils.AddGame(data);
       res.status(201).send("The game have been added successfully");
     } catch (error) {
       next(error);
     }
   } else {
     res.sendStatus(400).send("Only admin can add games in league");
+  }
+});
+
+router.post("/LeagueManagment/addScore", async (req, res, next) => {
+  if (req.session.username === "admin") {
+    try {
+      const { game_id, home_team_goal, away_team_goal } = await req.body;
+      const checkIfGameOccur = await games_utils.checkIfGameOccur(game_id); //if game occur return true, otherwise false;
+      if (checkIfGameOccur) {
+        await games_utils.AddScoresToGame(
+          game_id,
+          home_team_goal,
+          away_team_goal
+        );
+        res.sendStatus(201).send("Score update to game with id" + game_id);
+      } else {
+        res.sendStatus(400).send("Game didn't occur yet..");
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+});
+
+router.post("/LeagueManagment/addEvent", async (req, res, next) => {
+  if (req.session.username === "admin") {
+    try {
+      const data = await req.body;
+      const game_id = data.game_id;
+      const checkIfGameOccur = await games_utils.checkIfGameOccur(game_id);
+      if (checkIfGameOccur) {
+        await games_utils.AddEventToGame(
+          game_id,
+          data.date,
+          data.hour,
+          data.game_minute,
+          data.event_description
+        );
+        res
+          .sendStatus(201)
+          .send("The event has been added to game with id " + game_id);
+      } else {
+        res.sendStatus(401).send("Can't add event to game that hasn't occur");
+      }
+    } catch (error) {
+      next(error);
+    }
   }
 });
 

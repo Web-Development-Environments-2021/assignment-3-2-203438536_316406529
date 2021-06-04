@@ -495,30 +495,42 @@ paths:
                 example: 2-1
         "400":
           description: The requset to add score to game has been denied
-  /games/LeagueManagment/addEvent/{gameID}:
+  /games/LeagueManagment/addEvent:
     post:
       tags:
         - Games
       summary: Add event schedule to game
-      parameters:
-        - name: gameID
-          in: path
-          description: The ID of the game to add score to
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                game_id:
+                  type: number
+                date:
+                  type: string
+                  example: 2020-2-18
+                hour:
+                  type: string
+                  example: 21:45:00
+                game_minute:
+                  type: number
+                  example: 37
+                event_description:
+                  type: string
+                  example: red card to messi
       responses:
         "200":
-          description: Event schedule has been added to the game
+          description: Event has been added to the game
           content:
             application/json:
               schema:
                 type: object
-                description: Event schedule object add to game
+                description: Event object add to game
         "400":
-          description: The requset to add event schedule  to game has been denied
+          description: The requset to add event  to game has been denied
   /users/FavoritePlayers:
     get:
       tags:
