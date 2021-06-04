@@ -51,7 +51,7 @@ router.get("/leagueGames", async (req, res, next) =>{
 router.get("/getSeachOutoCompleteData", async(req, res, next) => {
   let players_names = [];
   try{
-    const players_names = await teams_utils.getSeachData();
+    const players_names = await league_utils.getSeachData();
     res.send(players_names);
   }catch(error){
     next(error);
