@@ -126,18 +126,6 @@ async function checkTeamLeague(teamID){
   return false;
 }
 
-async function getSeachData(){
-  teamsData = axios.get(`https://soccer.sportmonks.com/api/v2.0/teams/season/17328?include=squad.player`);
-  let teamsNames = [];
-  let playersNames = [];
-  teamsData.data.data.map((team) =>{
-    teamsNames.push(team.name);
-    playersNames.push(team.squad.data.map((player) => {
-      return player.data.display_name;
-    }))
-    });
-}
-
 
 exports.getPlayersByTeam = getPlayersByTeam;
 exports.getCoachNameByTeam= getCoachNameByTeam;
@@ -146,4 +134,3 @@ exports.extractTeamDetails = extractTeamDetails;
 exports.getUpcomingTeamGames = getUpcomingTeamGames;
 exports.getTeamByName = getTeamByName;
 exports.checkTeamLeague = checkTeamLeague;
-exports.getSeachData = getSeachData;
