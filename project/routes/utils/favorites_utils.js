@@ -37,7 +37,8 @@ async function markPlayerAsFavorite(username, playerID) {
 async function getFavoritePlayers(username){
     let players_ids_list = await getFavoritePlayers_ids(username);
     let players_info = await players_utils.getPlayersInfo(players_ids_list);
-    return players_utils.extractRelevantPlayerData([players_info.data.data]);
+    let player_data = players_info.map((player) =>{return player.data.data});
+    return players_utils.extractRelevantPlayerData(player_data);
 
 }
 
