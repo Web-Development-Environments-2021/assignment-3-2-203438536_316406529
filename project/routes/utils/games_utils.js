@@ -7,7 +7,7 @@ async function getGamesInfo(games_ids_list) {
   // we remove the await
   return games_ids_list.map((gameID) => {
     const game = DButils.execQuery(
-      `select * from userFavoriteGames WHERE gameID='${gameID}'`
+      `select * from userFavoriteGames WHERE gameID='${gameID.gameID}'`
     );
     return game;
   });
@@ -54,6 +54,38 @@ async function checkIfGameOccur(game_id) {
   }
 }
 
+async function getGameDetaildByID(game_id) {
+  const game = await DButils.execQuery(
+    `select * from dbo.games where game_id = ${game_id} `
+  );
+  if (game[0]) {
+    // game exist in the DB
+    const occured = await checkIfGameOccur(game_id);
+    const {
+      game_date,
+      game_hour,
+      home_team,
+      away_team,
+      home_team_goal,
+      away_team_goal,
+      filed,
+    } = game[0];
+    let game_hour_split = String(game_hour).slice(16, 25);
+    let game_date_split = String(game_date).slice(0, 15);
+    return {
+      game_date: game_date_split,
+      game_hour: game_hour_split,
+      home_team: home_team,
+      away_team: away_team,
+      home_team_goal: home_team_goal,
+      away_team_goal: away_team_goal,
+      filed: filed,
+    };
+  } else {
+    return;
+  }
+}
+
 // async function AddEventToGame(game_id, date, hour, game_minute, event_description){
 
 // }
@@ -62,3 +94,4 @@ exports.AddGame = AddGame;
 exports.AddScoresToGame = AddScoresToGame;
 exports.checkIfGameOccur = checkIfGameOccur;
 exports.getGamesInfo = getGamesInfo;
+exports.getGameDetaildByID = getGameDetaildByID;
