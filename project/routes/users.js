@@ -59,8 +59,8 @@ router.post("/favoritePlayers", async (req, res, next) => {
   try {
     const username = req.session.username;
     const player_id = req.body.playerId;
-    await favorites_utils.markPlayerAsFavorite(username, player_id);
-    res.status(201).send("The player successfully saved as favorite");
+    let status = await favorites_utils.markPlayerAsFavorite(username, player_id);
+    res.status(201).send(status);
   } catch (error) {
     next(error);
   }
@@ -95,8 +95,8 @@ router.post("/FavoriteTeams", async (req, res, next) => {
   try {
     const username = req.session.username;
     const team_id = req.body.team_id;
-    await favorites_utils.markTeamAsFavorite(username, team_id);
-    res.status(201).send("The team successfully saved as favorite");
+    let status = await favorites_utils.markTeamAsFavorite(username, team_id);
+    res.status(201).send(status);
   } catch (error) {
     next(error);
   }
@@ -118,8 +118,8 @@ router.post("/FavoriteGames", async (req, res, next) => {
   try {
     const username = req.session.username;
     const game_id = req.body.game_id;
-    await favorites_utils.markGameAsFavorite(username, game_id);
-    res.status(201).send("The game successfully saved as favorite");
+    let status = await favorites_utils.markGameAsFavorite(username, game_id);
+    res.status(201).send(status);
   } catch (error) {
     next(error);
   }

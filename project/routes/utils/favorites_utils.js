@@ -22,15 +22,22 @@ async function getFavoritePlayers_ids(username) {
   }
 
 async function markPlayerAsFavorite(username, playerID) {
-    await DButils.execQuery(
-      `insert into userFavoritePlayers values ('${username}',${playerID})`
-    );
+    try{
+      await DButils.execQuery(
+        `insert into userFavoritePlayers values ('${username}',${playerID})`
+      );
+      return "The player successfully saved as favorite";
+    } 
+    catch(err){
+      return err.originalError.message;
+    } 
+
   }
 
 async function getFavoritePlayers(username){
     let players_ids_list = await getFavoritePlayers_ids(username);
     let players_info = await players_utils.getPlayersInfo(players_ids_list);
-    return players_utils.extractRelevantPlayerData(players_info);
+    return players_utils.extractRelevantPlayerData([players_info.data.data]);
 
 }
 
@@ -49,22 +56,35 @@ async function getFavoritesUserTeams(username){
 }
 
 async function markTeamAsFavorite(username, teamID){//add (username,team_id) to db
-  await DButils.execQuery(
-    `insert into userFavoriteTeams values ('${username}',${teamID})`
-  );
+  try{
+    await DButils.execQuery(
+      `insert into userFavoriteTeams values ('${username}',${teamID})`
+    );
+    return "The team successfully saved as favorite";
+  } 
+  catch(err){
+    return err.originalError.message;
+  } 
 }
 
 async function getFavoritesUserGames(username){
   let games_ids_list = await getFavoritesUserGames_ids(username);
-  let teams_info = await games_utils.getGamesInfo(games_ids_list);
-  return teams_utils.extractGamesDetails(teams_info);
+  return games_info = await games_utils.getGamesInfo(games_ids_list);
 
 }
 
 async function markGameAsFavorite(username, GameID){//add (username,GameID) to db
-await DButils.execQuery(
-  `insert into userFavoriteGames values ('${username}',${GameID})`
-);
+let GameExist = await games_utils.getGameDetaildByID(GameID);
+if(GameExist=='Game does not exist in DB'){return "Game not exist in DB- can't add this game to favorite"}
+try{
+  await DButils.execQuery(
+    `insert into userFavoriteGames values ('${username}',${GameID})`
+  );
+  return "The game successfully saved as favorite";
+} 
+catch(err){
+  return err.originalError.message;
+} 
 }
 
 async function getFavoritesUserGames_ids(username) {//return list of games ids that are in db favorite of the user

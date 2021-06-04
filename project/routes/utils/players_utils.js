@@ -15,7 +15,7 @@ async function getPlayersInfo(players_ids_list) {
       axios.get(`${api_domain}/players/${id}`, {
         params: {
           api_token: process.env.api_token,
-          include: "team",
+          include: "team.league",
         },
       })
     )
@@ -43,9 +43,9 @@ function extractRelevantPlayerData(players_info){
 
   return players_info.map((player_info) => {
     try{
-      const { common_name , nationality, birthdate, birthplace, height, weight } = player_info;
+      const { common_name , nationality, birthdate, birthplace, height, weight } = player_info.data.data;
       // const playerPosition = player_info.position.data.name;
-      const leagueID = player_info.team.data.league.data.id;
+      const leagueID = player_info.data.data.team.data.league.data.id;
       return {
         common_name: common_name,
         nationality: nationality,
@@ -185,7 +185,7 @@ async function getPlayerByName(playerName){
     // //   playersData =  playersData.filter(player => player.playerPosition == PlayerPosition);
     // // }
     // return playersData;
-    const playersData = extractRelevantPlayerData(players.data.data);
+    const playersData = extractRelevantPlayerData([players]);
     const filterdPlayersData =  playersData.filter(player => {
       try{
         if(player.leagueID == 271){

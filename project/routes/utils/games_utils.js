@@ -5,12 +5,12 @@ const DButils = require("./DButils");
 async function getGamesInfo(games_ids_list) {
   //return list of games info
   // we remove the await
-  return games_ids_list.map((gameID) => {
-    const game = DButils.execQuery(
-      `select * from userFavoriteGames WHERE gameID='${gameID.gameID}'`
-    );
-    return game;
-  });
+  let promises = [];
+  games_ids_list.map((row) => 
+    promises.push(getGameDetaildByID(row.gameID))
+  );
+  let games_info = await Promise.all(promises);
+  return games_info;
 }
 
 async function AddGame(data) {
@@ -82,16 +82,38 @@ async function getGameDetaildByID(game_id) {
       filed: filed,
     };
   } else {
-    return;
+    return "Game does not exist in DB";
   }
 }
 
-// async function AddEventToGame(game_id, date, hour, game_minute, event_description){
+async function AddEventToGame(data) {
+  try {
+    const { game_id, date, hour, game_minute, event_type, player_id } = data;
+    await DButils.execQuery(`insert into dbo.ScheduleEvents (game_id, event_date, event_hour, game_minute, event_type, player_id) 
+  values ('${game_id}', '${date}', '${hour}', '${game_minute}' , '${event_type}', '${player_id}') `);
+  } catch (error) {
+    error;
+  }
+}
 
-// }
+async function checkIfEventAvailable(data) {
+  //The function checks if the game date and hour are legal in order to add event.
+  //We decided to allow adding event only if the game date is before or equal to the current name
+  //The game_hour + game minute of the event is equal to the event hour
+  const { game_id, date, hour, game_minute, player_id } = data;
+  const currentDate = new Date().toISOString();
+  const gameDate = new Date(date).toISOString();
+  if (currentDate >= gameDate && game_hour <= hour + game_minute) {
+    //game didnt occur
+    return true;
+  } else {
+    return flase;
+  }
+}
 
 exports.AddGame = AddGame;
 exports.AddScoresToGame = AddScoresToGame;
 exports.checkIfGameOccur = checkIfGameOccur;
 exports.getGamesInfo = getGamesInfo;
 exports.getGameDetaildByID = getGameDetaildByID;
+exports.AddEventToGame = AddEventToGame;
