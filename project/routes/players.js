@@ -15,11 +15,10 @@ router.get("/playerDetails/:playerID", async (req, res, next) =>{
   }
 });
 
-router.get("/search/:searchKey", async (req, res, next) => {
+router.get("/search/name/:searchKey", async (req, res, next) => {
   try{
     const search_key = req.params.searchKey;
-    const location = req.params.location;
-    const teamName = req.params.teamName;
+
     const player_details = await players_utils.getPlayerByName(
       search_key
     );
@@ -29,7 +28,7 @@ router.get("/search/:searchKey", async (req, res, next) => {
   }
 });
 
-router.get("/search/:searchKey/:location", async (req, res, next) => {
+router.get("/search/locationPlayer/:searchKey/:location", async (req, res, next) => {
   try{
     const search_key = req.params.searchKey;
     const location = req.params.location;
@@ -43,10 +42,9 @@ router.get("/search/:searchKey/:location", async (req, res, next) => {
   }
 });
 
-router.get("/search/:searchKey/:teamName", async (req, res, next) => {
+router.get("/search/PlayerInTeam/:searchKey/:teamName", async (req, res, next) => {
   try{
     const search_key = req.params.searchKey;
-    const location = req.params.location;
     const teamName = req.params.teamName;
     const player_details = await players_utils.getPlayerByNameTeam(
       search_key ,teamName
@@ -57,7 +55,7 @@ router.get("/search/:searchKey/:teamName", async (req, res, next) => {
   }
 });
 
-router.get("/search/:searchKey/:location/:teamName", async (req, res, next) => {
+router.get("/search/locationAndTeam/:searchKey/:teamName/:location", async (req, res, next) => {
   try{
     const search_key = req.params.searchKey;
     const location = req.params.location;
