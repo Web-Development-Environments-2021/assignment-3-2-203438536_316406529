@@ -8,7 +8,10 @@ router.get("/teamFullDetails/:teamId", async (req, res, next) => {
   let team_players = [];
   let team_coach = "";
   try {
-
+    const checkTeamLeague = teams_utils.checkTeamLeague(req.params.teamId);
+    if(!checkTeamLeague){
+      res.send("Team not in league 271");
+    }
     const team_players = await teams_utils.getPlayersByTeam(
       req.params.teamId
     );
@@ -18,7 +21,6 @@ router.get("/teamFullDetails/:teamId", async (req, res, next) => {
     const team_games_upcoming = await teams_utils.getUpcomingTeamGames(
       req.params.teamId
     );
-    //we should keep implementing team page.....
     res.send({team_players: team_players,team_coach: team_coach,team_games_upcoming: team_games_upcoming});
   } catch (error) {
     next(error);

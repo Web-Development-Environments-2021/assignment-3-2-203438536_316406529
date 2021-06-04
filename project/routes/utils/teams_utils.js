@@ -82,20 +82,48 @@ async function getUpcomingTeamGames(team_id){
 async function getTeamByName(teamName){
   const teams = await axios.get(`${api_domain}/teams/search/${teamName}`, {
     params: {
+      include: "league",
       api_token: process.env.api_token,
     },
   });
   try{
-    return teams.data.data.map((team) => {
+    const teamsData =  teams.data.data.map((team) => {
       const { name , logo_path } = team;
+      const leagueID = team.league.data.id;
       return {
         teamName: name,
-        teamLogo: logo_path
+        teamLogo: logo_path,
+        leagueID: leagueID,
       };
     });
+    const filterdteamsData =  teamsData.filter(team => {
+      try{
+        if(team.leagueID == 271){
+          return true;
+        }
+        return false;
+      }catch{
+        return false;
+      }
+    });
+    return filterdteamsData;
   } catch{
     return "team not found";
   }
+}
+
+async function checkTeamLeague(teamID){
+  const team = await axios.get(`${api_domain}/teams/${teamID}`, {
+    params: {
+      include: "league",
+      api_token: process.env.api_token,
+    },
+  });
+  const leagueID = team.data.data.league.data.id;
+  if(leagueID ==271){
+    return true;
+  }
+  return false;
 }
 
 
@@ -105,3 +133,4 @@ exports.getTeamsInfo = getTeamsInfo;
 exports.extractTeamDetails = extractTeamDetails;
 exports.getUpcomingTeamGames = getUpcomingTeamGames;
 exports.getTeamByName = getTeamByName;
+exports.checkTeamLeague = checkTeamLeague;
