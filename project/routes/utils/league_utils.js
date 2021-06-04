@@ -1,4 +1,5 @@
 const axios = require("axios");
+const e = require("express");
 const DButils = require("./DButils");
 const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 const LEAGUE_ID = 271;
@@ -74,15 +75,26 @@ async function getAllLeagueGames(username) {
 }
 
 async function getSeachData(){
-  teamsData = axios.get(`https://soccer.sportmonks.com/api/v2.0/teams/season/17328?include=squad.player`);
+  // teamsData = await axios.get(`https://soccer.sportmonks.com/api/v2.0/teams/season/17328?include=squad.player`);
+
+  const teamsData = await axios.get(`${api_domain}/teams/season/17328`, {
+    params: {
+      include: "squad.player.position",
+      api_token: process.env.api_token,
+    },
+  });
+  let playersPositions = new Set();
   let teamsNames = [];
   let playersNames = [];
   teamsData.data.data.map((team) =>{
     teamsNames.push(team.name);
-    playersNames.push(team.squad.data.map((player) => {
-      return player.data.display_name;
+    playersNames = playersNames.concat(team.squad.data.map((curPlayer) => {
+      playersPositions.add(curPlayer.player.data.position.data.name);
+      return curPlayer.player.data.display_name;
     }))
     });
+  let ppp = Array.from(playersPositions);
+  return {teamsNames:teamsNames, playersNames: playersNames, positions: ppp }
 }
 
 exports.getLeagueData = getLeagueData;
