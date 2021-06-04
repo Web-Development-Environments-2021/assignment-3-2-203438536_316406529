@@ -47,4 +47,15 @@ router.get("/leagueGames", async (req, res, next) =>{
 
 });
 
+
+router.get("/getSeachOutoCompleteData", async(req, res, next) => {
+  let players_names = [];
+  try{
+    const players_names = await teams_utils.getSeachData();
+    res.send(players_names);
+  }catch(error){
+    next(error);
+  }
+});
+
 module.exports = router;
