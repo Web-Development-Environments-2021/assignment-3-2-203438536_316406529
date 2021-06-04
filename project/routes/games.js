@@ -22,12 +22,32 @@ const games_utils = require("./utils/games_utils");
 //   }
 // });
 
+router.get(`/GameDocumentation/:gameID`, async (req, res, next) => {
+  try {
+    const game_info = await games_utils.getGameDetaildByID(req.params.gameID);
+    if (!game_info) {
+      //game not exist in DB
+      res.send("There is no game with ID " + req.params.gameID);
+    } else {
+      res.send(game_info);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.post("/LeagueManagment/addGame", async (req, res, next) => {
   if (req.session.username === "admin") {
     try {
       data = await req.body;
-      await games_utils.AddGame(data);
-      res.status(201).send("The game have been added successfully");
+      const currentDate = new Date().toISOString();
+      const gameDateString = new Date(data.date).toISOString();
+      if (currentDate > gameDateString) {
+        res.status(400).send("Invalid game date.Please add future games only!");
+      } else {
+        await games_utils.AddGame(data);
+        // res.status(201).send("The game have been added successfully");
+      }
     } catch (error) {
       next(error);
     }
