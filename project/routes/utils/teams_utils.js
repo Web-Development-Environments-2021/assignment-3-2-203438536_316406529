@@ -5,40 +5,39 @@ const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 const players_utils = require("./players_utils");
 const DButils = require("./DButils");
 
-
 async function getPlayersByTeam(team_id) {
-    let player_ids_list = await getPlayerIdsByTeam(team_id);
-    let players_info = await players_utils.getPlayersInfo(player_ids_list);
-    return players_utils.extractDetailsForTeamPage(players_info);
-  }
+  let player_ids_list = await getPlayerIdsByTeam(team_id);
+  let players_info = await players_utils.getPlayersInfo(player_ids_list);
+  return players_utils.extractDetailsForTeamPage(players_info);
+}
 
 async function getPlayerIdsByTeam(team_id) {
-    let player_ids_list = [];
-    const team = await axios.get(`${api_domain}/teams/${team_id}`, {
-      params: {
-        include: "squad",
-        api_token: process.env.api_token,
-      },
-    });
-    team.data.data.squad.data.map((player) =>
-      player_ids_list.push(player.player_id)
-    );
-    return player_ids_list;
-  }
+  let player_ids_list = [];
+  const team = await axios.get(`${api_domain}/teams/${team_id}`, {
+    params: {
+      include: "squad",
+      api_token: process.env.api_token,
+    },
+  });
+  team.data.data.squad.data.map((player) =>
+    player_ids_list.push(player.player_id)
+  );
+  return player_ids_list;
+}
 
-async function getCoachNameByTeam(team_id){
-    let coach_name = "";
-    const team = await axios.get(`${api_domain}/teams/${team_id}`, {
-      params: {
-        include: "coach",
-        api_token: process.env.api_token,
-      },
-    });
-    coach_name = team.data.data.coach.data.fullname;
-    return coach_name;
-  }
+async function getCoachNameByTeam(team_id) {
+  let coach_name = "";
+  const team = await axios.get(`${api_domain}/teams/${team_id}`, {
+    params: {
+      include: "coach",
+      api_token: process.env.api_token,
+    },
+  });
+  coach_name = team.data.data.coach.data.fullname;
+  return coach_name;
+}
 
-async function getTeamsInfo(teams_ids_list){
+async function getTeamsInfo(teams_ids_list) {
   let promises = [];
   teams_ids_list.map((id) => {
     const team = axios.get(`${api_domain}/teams/${id}`, {
@@ -46,14 +45,13 @@ async function getTeamsInfo(teams_ids_list){
         include: "league",
         api_token: process.env.api_token,
       },
-    })
-    if (team.data.data.league.data.id == 271){
+    });
+    if (team.data.data.league.data.id == 271) {
       promises.push(team);
     }
-  }
-);
+  });
   let teams_info = await Promise.all(promises);
-  
+
   return teams_info;
 }
 
@@ -65,30 +63,32 @@ function extractTeamDetails(teams_info) {
       name: name,
       logo_path: logo_path,
       county_name: county_name,
-      founded: founded, 
-      national_team: national_team
+      founded: founded,
+      national_team: national_team,
     };
   });
 }
 
-async function getUpcomingTeamGames(team_id){
+async function getUpcomingTeamGames(team_id) {
   const team = await axios.get(`${api_domain}/teams/${team_id}`);
-  const {name} = team.data.data;
-  const comingTeamGames = await DButils.execQuery(`select game_date, game_hour, home_team, away_team, field \
-  from dbo.games2 WHERE home_team = '${name}'  ORDER BY game_date ASC`);
+
+  const { name } = team.data.data;
+  const comingTeamGames =
+    await DButils.execQuery(`select game_date, game_hour, home_team, away_team, field \
+  from dbo.games WHERE home_team = '${name}'  ORDER BY game_date ASC`);
   return comingTeamGames;
 }
 
-async function getTeamByName(teamName){
+async function getTeamByName(teamName) {
   const teams = await axios.get(`${api_domain}/teams/search/${teamName}`, {
     params: {
       include: "league",
       api_token: process.env.api_token,
     },
   });
-  try{
-    const teamsData =  teams.data.data.map((team) => {
-      const { name , logo_path } = team;
+  try {
+    const teamsData = teams.data.data.map((team) => {
+      const { name, logo_path } = team;
       const leagueID = team.league.data.id;
       return {
         teamName: name,
@@ -96,23 +96,23 @@ async function getTeamByName(teamName){
         leagueID: leagueID,
       };
     });
-    const filterdteamsData =  teamsData.filter(team => {
-      try{
-        if(team.leagueID == 271){
+    const filterdteamsData = teamsData.filter((team) => {
+      try {
+        if (team.leagueID == 271) {
           return true;
         }
         return false;
-      }catch{
+      } catch {
         return false;
       }
     });
     return filterdteamsData;
-  } catch{
+  } catch {
     return "team not found";
   }
 }
 
-async function checkTeamLeague(teamID){
+async function checkTeamLeague(teamID) {
   const team = await axios.get(`${api_domain}/teams/${teamID}`, {
     params: {
       include: "league",
@@ -120,15 +120,14 @@ async function checkTeamLeague(teamID){
     },
   });
   const leagueID = team.data.data.league.data.id;
-  if(leagueID ==271){
+  if (leagueID == 271) {
     return true;
   }
   return false;
 }
 
-
 exports.getPlayersByTeam = getPlayersByTeam;
-exports.getCoachNameByTeam= getCoachNameByTeam;
+exports.getCoachNameByTeam = getCoachNameByTeam;
 exports.getTeamsInfo = getTeamsInfo;
 exports.extractTeamDetails = extractTeamDetails;
 exports.getUpcomingTeamGames = getUpcomingTeamGames;

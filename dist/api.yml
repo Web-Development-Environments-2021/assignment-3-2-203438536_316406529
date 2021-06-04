@@ -383,7 +383,7 @@ paths:
 
   /league/getSeachOutoCompleteData:
     get:
-      tags: 
+      tags:
         - League
       summary: return all palyers names,teams names, playersPositions in league 271
       responses:
@@ -822,7 +822,7 @@ components:
         eventSchedule:
           type: object
           description: If null- means the game not occur yet. cointains the events in the game
-    
+
     seachAoutoComplete:
       type: object
       properties:
