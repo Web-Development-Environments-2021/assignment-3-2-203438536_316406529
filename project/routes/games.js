@@ -32,7 +32,7 @@ router.post("/LeagueManagment/addGame", async (req, res, next) => {
       next(error);
     }
   } else {
-    res.sendStatus(400).send("Only admin can add games in league");
+    res.status(400).send("Only admin can add games in league");
   }
 });
 
@@ -47,9 +47,9 @@ router.post("/LeagueManagment/addScore", async (req, res, next) => {
           home_team_goal,
           away_team_goal
         );
-        res.sendStatus(201).send("Score update to game with id" + game_id);
+        res.status(201).send("Score update to game with id" + game_id);
       } else {
-        res.sendStatus(400).send("Game didn't occur yet..");
+        res.status(400).send("Game didn't occur yet..");
       }
     } catch (error) {
       next(error);
@@ -72,10 +72,10 @@ router.post("/LeagueManagment/addEvent", async (req, res, next) => {
           data.event_description
         );
         res
-          .sendStatus(201)
+          .status(201)
           .send("The event has been added to game with id " + game_id);
       } else {
-        res.sendStatus(401).send("Can't add event to game that hasn't occur");
+        res.status(401).send("Can't add event to game that hasn't occur");
       }
     } catch (error) {
       next(error);

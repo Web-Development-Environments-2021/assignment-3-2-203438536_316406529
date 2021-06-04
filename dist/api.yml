@@ -222,6 +222,7 @@ paths:
           explode: false
           schema:
             type: string
+            example: 939
       responses:
         "200":
           description: Data of the spacific Team
