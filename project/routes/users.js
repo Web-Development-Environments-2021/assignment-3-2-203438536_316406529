@@ -4,6 +4,7 @@ const DButils = require("./utils/DButils");
 const users_utils = require("./utils/users_utils");
 const players_utils = require("./utils/players_utils");
 const favorites_utils = require("./utils/favorites_utils");
+const { send } = require("process");
 
 /**
  * Authenticate all incoming requests by middleware
@@ -28,6 +29,9 @@ router.use(async function (req, res, next) {
  * This path gets return all the players in db
  */
 router.get("/allUsersDetails", async (req, res, next) => {
+  if (req.session.username != "admin") {
+    res.send("user un Aouthorized");
+  }
   //return all users in system details
   try {
     let usersDetails = {};
@@ -41,10 +45,10 @@ router.get("/allUsersDetails", async (req, res, next) => {
 router.get("/userDetails", async (req, res, next) => {
   //return the user details
   try {
-    const user_id = req.session.user_id;
+    const username = req.session.username;
     // const user_id = "noam"
     let usersDetails = {};
-    usersDetails = await users_utils.getUserDetails(user_id);
+    usersDetails = await users_utils.getUserDetails(username);
     res.status(200).send(usersDetails);
   } catch (error) {
     next(error);
@@ -53,9 +57,9 @@ router.get("/userDetails", async (req, res, next) => {
 
 router.post("/favoritePlayers", async (req, res, next) => {
   try {
-    const user_id = req.session.user_id;
+    const username = req.session.username;
     const player_id = req.body.playerId;
-    await favorites_utils.markPlayerAsFavorite(user_id, player_id);
+    await favorites_utils.markPlayerAsFavorite(username, player_id);
     res.status(201).send("The player successfully saved as favorite");
   } catch (error) {
     next(error);
@@ -67,8 +71,8 @@ router.post("/favoritePlayers", async (req, res, next) => {
  */
 router.get("/favoritePlayers", async (req, res, next) => {
   try {
-    const user_id = req.session.user_id;
-    const favorites_Players = await favorites_utils.getFavoritePlayers(user_id);
+    const username = req.session.username;
+    const favorites_Players = await favorites_utils.getFavoritePlayers(username);
     res.status(200).send(favorites_Players);
   } catch (error) {
     next(error);
@@ -77,9 +81,9 @@ router.get("/favoritePlayers", async (req, res, next) => {
 
 router.get("/FavoriteTeams", async (req, res, next) => {
   try {
-    const user_id = req.session.user_id;
+    const username = req.session.username;
     const favorites_Teams = await favorites_utils.getFavoritesUserTeams(
-      user_id
+      username
     );
     res.status(200).send(favorites_Teams);
   } catch (error) {
@@ -89,9 +93,9 @@ router.get("/FavoriteTeams", async (req, res, next) => {
 
 router.post("/FavoriteTeams", async (req, res, next) => {
   try {
-    const user_id = req.session.user_id;
+    const username = req.session.username;
     const team_id = req.body.team_id;
-    await favorites_utils.markTeamAsFavorite(user_id, team_id);
+    await favorites_utils.markTeamAsFavorite(username, team_id);
     res.status(201).send("The team successfully saved as favorite");
   } catch (error) {
     next(error);
@@ -100,9 +104,9 @@ router.post("/FavoriteTeams", async (req, res, next) => {
 
 router.get("/FavoriteGames", async (req, res, next) => {
   try {
-    const user_id = req.session.user_id;
+    const username = req.session.username;
     const favorites_Games = await favorites_utils.getFavoritesUserGames(
-      user_id
+      username
     );
     res.send(favorites_Games);
   } catch (error) {
@@ -112,9 +116,9 @@ router.get("/FavoriteGames", async (req, res, next) => {
 
 router.post("/FavoriteGames", async (req, res, next) => {
   try {
-    const user_id = req.session.user_id;
+    const username = req.session.username;
     const game_id = req.body.game_id;
-    await favorites_utils.markGameAsFavorite(user_id, game_id);
+    await favorites_utils.markGameAsFavorite(username, game_id);
     res.status(201).send("The game successfully saved as favorite");
   } catch (error) {
     next(error);

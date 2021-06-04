@@ -569,17 +569,17 @@ paths:
         - Players
       summary: Add player to faivorite list of user
       requestBody:
-        description: The team id to be added
+        description: The player id to be added
         required: true
         content:
           application/json:
             schema:
               type: object
               properties:
-                team_id:
+                playerId:
                   type: string
-                  description: teams's id which the user saved
-                  example: 85
+                  description: player's id which the user saved
+                  example: 84658
       responses:
         "200":
           description: The player has been added to favorite list
@@ -610,20 +610,20 @@ paths:
         - Games
       summary: Add game to faivorite list of user
       requestBody:
-        description: The team id to be added
+        description: The game id to be added
         required: true
         content:
           application/json:
             schema:
               type: object
               properties:
-                team_id:
+                game_id:
                   type: string
-                  description: teams's id which the user saved
-                  example: 85
+                  description: game's id which the user saved
+                  example: 939
       responses:
         "200":
-          description: The Game has been added to favorite list
+          description: The game has been added to favorite list
         "400":
           description: The request for add new Game to fav. list has been denied
 

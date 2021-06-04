@@ -39,33 +39,46 @@ async function getCoachNameByTeam(team_id) {
 
 async function getTeamsInfo(teams_ids_list) {
   let promises = [];
-  teams_ids_list.map((id) => {
-    const team = axios.get(`${api_domain}/teams/${id}`, {
+  teams_ids_list.map((row) => 
+    promises.push(
+      axios.get(`${api_domain}/teams/${row.teamID}`, {
       params: {
-        include: "league",
+        include: "league, country",
         api_token: process.env.api_token,
       },
-    });
-    if (team.data.data.league.data.id == 271) {
-      promises.push(team);
-    }
-  });
+    })
+    )
+  );
   let teams_info = await Promise.all(promises);
 
+
   return teams_info;
+
 }
 
 function extractTeamDetails(teams_info) {
-  return teams_info.map((teams_info) => {
+  const teamData =  teams_info.map((teams_info) => {
     const { name, logo_path, founded, national_team } = teams_info.data.data;
     const county_name = teams_info.data.data.country.data.name;
+    const leagueID =teams_info. data.data.league.data.id;
     return {
       name: name,
       logo_path: logo_path,
       county_name: county_name,
       founded: founded,
       national_team: national_team,
+      leagueID: leagueID,
     };
+  });
+  return filterdteamsData =  teamData.filter(team => {
+    try{
+      if(team.leagueID == 271){
+        return true;
+      }
+      return false;
+    }catch{
+      return false;
+    }
   });
 }
 
