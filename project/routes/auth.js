@@ -47,7 +47,7 @@ router.post("/login", async (req, res, next) => {
 
     // Set cookie
     try{
-      if (req.session.username == user.username){
+      if (req.session.username){
         res.status(401).send("User already loged-in");
         return;
       }

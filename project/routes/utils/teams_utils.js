@@ -34,7 +34,8 @@ async function getCoachNameByTeam(team_id) {
     },
   });
   coach_name = team.data.data.coach.data.fullname;
-  return coach_name;
+  coach_id = team.data.data.coach.data.coach_id;
+  return {coach_name, coach_id};
 }
 
 async function getTeamsInfo(teams_ids_list) {
