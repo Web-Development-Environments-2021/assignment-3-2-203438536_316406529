@@ -98,7 +98,8 @@ router.post("/FavoriteTeams", async (req, res, next) => {
     const username = req.session.username;
     const team_id = req.body.team_id;
     let status = await favorites_utils.markTeamAsFavorite(username, team_id);
-    res.status(201).send(status);
+    if (status){res.status(200).send("team adding success ");}
+    else{res.status(400).send(`no team with in '${team_id}' found in database`);}
   } catch (error) {
     next(error);
   }

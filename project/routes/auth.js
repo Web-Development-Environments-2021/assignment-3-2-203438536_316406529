@@ -48,7 +48,7 @@ router.post("/login", async (req, res, next) => {
     // Set cookie
     try{
       if (req.session.username == user.username){
-        res.status(400).send("User already loged-in");
+        res.status(401).send("User already loged-in");
         return;
       }
     }
@@ -66,9 +66,9 @@ router.post("/login", async (req, res, next) => {
 router.post("/user/logOut", function (req, res) {
   if (req.session.username) {
     req.session.reset(); // reset the session info --> send cookie when  req.session == undefined!!
-    res.send({ success: true, message: "logout succeeded" });
+    res.status(200).send({ success: true, message: "logout succeeded" });
   } else {
-    res.send({ success: false, message: "No user to logout." });
+    res.status(400).send({ success: false, message: "No user to logout." });
   }
 });
 

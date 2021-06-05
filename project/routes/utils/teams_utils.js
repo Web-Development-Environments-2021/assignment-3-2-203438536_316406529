@@ -82,7 +82,7 @@ function extractTeamDetails(teams_info) {
   });
 }
 
-async function getUpcomingTeamGames(team_id) {
+async function getTeamGames(team_id) {
   const team = await axios.get(`${api_domain}/teams/${team_id}`, {
     params: {
       api_token: process.env.api_token,
@@ -91,10 +91,26 @@ async function getUpcomingTeamGames(team_id) {
   // const team = await axios.get(`${api_domain}/teams/${team_id}`);
 
   const { name } = team.data.data;
-  const comingTeamGames =
+  const TeamGames =
     await DButils.execQuery(`select game_date, game_hour, home_team, away_team, field \
-  from dbo.games WHERE home_team = '${name}'  ORDER BY game_date ASC`);
-  return comingTeamGames;
+  from dbo.games WHERE home_team = '${name}' AND away_team = '${name}'  ORDER BY game_date ASC`);
+  return TeamGames;
+}
+
+async function checkIfTeamExist(team_id){
+  try{
+    const team = await axios.get(`${api_domain}/teams/${team_id}`, {
+      params: {
+        include: "league",
+        api_token: process.env.api_token,
+      },
+    });
+    if (team.data.data.league.data.id ==271){
+      return true;
+    }
+    return false;
+  }
+  catch{return false;}
 }
 
 async function getTeamByName(teamName) {
@@ -106,12 +122,13 @@ async function getTeamByName(teamName) {
   });
   try {
     const teamsData = teams.data.data.map((team) => {
-      const { name, logo_path } = team;
+      const { name, logo_path, id } = team;
       const leagueID = team.league.data.id;
       return {
         teamName: name,
         teamLogo: logo_path,
         leagueID: leagueID,
+        TeamID: id,
       };
     });
     const filterdteamsData = teamsData.filter((team) => {
@@ -148,6 +165,7 @@ exports.getPlayersByTeam = getPlayersByTeam;
 exports.getCoachNameByTeam = getCoachNameByTeam;
 exports.getTeamsInfo = getTeamsInfo;
 exports.extractTeamDetails = extractTeamDetails;
-exports.getUpcomingTeamGames = getUpcomingTeamGames;
+exports.getTeamGames = getTeamGames;
 exports.getTeamByName = getTeamByName;
 exports.checkTeamLeague = checkTeamLeague;
+exports.checkIfTeamExist = checkIfTeamExist;
