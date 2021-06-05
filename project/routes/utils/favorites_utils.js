@@ -56,7 +56,7 @@ async function getFavoritesUserTeams_ids(username) {//return list of teams ids t
 async function getFavoritesUserTeams(username){
     let teams_ids_list = await getFavoritesUserTeams_ids(username);
     let teams_info = await teams_utils.getTeamsInfo(teams_ids_list);
-    if (teams_info == false){return false;}
+    if (teams_info === false){return false;}
     return teams_utils.extractTeamDetails(teams_info);
 
 }
@@ -85,12 +85,12 @@ async function getFavoritesUserGames(username){
 
 async function markGameAsFavorite(username, GameID){//add (username,GameID) to db
 let GameExist = await games_utils.getGameDetaildByID(GameID);
-if(GameExist=='Game does not exist in DB'){return "Game not exist in DB- can't add this game to favorite"}
+if(GameExist=='Game does not exist in DB'){return false;}
 try{
   await DButils.execQuery(
     `insert into userFavoriteGames values ('${username}',${GameID})`
   );
-  return "The game successfully saved as favorite";
+  return true;
 } 
 catch(err){
   return err.originalError.message;

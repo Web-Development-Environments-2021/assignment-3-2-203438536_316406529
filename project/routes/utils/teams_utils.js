@@ -64,10 +64,11 @@ async function getTeamsInfo(teams_ids_list) {
 
 function extractTeamDetails(teams_info) {
   const teamData = teams_info.map((teams_info) => {
-    const { name, logo_path, founded, national_team } = teams_info.data.data;
+    const { id, name, logo_path, founded, national_team } = teams_info.data.data;
     const county_name = teams_info.data.data.country.data.name;
     const leagueID = teams_info.data.data.league.data.id;
     return {
+      teamID: id,
       name: name,
       logo_path: logo_path,
       county_name: county_name,
