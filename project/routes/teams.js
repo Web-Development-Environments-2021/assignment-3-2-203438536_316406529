@@ -8,7 +8,7 @@ router.get("/teamFullDetails/:teamId", async (req, res, next) => {
   let team_players = [];
   let team_coach = "";
   try {
-    const checkTeamLeague = await teams_utils.checkTeamLeague(
+    const checkTeamLeague = await teams_utils.checkIfTeamExist(
       req.params.teamId
     );
     if (!checkTeamLeague) {
