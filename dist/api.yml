@@ -373,17 +373,17 @@ paths:
                 date:
                   type: string
                   example: 2021-5-31
-                  #format: date
+                  # format: date
                 hour:
                   type: string
                   example: "20:30:00"
-                  #format: time
+                  # format: time
                 away_team_id:
                   type: number
-                  example: 759
+                  example: 939
                 home_team_id:
                   type: number
-                  example: 1273
+                  example: 1020
                 field:
                   type: string
                   example: Tedi
@@ -521,7 +521,7 @@ paths:
                 $ref: "#/components/schemas/leagueGames"
         "400":
           description: The request to get league Games has been denied
-  
+
   /coaches/coachDetails/{coachID}:
     get:
       tags:
