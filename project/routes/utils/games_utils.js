@@ -70,8 +70,16 @@ async function getGameDetaildByID(game_id) {
   const game = await DButils.execQuery(
     `select * from dbo.games where game_id = ${game_id} `
   );
+
   if (game[0]) {
     // game exist in the DB
+    const gameEvents = await DButils.execQuery(
+      `select * from ScheduleEvents WHERE game_id = ${game_id}`
+    );
+    let gameEventsLits = [];
+    gameEvents.map((event) => {
+      gameEventsLits.push(event);
+    });
     const occured = await checkIfGameOccur(game_id);
     const {
       game_date,
@@ -84,6 +92,9 @@ async function getGameDetaildByID(game_id) {
     } = game[0];
     let game_hour_split = String(game_hour).slice(16, 25);
     let game_date_split = String(game_date).slice(0, 15);
+    // let game_date_split = new Date(game_date)
+    //   .toLocaleDateString()
+    //   .split(",")[0];
     return {
       game_date: game_date_split,
       game_hour: game_hour_split,
@@ -92,6 +103,7 @@ async function getGameDetaildByID(game_id) {
       home_team_goal: home_team_goal,
       away_team_goal: away_team_goal,
       filed: filed,
+      eventSchedule: gameEventsLits,
     };
   } else {
     return "Game does not exist in DB";
@@ -102,7 +114,7 @@ async function AddEventToGame(data) {
   try {
     const { game_id, date, hour, game_minute, event_type, player_id } = data;
     await DButils.execQuery(`insert into dbo.ScheduleEvents (game_id, event_date, event_hour, game_minute, event_type, player_id) 
-  values ('${game_id}', '${date}', '${hour}', '${game_minute}' , '${event_type}', '${player_id}') `);
+  values ('${game_id}', '${date1}', '${hour1}', '${game_minute}' , '${event_type}', '${player_id}') `);
   } catch (error) {
     error;
   }

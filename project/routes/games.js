@@ -48,7 +48,7 @@ router.use(async function (req, res, next) {
       })
       .catch((err) => next(err));
   } else {
-    res.status(401).send("Only admin can add games in league");
+    res.status(401).send("Only admin can modify games in league");
   }
 });
 
