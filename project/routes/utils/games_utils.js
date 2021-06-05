@@ -18,10 +18,9 @@ async function AddGame(data) {
     // let ref = data.referee_name;
     const home_team_name = await team_utils.getTeamNameById(data.home_team_id);
     const away_team_name = await team_utils.getTeamNameById(data.away_team_id);
-    const hour = data.hour;
     await DButils.execQuery(
       `insert into dbo.games (game_date, game_hour, home_team, away_team, home_team_id, away_team_id, field, referee_name) 
-       values ('${data.date}', '${data.hour}', '${data.home_team_name}', '${data.away_team_name}','${data.home_team_id}','${data.away_team_id}', '${data.field}', '${data.referee_name}') `
+       values ('${data.date}', '${data.hour}', '${home_team_name}', '${away_team_name}','${data.home_team_id}','${data.away_team_id}', '${data.field}', '${data.referee_name}') `
     );
   } catch (error) {
     error;
@@ -37,6 +36,7 @@ async function AddScoresToGame(gameId, homeGoal, awayGoal) {
     error;
   }
 }
+
 function convertDateAndHour(date, hour) {
   let game_hour = String(hour).slice(16, 25);
   let game_date = String(date).slice(0, 15);
@@ -61,6 +61,11 @@ async function checkIfGameOccur(game_id) {
       date_hour_convert.date,
       date_hour_convert.hour
     );
+    // const gameInFuture = checkIfGameDetailsInFuture(
+    //   gameDetails[0].game_date,
+    //   gameDetails[0].game_hour
+    // );
+
     if (gameInFuture) {
       return false;
     } else {
@@ -89,6 +94,8 @@ async function getGameDetaildByID(game_id) {
       game_hour,
       home_team,
       away_team,
+      home_team_id,
+      away_team_id,
       home_team_goal,
       away_team_goal,
       filed,
@@ -104,6 +111,8 @@ async function getGameDetaildByID(game_id) {
       game_hour: game_hour_split,
       home_team: home_team,
       away_team: away_team,
+      home_team_id: home_team_id,
+      away_team_id: away_team_id,
       home_team_goal: home_team_goal,
       away_team_goal: away_team_goal,
       filed: filed,
@@ -127,8 +136,8 @@ async function AddEventToGame(data) {
 function checkIfGameDetailsInFuture(date, hour) {
   let check;
   const currentDate = new Date().toLocaleString().split(",");
-  const toDay = new Date().toLocaleDateString();
-  const gameDate = new Date(date).toLocaleDateString();
+  const toDay = new Date();
+  const gameDate = new Date(date);
   if (toDay > gameDate) {
     check = false;
   } else if (toDay < gameDate) {
@@ -147,16 +156,35 @@ function checkIfGameDetailsInFuture(date, hour) {
 
   return check;
 }
-async function getAllLeagueGames(){
-  try{
-    const games = await DButils.execQuery(
-      `select * from dbo.games `
-    );
-    return games;
+
+async function checkGameDetails(data) {
+  let message = "";
+  const gameAtSameTime = await DButils.execQuery(
+    `select home_team_id, away_team_id, field from dbo.games WHERE game_date ='${data.date}' AND game_hour='${data.hour}'`
+  );
+  if (
+    gameAtSameTime.find(
+      (x) =>
+        x.home_team_id === data.home_team_id ||
+        x.away_team_id === data.away_team_id
+    )
+  ) {
+    message += "One or Both teams already embedded  in this time.\n";
   }
-  catch{return false;}
+  if (gameAtSameTime.find((x) => x.field === data.field)) {
+    message += "The field already embedded in this time";
+  }
+  return message;
 }
 
+async function getAllLeagueGames() {
+  try {
+    const games = await DButils.execQuery(`select * from dbo.games `);
+    return games;
+  } catch {
+    return false;
+  }
+}
 
 exports.AddGame = AddGame;
 exports.AddScoresToGame = AddScoresToGame;
@@ -166,3 +194,4 @@ exports.getGameDetaildByID = getGameDetaildByID;
 exports.AddEventToGame = AddEventToGame;
 exports.checkIfGameDetailsInFuture = checkIfGameDetailsInFuture;
 exports.getAllLeagueGames = getAllLeagueGames;
+exports.checkGameDetails = checkGameDetails;

@@ -47,8 +47,12 @@ router.post("/LeagueManagment/addGame", async (req, res, next) => {
       res.status(400).send("One or both team details are incorrect");
       return;
     }
-
     if (confirmDate) {
+      const checkGame = await games_utils.checkGameDetails(data);
+      if (checkGame !== "") {
+        res.status(400).send(checkGame);
+        return;
+      }
       await games_utils.AddGame(data);
       res.status(200).send("Game added successfuly");
     } else {
