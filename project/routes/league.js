@@ -1,6 +1,8 @@
 var express = require("express");
 var router = express.Router();
 const league_utils = require("./utils/league_utils");
+const game_utils = require("./utils/games_utils");
+
 
 router.get("/LeagueData", async (req, res, next) => {
   let leaguePageDetails = [];
@@ -41,9 +43,12 @@ router.get("/currentStageDetails", async (req, res, next) => {
 
 router.get("/leagueGames", async (req, res, next) => {
   try {
-    const user_id = req.session.user_id;
-    const games = getAllLeagueGames(user_id);
-    res.send(games);
+    if (req.session && req.session.username === "admin"){
+      const games = await game_utils.getAllLeagueGames();
+      if(games == false){res.statusMessage(400).send("faild to get league games")}
+      res.status(200).send(games);
+    }
+    res.status(400).send('denied!, Only league managmant can access');
   } catch (error) {
     next(error);
   }

@@ -79,9 +79,6 @@ async function getCurrentStageGames() {
   };
 }
 
-async function getAllLeagueGames(username) {
-  //return favorites_utils.getFavoritesUserGames(username);
-}
 
 async function getSeachData() {
   // teamsData = await axios.get(`https://soccer.sportmonks.com/api/v2.0/teams/season/17328?include=squad.player`);
@@ -109,6 +106,5 @@ async function getSeachData() {
 }
 
 exports.getLeagueData = getLeagueData;
-exports.getAllLeagueGames = getAllLeagueGames;
 exports.getCurrentStageGames = getCurrentStageGames;
 exports.getSeachData = getSeachData;

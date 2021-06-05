@@ -358,29 +358,6 @@ paths:
                 $ref: "#/components/schemas/gameDocumentation"
         "400":
           description: The request to get the game documantation has been denied
-  /games/league/leagueGames:
-    get:
-      tags:
-        - League
-      summary: Return array with all the games
-      parameters:
-        - name: leagueID
-          in: path
-          description: league ID
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-      responses:
-        "200":
-          description: return array with all the games in the league
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/leagueGames"
-        "400":
-          description: The request to get league Games has been denied
   /games/LeagueManagment/addGame:
     post:
       tags:
@@ -521,7 +498,30 @@ paths:
                 $ref: "#/components/schemas/seachAoutoComplete"
         "400":
           description: The request to get palyers names,teams names, players Positions has been denied
-
+  /league/leagueGames:
+    get:
+      tags:
+        - League
+      summary: Return array with all the league games
+      parameters:
+        - name: leagueID
+          in: path
+          description: league ID
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: return array with all the games in the league
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/leagueGames"
+        "400":
+          description: The request to get league Games has been denied
+  
   /coaches/coachDetails/{coachID}:
     get:
       tags:
@@ -798,7 +798,7 @@ components:
     leagueGames:
       type: object
       properties:
-        Players:
+        Games:
           type: array
           items:
             type: object
