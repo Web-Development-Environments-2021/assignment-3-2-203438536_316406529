@@ -34,20 +34,34 @@ async function AddScoresToGame(gameId, homeGoal, awayGoal) {
     error;
   }
 }
+function convertDateAndHour(date, hour) {
+  let game_hour = String(hour).slice(16, 25);
+  let game_date = String(date).slice(0, 15);
+  return {
+    date: game_date,
+    hour: game_hour,
+  };
+}
 
 async function checkIfGameOccur(game_id) {
   game_id_num = Number(game_id);
   const gameDetails = await DButils.execQuery(
     `SELECT game_date, game_hour from dbo.games WHERE game_id = ${game_id_num}`
   );
-  const games = await DButils.execQuery(`select * from dbo.games`);
+  //const games = await DButils.execQuery(`select * from dbo.games`);
   if (gameDetails[0]) {
-    const currentDate = new Date().toISOString();
-    let gameDate = new Date(gameDetails[0].game_date).toISOString();
-    if (currentDate > gameDate) {
-      return true;
-    } else {
+    const date_hour_convert = convertDateAndHour(
+      gameDetails[0].game_date,
+      gameDetails[0].game_hour
+    );
+    const gameInFuture = checkIfGameDetailsInFuture(
+      date_hour_convert.date,
+      date_hour_convert.hour
+    );
+    if (gameInFuture) {
       return false;
+    } else {
+      return true;
     }
   }
 }
@@ -94,23 +108,28 @@ async function AddEventToGame(data) {
   }
 }
 
-async function checkIfEventAvailable(data) {
-  //The function checks if the game date and hour are legal in order to add event.
-  //We decided to allow adding event only if the game date is before or equal to the current name
-  //The game_hour + game minute of the event is equal to the event hour
-  const { game_id, date, hour, game_minute, player_id } = data;
-  const eventInsertDate = new Date(date).toISOString();
-  const game = await DButils.execQuery(
-    `select game_date, game_hour from dbo.games where game_id = ${game_id}`
-  );
-  const gameDate = new Date(game[0].game_date).toISOString();
-  const 
-  if (eventInsertDate >= gameDate && hour <= game[0].game_hour + game_minute) {
-    //game didnt occur
-    return true;
+function checkIfGameDetailsInFuture(date, hour) {
+  let check;
+  const currentDate = new Date().toLocaleString().split(",");
+  const toDay = new Date().toLocaleDateString();
+  const gameDate = new Date(date).toLocaleDateString();
+  if (toDay > gameDate) {
+    check = false;
+  } else if (toDay < gameDate) {
+    check = true;
   } else {
-    return flase;
+    const nowHour = currentDate[1].split(":")[0];
+    const gameHour = hour.split(":")[0];
+    // const toDayHour = Number();
+    // const gameHour = Number(hour.split(":"));
+    if (nowHour < gameHour) {
+      check = true;
+    } else {
+      check = false;
+    }
   }
+
+  return check;
 }
 
 exports.AddGame = AddGame;
@@ -119,4 +138,4 @@ exports.checkIfGameOccur = checkIfGameOccur;
 exports.getGamesInfo = getGamesInfo;
 exports.getGameDetaildByID = getGameDetaildByID;
 exports.AddEventToGame = AddEventToGame;
-exports.checkIfEventAvailable = checkIfEventAvailable;
+exports.checkIfGameDetailsInFuture = checkIfGameDetailsInFuture;
