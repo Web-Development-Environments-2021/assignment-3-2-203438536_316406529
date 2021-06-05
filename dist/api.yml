@@ -331,10 +331,9 @@ paths:
               schema:
                 $ref: "#/components/schemas/PlayerSearchResults"
         "201":
-          description:  no results found
+          description: no results found
         "400":
           description: Player search error
-
 
   /games/GameDocumentation/{gameID}:
     get:
@@ -417,10 +416,7 @@ paths:
       responses:
         "200":
           description: The game added to the league
-          content:
-            application/json:
-              schema:
-                type: object
+
         "400":
           description: The requset to add game to league has been denied
   /games/LeagueManagment/addScore:
@@ -443,12 +439,8 @@ paths:
                   type: number
       responses:
         "200":
-          description: The game hasa been update with the score
-          content:
-            application/json:
-              schema:
-                type: string
-                example: 2-1
+          description: The game has been update with the score
+
         "400":
           description: The requset to add score to game has been denied
   /games/LeagueManagment/addEvent:
@@ -483,11 +475,7 @@ paths:
       responses:
         "200":
           description: Event has been added to the game
-          content:
-            application/json:
-              schema:
-                type: object
-                description: Event object add to game
+
         "400":
           description: The requset to add event  to game has been denied
 
@@ -705,7 +693,9 @@ components:
           items:
             type: object
         team_coach:
-          type: string
+          type: array
+          items:
+            type: object
         team_games:
           type: array
           items:
@@ -758,20 +748,22 @@ components:
         leagueID:
           type: string
           example: 271
-        
+
     gameDocumentation:
       type: object
       properties:
         date:
           type: string
-          example: 1/1/21
+          example: "Tue Jul 21 2020"
         time:
           type: string
-          example: 20:00
-        hostTeam:
-          type: object
-        geustTeam:
-          type: object
+          example: 20:30:00
+        home_team:
+          type: string
+          example: Real Madrid
+        away_team:
+          type: string
+          example: Barcellona
         field:
           type: string
           example: Tedi
@@ -822,7 +814,7 @@ components:
           type: object
           items:
             type: object
-              
+
   # /players/search/name/{searchKey}:
   #   get:
   #     tags:
