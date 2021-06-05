@@ -40,17 +40,25 @@ async function getCoachNameByTeam(team_id) {
 
 async function getTeamsInfo(teams_ids_list) {
   let promises = [];
-  teams_ids_list.map((row) => 
-    promises.push(
-      axios.get(`${api_domain}/teams/${row.teamID}`, {
-      params: {
-        include: "league, country",
-        api_token: process.env.api_token,
-      },
-    })
-    )
-  );
-  let teams_info = await Promise.all(promises);
+  teams_ids_list.map((row) => {
+    try{
+      promises.push(
+        axios.get(`${api_domain}/teams/${row.teamID}`, {
+        params: {
+          include: "league, country",
+          api_token: process.env.api_token,
+        },
+      })
+      )
+    }
+    catch{}
+
+  });
+  let teams_info;
+  try{
+    teams_info = await Promise.all(promises);
+  }
+  catch{return false;}
 
 
   return teams_info;
@@ -148,19 +156,19 @@ async function getTeamByName(teamName) {
   }
 }
 
-async function checkTeamLeague(teamID) {
-  const team = await axios.get(`${api_domain}/teams/${teamID}`, {
-    params: {
-      include: "league",
-      api_token: process.env.api_token,
-    },
-  });
-  const leagueID = team.data.data.league.data.id;
-  if (leagueID == 271) {
-    return true;
-  }
-  return false;
-}
+// async function checkTeamLeague(teamID) {
+//   const team = await axios.get(`${api_domain}/teams/${teamID}`, {
+//     params: {
+//       include: "league",
+//       api_token: process.env.api_token,
+//     },
+//   });
+//   const leagueID = team.data.data.league.data.id;
+//   if (leagueID == 271) {
+//     return true;
+//   }
+//   return false;
+// }
 
 exports.getPlayersByTeam = getPlayersByTeam;
 exports.getCoachNameByTeam = getCoachNameByTeam;
@@ -168,5 +176,5 @@ exports.getTeamsInfo = getTeamsInfo;
 exports.extractTeamDetails = extractTeamDetails;
 exports.getTeamGames = getTeamGames;
 exports.getTeamByName = getTeamByName;
-exports.checkTeamLeague = checkTeamLeague;
+// exports.checkTeamLeague = checkTeamLeague;
 exports.checkIfTeamExist = checkIfTeamExist;

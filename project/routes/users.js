@@ -89,6 +89,7 @@ router.get("/FavoriteTeams", async (req, res, next) => {
     const favorites_Teams = await favorites_utils.getFavoritesUserTeams(
       username
     );
+    if(favorites_Teams == false){res.status(400).send("your fav list contains a team that not exist");}
     res.status(200).send(favorites_Teams);
   } catch (error) {
     next(error);
@@ -100,8 +101,9 @@ router.post("/FavoriteTeams", async (req, res, next) => {
     const username = req.session.username;
     const team_id = req.body.team_id;
     let status = await favorites_utils.markTeamAsFavorite(username, team_id);
-    if (status){res.status(200).send("team adding success ");}
-    else{res.status(400).send(`no team with in '${team_id}' found in database`);}
+    if (status===true){res.status(200).send("team adding success ");}
+    if(status==false){res.status(400).send(`no team with in '${team_id}' found in database`);}
+    else{res.status(400).send(status);}
   } catch (error) {
     next(error);
   }
