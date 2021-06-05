@@ -5,7 +5,7 @@ create table games(
 	[home_team] [varchar](300),
 	[away_team] [varchar](300),
 	[home_team_id] int,
-	[away_team_id} int,
+	[away_team_id] int,
 	[home_team_goal] int,
 	[away_team_goal] int,
 	[field] varchar(300),
