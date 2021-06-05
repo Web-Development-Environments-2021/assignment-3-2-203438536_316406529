@@ -401,12 +401,12 @@ paths:
                   type: string
                   example: "20:30:00"
                   #format: time
-                away_team:
-                  type: string
-                  example: Real Madrid
-                home_team:
-                  type: string
-                  example: Barcellona
+                away_team_id:
+                  type: number
+                  example: 759
+                home_team_id:
+                  type: number
+                  example: 1273
                 field:
                   type: string
                   example: Tedi

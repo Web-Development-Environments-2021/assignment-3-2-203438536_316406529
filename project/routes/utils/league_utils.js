@@ -4,6 +4,7 @@ const DButils = require("./DButils");
 const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 const LEAGUE_ID = 271;
 const favorites_utils = require("./favorites_utils");
+const { getGameDetaildByID } = require("./games_utils");
 
 async function getLeagueData() {
   const league = await axios.get(`${api_domain}/leagues/${LEAGUE_ID}`, {
@@ -58,15 +59,23 @@ async function getLeagueData() {
 
 async function getCurrentStageGames() {
   const currentDate = new Date().toISOString();
-  const futureStagegames =
-    await DButils.execQuery(`select game_date, game_hour, home_team, away_team, field \
-  from dbo.games WHERE game_date >= '${currentDate}'  ORDER BY game_date ASC`);
-  const pastStageGames =
-    await DButils.execQuery(`select game_date, game_hour, home_team, away_team, field \
-  from dbo.games WHERE game_date < '${currentDate}'  ORDER BY game_date ASC`);
+  const futureStagegamesID = await DButils.execQuery(
+    `select game_id from dbo.games WHERE game_date >= '${currentDate}'  ORDER BY game_date ASC`
+  );
+  let futureStageGamesList = [];
+  futureStagegamesID.map((gameID) => {
+    futureStageGamesList.push(getGameDetaildByID(gameID));
+  });
+  const pastStageGamesID = await DButils.execQuery(
+    `select game_id from dbo.games WHERE game_date < '${currentDate}'  ORDER BY game_date ASC`
+  );
+  let pastStageGamesList = [];
+  pastStageGamesID.map((gameID) => {
+    pastStageGamesList.push(getGameDetaildByID(gameID));
+  });
   return {
-    pastGamesList: pastStageGames,
-    futureGamesList: futureStagegames,
+    pastGamesList: pastStageGamesList,
+    futureGamesList: futureStageGamesList,
   };
 }
 
@@ -74,7 +83,7 @@ async function getAllLeagueGames(username) {
   //return favorites_utils.getFavoritesUserGames(username);
 }
 
-async function getSeachData(){
+async function getSeachData() {
   // teamsData = await axios.get(`https://soccer.sportmonks.com/api/v2.0/teams/season/17328?include=squad.player`);
 
   const teamsData = await axios.get(`${api_domain}/teams/season/17328`, {
@@ -86,15 +95,17 @@ async function getSeachData(){
   let playersPositions = new Set();
   let teamsNames = [];
   let playersNames = [];
-  teamsData.data.data.map((team) =>{
+  teamsData.data.data.map((team) => {
     teamsNames.push(team.name);
-    playersNames = playersNames.concat(team.squad.data.map((curPlayer) => {
-      playersPositions.add(curPlayer.player.data.position.data.name);
-      return curPlayer.player.data.display_name;
-    }))
-    });
+    playersNames = playersNames.concat(
+      team.squad.data.map((curPlayer) => {
+        playersPositions.add(curPlayer.player.data.position.data.name);
+        return curPlayer.player.data.display_name;
+      })
+    );
+  });
   let ppp = Array.from(playersPositions);
-  return {teamsNames:teamsNames, playersNames: playersNames, positions: ppp }
+  return { teamsNames: teamsNames, playersNames: playersNames, positions: ppp };
 }
 
 exports.getLeagueData = getLeagueData;
