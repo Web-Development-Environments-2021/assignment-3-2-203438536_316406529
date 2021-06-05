@@ -14,16 +14,18 @@ router.get("/teamFullDetails/:teamId", async (req, res, next) => {
     if (!checkTeamLeague) {
       res.send("Team not in league 271");
     }
-    const team_players = await teams_utils.getPlayersByTeam(req.params.teamId);
-    const team_coach = await teams_utils.getCoachNameByTeam(req.params.teamId);
-    const team_games_upcoming = await teams_utils.getUpcomingTeamGames(
-      req.params.teamId
-    );
+    let promises = [];
+    promises.push(teams_utils.getPlayersByTeam(req.params.teamId));
+    promises.push(teams_utils.getCoachNameByTeam(req.params.teamId));
+    promises.push(teams_utils.getTeamGames(req.params.teamId));
+    
+    let fulfill = await Promise.all(promises);
     res.send({
-      team_players: team_players,
-      team_coach: team_coach,
-      team_games_upcoming: team_games_upcoming,
+      team_players: fulfill[0],
+      team_coach: fulfill[1],
+      team_games: fulfill[2],
     });
+
   } catch (error) {
     next(error);
   }

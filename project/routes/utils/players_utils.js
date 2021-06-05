@@ -43,36 +43,13 @@ function extractRelevantPlayerData(players_info){
 
   return players_info.map((player_info) => {
     try{
-      const { common_name , nationality, birthdate, birthplace, height, weight } = player_info;
-      // const playerPosition = player_info.position.data.name;
-      const leagueID = player_info.team.data.league.data.id;
+      let playerPosition, leagueID,team; 
+      const {player_id, common_name , nationality, birthdate, birthplace, height, weight } = player_info;
+      try{playerPosition = player_info.position.data.name;}catch{playerPosition=null}
+      try{leagueID = player_info.team.data.league.data.id;}catch{leagueID=null}
+      try{team = player_info.team.data.name;}catch{team=null}
       return {
-        common_name: common_name,
-        nationality: nationality,
-        birthdate: birthdate,
-        birthplace: birthplace,
-        height: height,
-        weight: weight,
-        leagueID: leagueID,
-        // playerPosition: playerPosition,
-        // team: team,
-      }
-    }
-    catch{
-      return "player not found";
-    }
-  });
-}
-
-function extractRelevantPlayerDataLocation(players_info){
-
-  return players_info.map((player_info) => {
-    try{
-      const { common_name , nationality, birthdate, birthplace, height, weight } = player_info;
-      const playerPosition = player_info.position.data.name;
-      const leagueID = player_info.team.data.league.data.id;
-
-      return {
+        PlayerID: player_id,
         common_name: common_name,
         nationality: nationality,
         birthdate: birthdate,
@@ -80,59 +57,7 @@ function extractRelevantPlayerDataLocation(players_info){
         height: height,
         weight: weight,
         playerPosition: playerPosition,
-        leagueID: leagueID,
-        // team: team,
-      }
-    }
-    catch{
-      return "player not found";
-    }
-  });
-}
-
-function extractRelevantPlayerDataTeam(players_info){
-
-  return players_info.map((player_info) => {
-    try{
-      const { common_name , nationality, birthdate, birthplace, height, weight } = player_info;
-      const team = player_info.team.data.name;
-      const leagueID = player_info.team.data.league.data.id;
-
-      return {
-        common_name: common_name,
-        nationality: nationality,
-        birthdate: birthdate,
-        birthplace: birthplace,
-        height: height,
-        weight: weight,
         team: team,
-        leagueID: leagueID,
-      }
-    }
-    catch{
-      return "player not found";
-    }
-  });
-}
-
-function extractRelevantPlayerDataTeamLocation(players_info){
-
-  return players_info.map((player_info) => {
-    try{
-      const { common_name , nationality, birthdate, birthplace, height, weight } = player_info;
-      const team = player_info.team.data.name;
-      const playerPosition = player_info.position.data.name;
-      const leagueID = player_info.team.data.league.data.id;
-
-      return {
-        common_name: common_name,
-        nationality: nationality,
-        birthdate: birthdate,
-        birthplace: birthplace,
-        height: height,
-        weight: weight,
-        team: team,
-        playerPosition: playerPosition,
         leagueID: leagueID,
       }
     }
@@ -180,11 +105,6 @@ async function getPlayerByName(playerName){
     },
   });
   try{
-    // const playersData = extractRelevantPlayerData(players.data.data);
-    // // if(PlayerPosition != "{location}"){
-    // //   playersData =  playersData.filter(player => player.playerPosition == PlayerPosition);
-    // // }
-    // return playersData;
     const playersData = extractRelevantPlayerData(players.data.data);
     const filterdPlayersData =  playersData.filter(player => {
       try{
@@ -210,7 +130,7 @@ async function getPlayerByNameLocation(playerName,PlayerPosition){
     },
   });
   try{
-    const playersData = extractRelevantPlayerDataLocation(players.data.data);
+    const playersData = extractRelevantPlayerData(players.data.data);
     if(PlayerPosition != "{location}"){
         const filterdPlayersData =  playersData.filter(player => {
           try{
@@ -238,7 +158,7 @@ async function getPlayerByNameTeam(playerName,team){
     },
   });
   try{
-    const playersData = extractRelevantPlayerDataTeam(players.data.data);
+    const playersData = extractRelevantPlayerData(players.data.data);
     if(team != "{team}"){
         const filterdPlayersData =  playersData.filter(player => {
           try{
@@ -266,7 +186,7 @@ async function getPlayerByNameLocationTeam(playerName,location,team){
     },
   });
   try{
-    const playersData = extractRelevantPlayerDataTeamLocation(players.data.data);
+    const playersData = extractRelevantPlayerData(players.data.data);
     if(team != "{team}" && location != "{location}"){
         const filterdPlayersData =  playersData.filter(player => {
           try{
@@ -286,7 +206,83 @@ async function getPlayerByNameLocationTeam(playerName,location,team){
   }
 }
 
+// function extractRelevantPlayerDataLocation(players_info){
 
+//   return players_info.map((player_info) => {
+//     try{
+//       const { common_name , nationality, birthdate, birthplace, height, weight } = player_info;
+//       const playerPosition = player_info.position.data.name;
+//       const leagueID = player_info.team.data.league.data.id;
+
+//       return {
+//         common_name: common_name,
+//         nationality: nationality,
+//         birthdate: birthdate,
+//         birthplace: birthplace,
+//         height: height,
+//         weight: weight,
+//         playerPosition: playerPosition,
+//         leagueID: leagueID,
+//         // team: team,
+//       }
+//     }
+//     catch{
+//       return "player not found";
+//     }
+//   });
+// }
+
+// function extractRelevantPlayerDataTeam(players_info){
+
+//   return players_info.map((player_info) => {
+//     try{
+//       const { common_name , nationality, birthdate, birthplace, height, weight } = player_info;
+//       const team = player_info.team.data.name;
+//       const leagueID = player_info.team.data.league.data.id;
+
+//       return {
+//         common_name: common_name,
+//         nationality: nationality,
+//         birthdate: birthdate,
+//         birthplace: birthplace,
+//         height: height,
+//         weight: weight,
+//         team: team,
+//         leagueID: leagueID,
+//       }
+//     }
+//     catch{
+//       return "player not found";
+//     }
+//   });
+// }
+
+// function extractRelevantPlayerDataTeamLocation(players_info){
+
+//   return players_info.map((player_info) => {
+//     try{
+//       const { common_name , nationality, birthdate, birthplace, height, weight } = player_info;
+//       const team = player_info.team.data.name;
+//       const playerPosition = player_info.position.data.name;
+//       const leagueID = player_info.team.data.league.data.id;
+
+//       return {
+//         common_name: common_name,
+//         nationality: nationality,
+//         birthdate: birthdate,
+//         birthplace: birthplace,
+//         height: height,
+//         weight: weight,
+//         team: team,
+//         playerPosition: playerPosition,
+//         leagueID: leagueID,
+//       }
+//     }
+//     catch{
+//       return "player not found";
+//     }
+//   });
+// }
 
 exports.getPlayersInfo = getPlayersInfo;
 exports.extractDetailsForTeamPage = extractDetailsForTeamPage;

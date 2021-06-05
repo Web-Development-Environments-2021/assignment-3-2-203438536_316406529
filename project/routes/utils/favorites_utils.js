@@ -57,11 +57,15 @@ async function getFavoritesUserTeams(username){
 }
 
 async function markTeamAsFavorite(username, teamID){//add (username,team_id) to db
+  let teamExist = await teams_utils.checkIfTeamExist(teamID);
+  if(teamExist== false){
+    return false;
+  }
   try{
     await DButils.execQuery(
       `insert into userFavoriteTeams values ('${username}',${teamID})`
     );
-    return "The team successfully saved as favorite";
+    return true;
   } 
   catch(err){
     return err.originalError.message;
