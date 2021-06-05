@@ -16,12 +16,12 @@ async function AddGame(data) {
   try {
     // const {date, hour, away_team_id, home_team_id, field} = data;
     // let ref = data.referee_name;
-    // const home_team_name =
-    // const away_team_name =
+    const home_team_name = await team_utils.getTeamNameById(data.home_team_id);
+    const away_team_name = await team_utils.getTeamNameById(data.away_team_id);
     const hour = data.hour;
     await DButils.execQuery(
       `insert into dbo.games (game_date, game_hour, home_team, away_team, home_team_id, away_team_id, field, referee_name) 
-       values ('${data.date}', '${data.hour}', '${data.home_team}', '${data.away_team}', '${data.field}', '${data.referee_name}') `
+       values ('${data.date}', '${data.hour}', '${data.home_team_name}', '${data.away_team_name}','${data.home_team_id}','${data.away_team_id}', '${data.field}', '${data.referee_name}') `
     );
   } catch (error) {
     error;

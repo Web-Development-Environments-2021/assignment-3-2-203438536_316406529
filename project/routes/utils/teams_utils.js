@@ -35,41 +35,38 @@ async function getCoachNameByTeam(team_id) {
   });
   coach_name = team.data.data.coach.data.fullname;
   coach_id = team.data.data.coach.data.coach_id;
-  return {coach_name, coach_id};
+  return { coach_name, coach_id };
 }
 
 async function getTeamsInfo(teams_ids_list) {
   let promises = [];
   teams_ids_list.map((row) => {
-    try{
+    try {
       promises.push(
         axios.get(`${api_domain}/teams/${row.teamID}`, {
-        params: {
-          include: "league, country",
-          api_token: process.env.api_token,
-        },
-      })
-      )
-    }
-    catch{}
-
+          params: {
+            include: "league, country",
+            api_token: process.env.api_token,
+          },
+        })
+      );
+    } catch {}
   });
   let teams_info;
-  try{
+  try {
     teams_info = await Promise.all(promises);
+  } catch {
+    return false;
   }
-  catch{return false;}
-
 
   return teams_info;
-
 }
 
 function extractTeamDetails(teams_info) {
-  const teamData =  teams_info.map((teams_info) => {
+  const teamData = teams_info.map((teams_info) => {
     const { name, logo_path, founded, national_team } = teams_info.data.data;
     const county_name = teams_info.data.data.country.data.name;
-    const leagueID =teams_info. data.data.league.data.id;
+    const leagueID = teams_info.data.data.league.data.id;
     return {
       name: name,
       logo_path: logo_path,
@@ -79,16 +76,16 @@ function extractTeamDetails(teams_info) {
       leagueID: leagueID,
     };
   });
-  return filterdteamsData =  teamData.filter(team => {
-    try{
-      if(team.leagueID == 271){
+  return (filterdteamsData = teamData.filter((team) => {
+    try {
+      if (team.leagueID == 271) {
         return true;
       }
       return false;
-    }catch{
+    } catch {
       return false;
     }
-  });
+  }));
 }
 
 async function getTeamGames(team_id) {
@@ -106,20 +103,21 @@ async function getTeamGames(team_id) {
   return TeamGames;
 }
 
-async function checkIfTeamExist(team_id){
-  try{
+async function checkIfTeamExist(team_id) {
+  try {
     const team = await axios.get(`${api_domain}/teams/${team_id}`, {
       params: {
         include: "league",
         api_token: process.env.api_token,
       },
     });
-    if (team.data.data.league.data.id ==271){
+    if (team.data.data.league.data.id == 271) {
       return true;
     }
     return false;
+  } catch {
+    return false;
   }
-  catch{return false;}
 }
 
 async function getTeamByName(teamName) {
@@ -156,6 +154,14 @@ async function getTeamByName(teamName) {
   }
 }
 
+async function getTeamNameById(team_id) {
+  const team = await axios.get(`${api_domain}/teams/${team_id}`, {
+    params: {
+      api_token: process.env.api_token,
+    },
+  });
+  return team.data.name;
+}
 // async function checkTeamLeague(teamID) {
 //   const team = await axios.get(`${api_domain}/teams/${teamID}`, {
 //     params: {
@@ -178,3 +184,4 @@ exports.getTeamGames = getTeamGames;
 exports.getTeamByName = getTeamByName;
 // exports.checkTeamLeague = checkTeamLeague;
 exports.checkIfTeamExist = checkIfTeamExist;
+exports.getTeamNameById = getTeamNameById;

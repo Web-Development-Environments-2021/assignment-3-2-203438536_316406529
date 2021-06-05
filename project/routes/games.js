@@ -2,25 +2,7 @@ var express = require("express");
 var router = express.Router();
 const games_utils = require("./utils/games_utils");
 const DButils = require("./utils/DButils");
-// router.use(async function (req, res, next) {
-//   if (req.session.user_id === "admin") {
-//     next();
-//   } else {
-//     res.sendStatus(400).send("Only admin can change games in league");
-//   }
-//   if (req.session && req.session.username) {//clieant verification
-//     DButils.execQuery("SELECT username FROM Users")
-//       .then((users) => {
-//         if (users.find((x) => x.username === req.session.username)) {
-//           req.username = req.session.username;
-//           next();
-//         }
-//       })
-//       .catch((err) => next(err));
-//   } else {
-//     res.sendStatus(401);
-//   }
-// });
+const team_utils = require("./utils/teams_utils");
 
 router.get(`/GameDocumentation/:gameID`, async (req, res, next) => {
   try {
@@ -59,6 +41,13 @@ router.post("/LeagueManagment/addGame", async (req, res, next) => {
       data.date,
       data.hour
     );
+    const homeTeamCheck = await team_utils.checkIfTeamExist(data.home_team_id);
+    const awayTeamCheck = await team_utils.checkIfTeamExist(data.away_team_id);
+    if (!homeTeamCheck || !awayTeamCheck) {
+      res.status(400).send("One or both team details are incorrect");
+      return;
+    }
+
     if (confirmDate) {
       await games_utils.AddGame(data);
       res.status(200).send("Game added successfuly");
