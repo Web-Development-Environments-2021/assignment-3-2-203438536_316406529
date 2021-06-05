@@ -28,8 +28,9 @@ async function getPlayersInfo(players_ids_list) {
 
 function extractDetailsForTeamPage(players_info) {
   return players_info.map((player_info) => {
-    const { fullname, image_path ,common_name, nationality, birthdate } = player_info.data.data;
+    const { player_id, fullname, image_path ,common_name, nationality, birthdate } = player_info.data.data;
     return {
+      PlayerID: player_id,
       name: fullname,
       image: image_path,
       common_name: common_name,
@@ -206,6 +207,32 @@ async function getPlayerByNameLocationTeam(playerName,location,team){
   }
 }
 
+async function checkIfPlayerExist(playerID){
+  try{
+    const player = await axios.get(`${api_domain}/players/${playerID}`, {
+      params: {
+        api_token: process.env.api_token,
+        include: "team.league",
+      },
+    });
+    if (player.data.data.team.data.league.data.id ==271){
+      return true;
+    }
+    return false;
+  }
+  catch{return false;}
+}
+
+exports.getPlayersInfo = getPlayersInfo;
+exports.extractDetailsForTeamPage = extractDetailsForTeamPage;
+exports.extractRelevantPlayerData = extractRelevantPlayerData;
+exports.getPlayerDetailsById = getPlayerDetailsById;
+exports.getPlayerByName = getPlayerByName;
+exports.getPlayerByNameLocation = getPlayerByNameLocation;
+exports.getPlayerByNameTeam = getPlayerByNameTeam;
+exports.getPlayerByNameLocationTeam = getPlayerByNameLocationTeam;
+exports.checkIfPlayerExist = checkIfPlayerExist;
+
 // function extractRelevantPlayerDataLocation(players_info){
 
 //   return players_info.map((player_info) => {
@@ -284,11 +311,3 @@ async function getPlayerByNameLocationTeam(playerName,location,team){
 //   });
 // }
 
-exports.getPlayersInfo = getPlayersInfo;
-exports.extractDetailsForTeamPage = extractDetailsForTeamPage;
-exports.extractRelevantPlayerData = extractRelevantPlayerData;
-exports.getPlayerDetailsById = getPlayerDetailsById;
-exports.getPlayerByName = getPlayerByName;
-exports.getPlayerByNameLocation = getPlayerByNameLocation;
-exports.getPlayerByNameTeam = getPlayerByNameTeam;
-exports.getPlayerByNameLocationTeam = getPlayerByNameLocationTeam;
