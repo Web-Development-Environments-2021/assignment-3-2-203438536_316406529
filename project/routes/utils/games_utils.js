@@ -147,6 +147,16 @@ function checkIfGameDetailsInFuture(date, hour) {
 
   return check;
 }
+async function getAllLeagueGames(){
+  try{
+    const games = await DButils.execQuery(
+      `select * from dbo.games `
+    );
+    return games;
+  }
+  catch{return false;}
+}
+
 
 exports.AddGame = AddGame;
 exports.AddScoresToGame = AddScoresToGame;
@@ -155,3 +165,4 @@ exports.getGamesInfo = getGamesInfo;
 exports.getGameDetaildByID = getGameDetaildByID;
 exports.AddEventToGame = AddEventToGame;
 exports.checkIfGameDetailsInFuture = checkIfGameDetailsInFuture;
+exports.getAllLeagueGames = getAllLeagueGames;
