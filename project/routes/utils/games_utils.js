@@ -1,5 +1,6 @@
 const axios = require("axios");
 const DButils = require("./DButils");
+const team_utils = require("./teams_utils");
 // const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 
 async function getGamesInfo(games_ids_list) {
@@ -15,9 +16,11 @@ async function AddGame(data) {
   try {
     // const {date, hour, away_team_id, home_team_id, field} = data;
     // let ref = data.referee_name;
+    // const home_team_name =
+    // const away_team_name =
     const hour = data.hour;
     await DButils.execQuery(
-      `insert into dbo.games (game_date, game_hour, home_team, away_team, field, referee_name) 
+      `insert into dbo.games (game_date, game_hour, home_team, away_team, home_team_id, away_team_id, field, referee_name) 
        values ('${data.date}', '${data.hour}', '${data.home_team}', '${data.away_team}', '${data.field}', '${data.referee_name}') `
     );
   } catch (error) {
@@ -96,6 +99,7 @@ async function getGameDetaildByID(game_id) {
     //   .toLocaleDateString()
     //   .split(",")[0];
     return {
+      game_id: game_id,
       game_date: game_date_split,
       game_hour: game_hour_split,
       home_team: home_team,
