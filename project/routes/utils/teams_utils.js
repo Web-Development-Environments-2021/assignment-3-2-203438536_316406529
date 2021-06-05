@@ -64,7 +64,8 @@ async function getTeamsInfo(teams_ids_list) {
 
 function extractTeamDetails(teams_info) {
   const teamData = teams_info.map((teams_info) => {
-    const { id, name, logo_path, founded, national_team } = teams_info.data.data;
+    const { id, name, logo_path, founded, national_team } =
+      teams_info.data.data;
     const county_name = teams_info.data.data.country.data.name;
     const leagueID = teams_info.data.data.league.data.id;
     return {
@@ -161,7 +162,7 @@ async function getTeamNameById(team_id) {
       api_token: process.env.api_token,
     },
   });
-  return team.data.name;
+  return team.data.data.name;
 }
 // async function checkTeamLeague(teamID) {
 //   const team = await axios.get(`${api_domain}/teams/${teamID}`, {
