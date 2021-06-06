@@ -37,10 +37,12 @@ router.use(async function (req, res, next) {
 router.post("/LeagueManagment/addGame", async (req, res, next) => {
   try {
     data = await req.body;
+    //apply the rule that only future games cad be add to DB
     const confirmDate = games_utils.checkIfGameDetailsInFuture(
       data.date,
       data.hour
     );
+    //checks if teams exist in the league
     const homeTeamCheck = await team_utils.checkIfTeamExist(data.home_team_id);
     const awayTeamCheck = await team_utils.checkIfTeamExist(data.away_team_id);
     if (!homeTeamCheck || !awayTeamCheck) {
@@ -48,6 +50,7 @@ router.post("/LeagueManagment/addGame", async (req, res, next) => {
       return;
     }
     if (confirmDate) {
+      //checks if the field or one of the teams have games at the same date and hour
       const checkGame = await games_utils.checkGameDetails(data);
       if (checkGame !== "") {
         res.status(400).send(checkGame);
@@ -89,7 +92,10 @@ router.post("/LeagueManagment/addEvent", async (req, res, next) => {
     const game_id = data.game_id;
     const player_id = data.player_id;
     const availableToAddEvent = await games_utils.checkIfGameOccur(game_id);
-    const checkIfplayerInGames = await games_utils.checkIFPlayerInGame(game_id, player_id);
+    const checkIfplayerInGames = await games_utils.checkIFPlayerInGame(
+      game_id,
+      player_id
+    );
     if (availableToAddEvent && checkIfplayerInGames) {
       await games_utils.AddEventToGame(data);
       res

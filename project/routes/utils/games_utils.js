@@ -128,7 +128,7 @@ async function AddEventToGame(data) {
   try {
     const { game_id, date, hour, game_minute, event_type, player_id } = data;
     await DButils.execQuery(`insert into dbo.ScheduleEvents (game_id, event_date, event_hour, game_minute, event_type, player_id) 
-  values ('${game_id}', '${date1}', '${hour1}', '${game_minute}' , '${event_type}', '${player_id}') `);
+  values ('${game_id}', '${date}', '${hour}', '${game_minute}' , '${event_type}', '${player_id}') `);
   } catch (error) {
     error;
   }
@@ -187,22 +187,29 @@ async function getAllLeagueGames() {
   }
 }
 
-async function checkIFPlayerInGame(game_id, player_id){
-  try{
+async function checkIFPlayerInGame(game_id, player_id) {
+  try {
     game_id_num = Number(game_id);
     const gameDetails = await DButils.execQuery(
       `SELECT home_team_id, away_team_id from dbo.games WHERE game_id = ${game_id_num}`
     );
     if (gameDetails[0]) {
-      const home_team_id= gameDetails[0].home_team_id;
-      const away_team_id= gameDetails[0].away_team_id;
-      const playerExist = await team_utils.checkPlayerInTeam(player_id, home_team_id,away_team_id);
-      if(playerExist){return true;}
+      const home_team_id = gameDetails[0].home_team_id;
+      const away_team_id = gameDetails[0].away_team_id;
+      const playerExist = await team_utils.checkPlayerInTeam(
+        player_id,
+        home_team_id,
+        away_team_id
+      );
+      if (playerExist) {
+        return true;
+      }
       return false;
     }
     return false;
+  } catch {
+    return false;
   }
-  catch{return false;}
 }
 
 exports.AddGame = AddGame;
@@ -214,4 +221,4 @@ exports.AddEventToGame = AddEventToGame;
 exports.checkIfGameDetailsInFuture = checkIfGameDetailsInFuture;
 exports.getAllLeagueGames = getAllLeagueGames;
 exports.checkGameDetails = checkGameDetails;
-exports.checkIFPlayerInGame =checkIFPlayerInGame;
+exports.checkIFPlayerInGame = checkIFPlayerInGame;
