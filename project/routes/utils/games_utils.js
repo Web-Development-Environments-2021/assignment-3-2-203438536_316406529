@@ -99,7 +99,7 @@ async function getGameDetaildByID(game_id) {
       away_team_id,
       home_team_goal,
       away_team_goal,
-      filed,
+      field,
     } = game[0];
     let game_hour_split = String(game_hour).slice(16, 25);
     let game_date_split = String(game_date).slice(0, 15);
@@ -116,7 +116,7 @@ async function getGameDetaildByID(game_id) {
       away_team_id: away_team_id,
       home_team_goal: home_team_goal,
       away_team_goal: away_team_goal,
-      filed: filed,
+      field: field,
       eventSchedule: gameEventsLits,
     };
   } else {

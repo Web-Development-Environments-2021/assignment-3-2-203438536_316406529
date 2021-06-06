@@ -8,6 +8,13 @@ router.post("/register", async (req, res, next) => {
     // parameters exists
     // valid parameters
     // username exists
+    if (req.session.username) {
+      //some user is login
+      throw {
+        status: 409,
+        message: "You are already login. logout in order to register",
+      };
+    }
     const users = await DButils.execQuery("SELECT username FROM dbo.Users");
 
     if (users.find((x) => x.username === req.body.username))
@@ -46,14 +53,12 @@ router.post("/login", async (req, res, next) => {
     }
 
     // Set cookie
-    try{
-      if (req.session.username){
+    try {
+      if (req.session.username) {
         res.status(401).send("User already loged-in");
         return;
       }
-    }
-    catch{
-    }
+    } catch {}
     req.session.username = user.username;
 
     // return cookie

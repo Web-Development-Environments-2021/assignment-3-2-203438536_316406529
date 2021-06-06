@@ -585,16 +585,16 @@ components:
     LeagueData:
       type: object
       properties:
-        leagueName:
+        league_name:
           type: string
           example: Astars
-        seasonName:
+        current_season_name:
           type: string
           example: summer
-        stageName:
+        current_stage_name:
           type: string
           example: A
-        ameDetails:
+        nextComingGame:
           type: object
     UserFavoritesGames:
       type: object
@@ -643,7 +643,7 @@ components:
           type: string
         commonName:
           type: string
-        nation:
+        nationality:
           type: string
         birthDay:
           type: string
@@ -655,9 +655,9 @@ components:
         fullname:
           type: string
           example: yosi cohen
-        image_url:
+        image_path:
           type: string
-        commonName:
+        common_name:
           type: string
           example: yoss
         position_id:
@@ -751,10 +751,13 @@ components:
     gameDocumentation:
       type: object
       properties:
-        date:
+        game_id:
+          type: string
+          example: "2"
+        game_date:
           type: string
           example: "Tue Jul 21 2020"
-        time:
+        game_hour:
           type: string
           example: 20:30:00
         home_team:
@@ -763,9 +766,12 @@ components:
         away_team:
           type: string
           example: Barcellona
-        field:
-          type: string
-          example: Tedi
+        home_team_id:
+          type: number
+          example: 1020
+        away_team_id:
+          type: number
+          example: 85
         home_team_goal:
           type: number
           description: If null- means the game not occur yet
@@ -774,6 +780,9 @@ components:
           type: number
           description: If null- means the game not occur yet
           example: 1
+        field:
+          type: string
+          example: "Lyngby Stadion"
         eventSchedule:
           type: object
           description: If null- means the game not occur yet. cointains the events in the game
@@ -806,11 +815,11 @@ components:
       type: object
       properties:
         pastGamesList:
-          type: object
+          type: array
           items:
             type: object
         futureGamesList:
-          type: object
+          type: array
           items:
             type: object
 

@@ -3,6 +3,7 @@ const e = require("express");
 const DButils = require("./DButils");
 const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 const LEAGUE_ID = 271;
+const STAGE_ID = 77447500;
 const favorites_utils = require("./favorites_utils");
 const { getGameDetaildByID } = require("./games_utils");
 
@@ -14,19 +15,14 @@ async function getLeagueData() {
     },
   });
   let stage;
-  if (league.data.data.current_stage_id) {
-    stage = await axios.get(
-      `${api_domain}/stages/${league.data.data.current_stage_id}`,
-      {
-        params: {
-          api_token: process.env.api_token,
-        },
-      }
-    );
-    stage = stage.data.data.name;
-  } else {
-    stage = "Not Exist";
-  }
+
+  stage = await axios.get(`${api_domain}/stages/${STAGE_ID}`, {
+    params: {
+      api_token: process.env.api_token,
+    },
+  });
+  let stage_name = stage.data.data.name;
+
   let currentDate = new Date().toISOString();
   //need to fix this query
   const nextGame =
@@ -51,7 +47,7 @@ async function getLeagueData() {
   return {
     league_name: league.data.data.name,
     current_season_name: league.data.data.season.data.name,
-    current_stage_name: stage,
+    current_stage_name: stage_name,
     // next game details should come from DB
     nextComingGame: nextGameInfo,
   };
@@ -64,21 +60,22 @@ async function getCurrentStageGames() {
   );
   let futureStageGamesList = [];
   futureStagegamesID.map((gameID) => {
-    futureStageGamesList.push(getGameDetaildByID(gameID));
+    futureStageGamesList.push(getGameDetaildByID(gameID.game_id));
   });
+  let futurePromises = await Promise.all(futureStageGamesList);
   const pastStageGamesID = await DButils.execQuery(
     `select game_id from dbo.games WHERE game_date < '${currentDate}'  ORDER BY game_date ASC`
   );
   let pastStageGamesList = [];
   pastStageGamesID.map((gameID) => {
-    pastStageGamesList.push(getGameDetaildByID(gameID));
+    pastStageGamesList.push(getGameDetaildByID(gameID.game_id));
   });
+  let pastPromises = await Promise.all(pastStageGamesList);
   return {
-    pastGamesList: pastStageGamesList,
-    futureGamesList: futureStageGamesList,
+    pastGamesList: pastPromises,
+    futureGamesList: futurePromises,
   };
 }
-
 
 async function getSeachData() {
   // teamsData = await axios.get(`https://soccer.sportmonks.com/api/v2.0/teams/season/17328?include=squad.player`);
