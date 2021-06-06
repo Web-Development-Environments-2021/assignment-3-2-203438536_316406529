@@ -11,6 +11,7 @@ const DButils = require("./DButils");
 
 
 async function getFavoritePlayers_ids(username) {
+  try{
     let player_ids = await DButils.execQuery(
       `select playerID from userFavoritePlayers where username='${username}'`
     );
@@ -19,6 +20,8 @@ async function getFavoritePlayers_ids(username) {
     });
       
     return player_ids;
+  }
+  catch{return false;}
   }
 
 async function markPlayerAsFavorite(username, playerID) {

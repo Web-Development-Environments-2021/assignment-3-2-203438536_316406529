@@ -3,7 +3,7 @@ var router = express.Router();
 const DButils = require("../routes/utils/DButils");
 const bcrypt = require("bcryptjs");
 
-router.post("/register", async (req, res, next) => {
+router.post("/register", async (req, res, next) => {//assign user to system
   try {
     // parameters exists
     // valid parameters
@@ -37,7 +37,7 @@ router.post("/register", async (req, res, next) => {
   }
 });
 
-router.post("/login", async (req, res, next) => {
+router.post("/login", async (req, res, next) => {//log in to system for gest only
   try {
     const user = (
       await DButils.execQuery(
@@ -68,7 +68,7 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-router.post("/user/logOut", function (req, res) {
+router.post("/user/logOut", function (req, res) {//log out from system- loged in users only
   if (req.session.username) {
     req.session.reset(); // reset the session info --> send cookie when  req.session == undefined!!
     res.status(200).send({ success: true, message: "logout succeeded" });

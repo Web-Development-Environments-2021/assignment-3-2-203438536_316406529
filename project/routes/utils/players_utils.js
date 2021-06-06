@@ -9,24 +9,27 @@ const teams_utils = require("./teams_utils");
 
 
 async function getPlayersInfo(players_ids_list) {
-  let promises = [];
-  players_ids_list.map((id) =>
-    promises.push(
-      axios.get(`${api_domain}/players/${id}`, {
-        params: {
-          api_token: process.env.api_token,
-          include: "team.league",
-        },
-      })
-    )
-  );
-  let players_info = await Promise.all(promises);
-  
-  return players_info;
+  try{
+    let promises = [];
+    players_ids_list.map((id) =>
+      promises.push(
+        axios.get(`${api_domain}/players/${id}`, {
+          params: {
+            api_token: process.env.api_token,
+            include: "team.league",
+          },
+        })
+      )
+    );
+    let players_info = await Promise.all(promises);
+    
+    return players_info;
+  }catch{return false;}
+
   // return extractRelevantPlayerData(players_info);
 }
 
-function extractDetailsForTeamPage(players_info) {
+function extractDetailsForTeamPage(players_info) {//return player data from player info- extract
   return players_info.map((player_info) => {
     const { player_id, fullname, image_path ,common_name, nationality, birthdate } = player_info.data.data;
     return {
@@ -40,7 +43,7 @@ function extractDetailsForTeamPage(players_info) {
   });
 }
 
-function extractRelevantPlayerData(players_info,player_original_name){
+function extractRelevantPlayerData(players_info,player_original_name = null){//extract the relevant data from player api get data
 
   return players_info.map((player_info) => {
     try{
@@ -49,7 +52,7 @@ function extractRelevantPlayerData(players_info,player_original_name){
       try{playerPosition = player_info.position.data.name;}catch{playerPosition=null}
       try{leagueID = player_info.team.data.league.data.id;}catch{leagueID=null}
       try{team = player_info.team.data.name;}catch{team=null}
-      if(!fullname.includes(player_original_name)){return false;}
+      if(player_original_name){if(!fullname.includes(player_original_name)){return false;}}
       return {
         PlayerID: player_id,
         common_name: common_name,
@@ -70,37 +73,40 @@ function extractRelevantPlayerData(players_info,player_original_name){
   });
 }
 
-async function getPlayerDetailsById(player_id){
-  //get player data from Football-API
-  const player = await axios.get(`${api_domain}/players/${player_id}`, {
-    params: {
-      include: "team.league",
-      api_token: process.env.api_token,
-    },
-  });
-  const {fullname, image_path, common_name, position_id, nationality, height, 
-    weight, birthcountry,  birthdate, id } = player.data.data;
-  const { name } = player.data.data.team.data;
-  const leagueID = player.data.data.team.data.league.data.id;
-  if(leagueID != 271){
-    return "The Player is not in league 271";
-  }
-  return{
-    id: id,
-    fullname: fullname,
-    image_path: image_path,
-    common_name: common_name,
-    position_id: position_id,
-    nationality: nationality,
-    height: height,
-    birthcountry: birthcountry,
-    birthdate: birthdate,
-    team_name: name,
-    weight: weight
-  };
+async function getPlayerDetailsById(player_id){  //get player data from Football-API
+
+  try{
+    const player = await axios.get(`${api_domain}/players/${player_id}`, {
+      params: {
+        include: "team.league",
+        api_token: process.env.api_token,
+      },
+    });
+    const {fullname, image_path, common_name, position_id, nationality, height, 
+      weight, birthcountry,  birthdate, id } = player.data.data;
+    const { name } = player.data.data.team.data;
+    const leagueID = player.data.data.team.data.league.data.id;
+    if(leagueID != 271){
+      return "The Player is not in league 271";
+    }
+    return{
+      id: id,
+      fullname: fullname,
+      image_path: image_path,
+      common_name: common_name,
+      position_id: position_id,
+      nationality: nationality,
+      height: height,
+      birthcountry: birthcountry,
+      birthdate: birthdate,
+      team_name: name,
+      weight: weight
+    };
+  }catch{return false;}
+  
 }
 
-async function getPlayerByName(playerName){
+async function getPlayerByName(playerName){//seach by name only
   const players = await axios.get(`${api_domain}/players/search/${playerName}`, {
     params: {
       include: "team.league",
@@ -126,7 +132,7 @@ async function getPlayerByName(playerName){
   }
 }
 
-async function getPlayerByNameLocation(playerName,PlayerPosition){
+async function getPlayerByNameLocation(playerName,PlayerPosition){//seach by name &position
   const players = await axios.get(`${api_domain}/players/search/${playerName}`, {
     params: {
       include: "position, team.league",
@@ -154,7 +160,7 @@ async function getPlayerByNameLocation(playerName,PlayerPosition){
   }
 }
 
-async function getPlayerByNameTeam(playerName,team){
+async function getPlayerByNameTeam(playerName,team){//seach by name & team
   const players = await axios.get(`${api_domain}/players/search/${playerName}`, {
     params: {
       include: "team, team.league",
@@ -182,7 +188,7 @@ async function getPlayerByNameTeam(playerName,team){
   }
 }
 
-async function getPlayerByNameLocationTeam(playerName,location,team){
+async function getPlayerByNameLocationTeam(playerName,location,team){//seach by name & team & location
   const players = await axios.get(`${api_domain}/players/search/${playerName}`, {
     params: {
       include: "team, position, team.league",
@@ -210,7 +216,7 @@ async function getPlayerByNameLocationTeam(playerName,location,team){
   }
 }
 
-async function checkIfPlayerExist(playerID){
+async function checkIfPlayerExist(playerID){ //check if player exist in soccer db by id
   try{
     const player = await axios.get(`${api_domain}/players/${playerID}`, {
       params: {

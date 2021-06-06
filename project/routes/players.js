@@ -9,13 +9,14 @@ router.get("/playerDetails/:playerID", async (req, res, next) =>{
     const player_details = await players_utils.getPlayerDetailsById(
       req.params.playerID
     );
-    res.send(player_details);
+    if(!player_details){res.status(400).send('faild to get player data');}
+    else{res.status(200).send(player_details);}
   }catch(error){
     next(error);
   }
 });
 
-router.get("/search/locationAndTeam/:searchKey/:teamName/:location", async (req, res, next) => {
+router.get("/search/locationAndTeam/:searchKey/:teamName/:location", async (req, res, next) => {//seach players
   try{
     const search_key = req.params.searchKey;
     const location = req.params.location;
@@ -50,48 +51,3 @@ router.get("/search/locationAndTeam/:searchKey/:teamName/:location", async (req,
 });
 
 module.exports = router;
-
-// router.get("/search/name/:searchKey", async (req, res, next) => {
-//   try{
-//     const search_key = req.params.searchKey;
-
-//     const player_details = await players_utils.getPlayerByName(
-//       search_key
-//     );
-//     res.status(200).send(player_details);
-//   } catch (error) {
-//     next(error);
-//   }
-// });
-
-// router.get("/search/locationPlayer/:searchKey/:location", async (req, res, next) => {
-//   try{
-//     const search_key = req.params.searchKey;
-//     const location = req.params.location;
-//     // const teamName = req.params.teamName;
-//     const player_details = await players_utils.getPlayerByNameLocation(
-//       search_key, location
-//     );
-//     res.send(player_details);
-//   } catch (error) {
-//     next(error);
-//   }
-// });
-
-// router.get("/search/PlayerInTeam/:searchKey/:teamName", async (req, res, next) => {
-//   try{
-//     const search_key = req.params.searchKey;
-//     const teamName = req.params.teamName;
-//     const player_details = await players_utils.getPlayerByNameTeam(
-//       search_key ,teamName
-//     );
-//     res.send(player_details);
-//   } catch (error) {
-//     next(error);
-//   }
-// });
-
-
-
-
-

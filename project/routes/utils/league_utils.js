@@ -7,7 +7,7 @@ const STAGE_ID = 77447500;
 const favorites_utils = require("./favorites_utils");
 const { getGameDetaildByID } = require("./games_utils");
 
-async function getLeagueData() {
+async function getLeagueData() {//return league data with games, league_name, current_season_name, current_stage_name, nextComingGame
   const league = await axios.get(`${api_domain}/leagues/${LEAGUE_ID}`, {
     params: {
       include: "season",
@@ -48,12 +48,11 @@ async function getLeagueData() {
     league_name: league.data.data.name,
     current_season_name: league.data.data.season.data.name,
     current_stage_name: stage_name,
-    // next game details should come from DB
     nextComingGame: nextGameInfo,
   };
 }
 
-async function getCurrentStageGames() {
+async function getCurrentStageGames() {//get games from DB by stage
   const currentDate = new Date().toISOString();
   const futureStagegamesID = await DButils.execQuery(
     `select game_id from dbo.games WHERE game_date >= '${currentDate}'  ORDER BY game_date ASC`
@@ -77,9 +76,7 @@ async function getCurrentStageGames() {
   };
 }
 
-async function getSeachData() {
-  // teamsData = await axios.get(`https://soccer.sportmonks.com/api/v2.0/teams/season/17328?include=squad.player`);
-
+async function getSeachData() {// return data for search function
   const teamsData = await axios.get(`${api_domain}/teams/season/17328`, {
     params: {
       include: "squad.player.position",

@@ -3,7 +3,7 @@ var router = express.Router();
 const DButils = require("./utils/DButils");
 const coaches_utils = require("./utils/coaches_utils");
 
-router.get("/coachDetails/:coachID", async (req, res, next) =>{
+router.get("/coachDetails/:coachID", async (req, res, next) =>{//get coach details for page coach
     let coach_details = [];
     try{
       const coach_details = await coaches_utils.getCoachDetailsById(

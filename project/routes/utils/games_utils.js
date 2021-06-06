@@ -3,9 +3,7 @@ const DButils = require("./DButils");
 const team_utils = require("./teams_utils");
 // const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 
-async function getGamesInfo(games_ids_list) {
-  //return list of games info
-  // we remove the await
+async function getGamesInfo(games_ids_list) {  //return list of games info
   let promises = [];
   games_ids_list.map((row) => promises.push(getGameDetaildByID(row.gameID)));
   let games_info = await Promise.all(promises);
@@ -14,8 +12,6 @@ async function getGamesInfo(games_ids_list) {
 
 async function AddGame(data) {
   try {
-    // const {date, hour, away_team_id, home_team_id, field} = data;
-    // let ref = data.referee_name;
     const home_team_name = await team_utils.getTeamNameById(data.home_team_id);
     const away_team_name = await team_utils.getTeamNameById(data.away_team_id);
     await DButils.execQuery(
@@ -27,7 +23,7 @@ async function AddGame(data) {
   }
 }
 
-async function AddScoresToGame(gameId, homeGoal, awayGoal) {
+async function AddScoresToGame(gameId, homeGoal, awayGoal) {//update game score
   try {
     await DButils.execQuery(
       `UPDATE dbo.games SET home_team_goal = ${homeGoal}, away_team_goal =${awayGoal} WHERE game_id = ${gameId}`
@@ -46,13 +42,11 @@ function convertDateAndHour(date, hour) {
   };
 }
 
-async function checkIfGameOccur(game_id) {
+async function checkIfGameOccur(game_id) {//check in DB by id
   game_id_num = Number(game_id);
   const gameDetails = await DButils.execQuery(
     `SELECT game_date, game_hour from dbo.games WHERE game_id = ${game_id_num}`
   );
-
-  //const games = await DButils.execQuery(`select * from dbo.games`);
   if (gameDetails[0]) {
     const date_hour_convert = convertDateAndHour(
       gameDetails[0].game_date,

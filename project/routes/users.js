@@ -28,11 +28,11 @@ router.use(async function (req, res, next) {
 /**
  * This path gets return all the players in db
  */
-router.get("/allUsersDetails", async (req, res, next) => {
+router.get("/allUsersDetails", async (req, res, next) => {//return all users in system details
   if (req.session.username != "admin") {
     res.send("user un Aouthorized");
   }
-  //return all users in system details
+  
   try {
     let usersDetails = {};
     usersDetails = await users_utils.getAllUsers();
@@ -42,8 +42,8 @@ router.get("/allUsersDetails", async (req, res, next) => {
   }
 });
 
-router.get("/userDetails", async (req, res, next) => {
-  //return the user details
+router.get("/userDetails", async (req, res, next) => {  //return the user loged in system details
+
   try {
     const username = req.session.username;
     // const user_id = "noam"
@@ -55,7 +55,7 @@ router.get("/userDetails", async (req, res, next) => {
   }
 });
 
-router.post("/favoritePlayers", async (req, res, next) => {
+router.post("/favoritePlayers", async (req, res, next) => {//set a loged in user fav player
   try {
     const username = req.session.username;
     const player_id = req.body.playerId;
@@ -67,9 +67,7 @@ router.post("/favoritePlayers", async (req, res, next) => {
       res.status(200).send("The player successfully saved as favorite");
     }
     if (!status) {
-      res
-        .status(400)
-        .send(`The player id '${player_id}' not exist in DataBase`);
+      res.status(400).send(`The player id '${player_id}' not exist in DataBase`);
     } else {
       res.status(400).send(status);
     }
@@ -78,22 +76,20 @@ router.post("/favoritePlayers", async (req, res, next) => {
   }
 });
 
-/**
- * This path returns the favorites players that were saved by the logged-in user
- */
-router.get("/favoritePlayers", async (req, res, next) => {
+router.get("/favoritePlayers", async (req, res, next) => {//return the loged in user fav players
   try {
     const username = req.session.username;
     const favorites_Players = await favorites_utils.getFavoritePlayers(
       username
     );
+    if (!favorites_Players){res.status(400).send('faild to load data')}
     res.status(200).send(favorites_Players);
   } catch (error) {
     next(error);
   }
 });
 
-router.get("/FavoriteTeams", async (req, res, next) => {
+router.get("/FavoriteTeams", async (req, res, next) => {//return the loged in user fav tems
   try {
     const username = req.session.username;
     const favorites_Teams = await favorites_utils.getFavoritesUserTeams(
@@ -102,19 +98,22 @@ router.get("/FavoriteTeams", async (req, res, next) => {
     if (favorites_Teams === false) {
       res.status(400).send("your fav list contains a team that not exist");
     }
-    res.status(200).send(favorites_Teams);
+    else{
+      res.status(200).send(favorites_Teams);
+    }
   } catch (error) {
     next(error);
   }
 });
 
-router.post("/FavoriteTeams", async (req, res, next) => {
+router.post("/FavoriteTeams", async (req, res, next) => {//set a loged in user fav Team
   try {
     const username = req.session.username;
     const team_id = req.body.team_id;
     let status = await favorites_utils.markTeamAsFavorite(username, team_id);
     if (status === true) {
       res.status(200).send("team adding success ");
+      return;
     }
     if (status == false) {
       res.status(400).send(`no team with in '${team_id}' found in database`);
@@ -126,7 +125,7 @@ router.post("/FavoriteTeams", async (req, res, next) => {
   }
 });
 
-router.get("/FavoriteGames", async (req, res, next) => {
+router.get("/FavoriteGames", async (req, res, next) => {//return the loged in user fav games
   try {
     const username = req.session.username;
     const favorites_Games = await favorites_utils.getFavoritesUserGames(
@@ -138,7 +137,7 @@ router.get("/FavoriteGames", async (req, res, next) => {
   }
 });
 
-router.post("/FavoriteGames", async (req, res, next) => {
+router.post("/FavoriteGames", async (req, res, next) => {//set a loged in user fav game
   try {
     const username = req.session.username;
     const game_id = req.body.game_id;
