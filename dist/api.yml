@@ -550,10 +550,10 @@ components:
       properties:
         username:
           type: string
-          example: noam
+          example: admin
         password:
           type: string
-          example: "12345$a"
+          example: "admin123"
     UserRegister:
       type: object
       properties:
