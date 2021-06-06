@@ -10,8 +10,6 @@ Admin user in our system:
 username: admin
 password: admin123
 
-Link to the API-
 
-http://127.0.0.1:3000/api#/
 
 
