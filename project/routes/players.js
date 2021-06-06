@@ -21,22 +21,22 @@ router.get("/search/locationAndTeam/:searchKey/:teamName/:location", async (req,
     const location = req.params.location;
     const teamName = req.params.teamName;
     let player_details = [];
-    if(teamName != '{team}' && location !='{location}' && search_key != '{search_key}'){
+    if(teamName != '{team}' && location !='{location}' && search_key != '{search_key}'){//search by name, team, location
       player_details = await players_utils.getPlayerByNameLocationTeam(
         search_key, location,teamName
       );
     }
-    if(teamName == '{team}' && location !='{location}' && search_key != '{search_key}'){
+    if(teamName == '{team}' && location !='{location}' && search_key != '{search_key}'){//search by name, location
       player_details = await players_utils.getPlayerByNameLocation(
         search_key, location
       );
     }
-    if(teamName != '{team}' && location =='{location}' && search_key != '{search_key}'){
+    if(teamName != '{team}' && location =='{location}' && search_key != '{search_key}'){//search by name, team
       player_details = await players_utils.getPlayerByNameTeam(
         search_key ,teamName
       );
     }
-    if(teamName == '{team}' && location =='{location}' && search_key != '{search_key}'){
+    if(teamName == '{team}' && location =='{location}' && search_key != '{search_key}'){//search by name
       player_details = await players_utils.getPlayerByName(
         search_key
       );

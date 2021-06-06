@@ -40,18 +40,20 @@ function extractDetailsForTeamPage(players_info) {
   });
 }
 
-function extractRelevantPlayerData(players_info){
+function extractRelevantPlayerData(players_info,player_original_name){
 
   return players_info.map((player_info) => {
     try{
       let playerPosition, leagueID,team; 
-      const {player_id, common_name , nationality, birthdate, birthplace, height, weight } = player_info;
+      const {player_id,fullname, common_name , nationality, birthdate, birthplace, height, weight } = player_info;
       try{playerPosition = player_info.position.data.name;}catch{playerPosition=null}
       try{leagueID = player_info.team.data.league.data.id;}catch{leagueID=null}
       try{team = player_info.team.data.name;}catch{team=null}
+      if(!fullname.includes(player_original_name)){return false;}
       return {
         PlayerID: player_id,
         common_name: common_name,
+        fullname:fullname,
         nationality: nationality,
         birthdate: birthdate,
         birthplace: birthplace,
@@ -106,10 +108,11 @@ async function getPlayerByName(playerName){
     },
   });
   try{
-    const playersData = extractRelevantPlayerData(players.data.data);
+    const playersData = extractRelevantPlayerData(players.data.data, playerName);
     const filterdPlayersData =  playersData.filter(player => {
       try{
         if(player.leagueID == 271){
+          
           return true;
         }
         return false;
@@ -131,7 +134,7 @@ async function getPlayerByNameLocation(playerName,PlayerPosition){
     },
   });
   try{
-    const playersData = extractRelevantPlayerData(players.data.data);
+    const playersData = extractRelevantPlayerData(players.data.data, playerName);
     if(PlayerPosition != "{location}"){
         const filterdPlayersData =  playersData.filter(player => {
           try{
@@ -159,7 +162,7 @@ async function getPlayerByNameTeam(playerName,team){
     },
   });
   try{
-    const playersData = extractRelevantPlayerData(players.data.data);
+    const playersData = extractRelevantPlayerData(players.data.data, playerName);
     if(team != "{team}"){
         const filterdPlayersData =  playersData.filter(player => {
           try{
@@ -187,7 +190,7 @@ async function getPlayerByNameLocationTeam(playerName,location,team){
     },
   });
   try{
-    const playersData = extractRelevantPlayerData(players.data.data);
+    const playersData = extractRelevantPlayerData(players.data.data, playerName);
     if(team != "{team}" && location != "{location}"){
         const filterdPlayersData =  playersData.filter(player => {
           try{
