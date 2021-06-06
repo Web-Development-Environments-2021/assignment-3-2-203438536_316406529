@@ -372,7 +372,7 @@ paths:
               properties:
                 date:
                   type: string
-                  example: 2021-5-31
+                  example: 2021-8-23
                   # format: date
                 hour:
                   type: string
