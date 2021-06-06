@@ -153,7 +153,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserFavoritePlayers"
         "400":
-          description: The request for getting the main page legue data has been denied
+          description: The request for getting the fav page user data has been denied
     post:
       tags:
         - Users
@@ -280,7 +280,7 @@ paths:
           style: simple
           explode: false
           schema:
-            type: string
+            type: number
           example: 84658
       responses:
         "200":
@@ -349,6 +349,7 @@ paths:
           explode: false
           schema:
             type: string
+            example: 1
       responses:
         "200":
           description: Game documentation has been returned to client
@@ -822,92 +823,3 @@ components:
           type: array
           items:
             type: object
-
-  # /players/search/name/{searchKey}:
-  #   get:
-  #     tags:
-  #       - Players
-  #     summary: return player details by player name
-  #     parameters:
-  #       - name: searchKey
-  #         in: path
-  #         description: The keyWord to search player by (name)
-  #         required: true
-  #         style: simple
-  #         explode: false
-  #         schema:
-  #           type: string
-  #         example: Peter Ankersen
-  #     responses:
-  #       "200":
-  #         description: Search Results, [] if no results found
-  #         content:
-  #           application/jason:
-  #             schema:
-  #               $ref: "#/components/schemas/PlayerSearchResults"
-  #       "400":
-  #         description: Player search error
-  # /players/search/locationPlayer/{searchKey}/{location}:
-  #   get:
-  #     tags:
-  #       - Players
-  #     summary: return player details by player name and location on filed
-  #     parameters:
-  #       - name: searchKey
-  #         in: path
-  #         description: The keyWord to search player by (name)
-  #         required: true
-  #         style: simple
-  #         explode: false
-  #         schema:
-  #           type: string
-  #         example: Peter Ankersen
-  #       - name: location
-  #         in: path
-  #         description: The location of the player on the filed
-  #         style: simple
-  #         explode: false
-  #         schema:
-  #           type: string
-  #         example: Defender
-  #     responses:
-  #       "200":
-  #         description: Search Results, [] if no results found
-  #         content:
-  #           application/jason:
-  #             schema:
-  #               $ref: "#/components/schemas/PlayerSearchResults"
-  #       "400":
-  #         description: Player search error
-  # /players/search/PlayerInTeam/{searchKey}/{team}:
-  #   get:
-  #     tags:
-  #       - Players
-  #     summary: return player details by player name and team name
-  #     parameters:
-  #       - name: searchKey
-  #         in: path
-  #         description: The keyWord to search player by (name)
-  #         required: true
-  #         style: simple
-  #         explode: false
-  #         schema:
-  #           type: string
-  #         example: Peter Ankersen
-  #       - name: team
-  #         in: path
-  #         description: The team of the player
-  #         style: simple
-  #         explode: false
-  #         schema:
-  #           type: string
-  #         example: København
-  #     responses:
-  #       "200":
-  #         description: Search Results, [] if no results found
-  #         content:
-  #           application/jason:
-  #             schema:
-  #               $ref: "#/components/schemas/PlayerSearchResults"
-  #       "400":
-  #         description: Player search error

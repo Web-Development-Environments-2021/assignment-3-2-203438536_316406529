@@ -2,8 +2,7 @@ const axios = require("axios");
 const e = require("express");
 const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 
-async function getCoachDetailsById(coach_id) {
-  //get coach data from Football-API
+async function getCoachDetailsById(coach_id) {  //get coach data from Football-API
   const coach = await axios.get(`${api_domain}/coaches/${coach_id}`, {
     params: {
       api_token: process.env.api_token,
@@ -34,7 +33,7 @@ async function getCoachDetailsById(coach_id) {
   };
 }
 
-async function getCoachTeam(team_id) {
+async function getCoachTeam(team_id) {//returns coach team details
   const coach_team = await axios.get(`${api_domain}/teams/${team_id}`, {
     params: {
       include: "league",

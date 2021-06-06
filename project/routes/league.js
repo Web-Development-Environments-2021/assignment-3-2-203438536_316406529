@@ -3,7 +3,7 @@ var router = express.Router();
 const league_utils = require("./utils/league_utils");
 const game_utils = require("./utils/games_utils");
 
-router.get("/LeagueData", async (req, res, next) => {
+router.get("/LeagueData", async (req, res, next) => {//all league data
   let leaguePageDetails = [];
   try {
     const league_details = await league_utils.getLeagueData();
@@ -31,7 +31,7 @@ router.get("/LeagueData", async (req, res, next) => {
   }
 });
 
-router.get("/currentStageDetails", async (req, res, next) => {
+router.get("/currentStageDetails", async (req, res, next) => {//cur stage data
   try {
     const stageGames = await league_utils.getCurrentStageGames();
     res.send(stageGames);
@@ -40,7 +40,7 @@ router.get("/currentStageDetails", async (req, res, next) => {
   }
 });
 
-router.get("/leagueGames", async (req, res, next) => {
+router.get("/leagueGames", async (req, res, next) => {//get all league games
   try {
     if (req.session && req.session.username === "admin") {
       const games = await game_utils.getAllLeagueGames();
@@ -57,7 +57,7 @@ router.get("/leagueGames", async (req, res, next) => {
   }
 });
 
-router.get("/getSeachOutoCompleteData", async (req, res, next) => {
+router.get("/getSeachOutoCompleteData", async (req, res, next) => {//for seach page, all manes- tams, players, positions- for aouto complate
   let players_names = [];
   try {
     const players_names = await league_utils.getSeachData();

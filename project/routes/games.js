@@ -4,7 +4,7 @@ const games_utils = require("./utils/games_utils");
 const DButils = require("./utils/DButils");
 const team_utils = require("./utils/teams_utils");
 
-router.get(`/GameDocumentation/:gameID`, async (req, res, next) => {
+router.get(`/GameDocumentation/:gameID`, async (req, res, next) => {//get game details for game page
   try {
     const game_info = await games_utils.getGameDetaildByID(req.params.gameID);
     if (!game_info) {
@@ -18,7 +18,7 @@ router.get(`/GameDocumentation/:gameID`, async (req, res, next) => {
   }
 });
 
-router.use(async function (req, res, next) {
+router.use(async function (req, res, next) {//aouthotication for league managment- below functions
   if (req.session && req.session.username === "admin") {
     //clieant verification
     DButils.execQuery("SELECT username FROM dbo.Users")

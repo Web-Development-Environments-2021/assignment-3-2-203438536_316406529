@@ -5,7 +5,7 @@ const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 const players_utils = require("./players_utils");
 const DButils = require("./DButils");
 
-async function getPlayersByTeam(team_id) {
+async function getPlayersByTeam(team_id) {//get all players data by team ID
   let player_ids_list = await getPlayerIdsByTeam(team_id);
   let players_info = await players_utils.getPlayersInfo(player_ids_list);
   return players_utils.extractDetailsForTeamPage(players_info);
@@ -62,7 +62,7 @@ async function getTeamsInfo(teams_ids_list) {
   return teams_info;
 }
 
-function extractTeamDetails(teams_info) {
+function extractTeamDetails(teams_info) {//get details from team info- filtering relevant data
   const teamData = teams_info.map((teams_info) => {
     const { id, name, logo_path, founded, national_team } =
       teams_info.data.data;
@@ -105,7 +105,7 @@ async function getTeamGames(team_id) {
   return TeamGames;
 }
 
-async function checkIfTeamExist(team_id) {
+async function checkIfTeamExist(team_id) {//check if team exist for add game, add fav
   try {
     const team = await axios.get(`${api_domain}/teams/${team_id}`, {
       params: {
@@ -165,7 +165,7 @@ async function getTeamNameById(team_id) {
   return team.data.data.name;
 }
 
-async function checkPlayerInTeam(player_id,home_team_id,away_team_id){
+async function checkPlayerInTeam(player_id,home_team_id,away_team_id){//find players in team for game add
   try{
     const squad_team1 = await getPlayerIdsByTeam(home_team_id);
     const squad_team2 = await getPlayerIdsByTeam(away_team_id);
@@ -175,19 +175,7 @@ async function checkPlayerInTeam(player_id,home_team_id,away_team_id){
   }
   catch{return false;}
 }
-// async function checkTeamLeague(teamID) {
-//   const team = await axios.get(`${api_domain}/teams/${teamID}`, {
-//     params: {
-//       include: "league",
-//       api_token: process.env.api_token,
-//     },
-//   });
-//   const leagueID = team.data.data.league.data.id;
-//   if (leagueID == 271) {
-//     return true;
-//   }
-//   return false;
-// }
+
 
 exports.getPlayersByTeam = getPlayersByTeam;
 exports.getCoachNameByTeam = getCoachNameByTeam;

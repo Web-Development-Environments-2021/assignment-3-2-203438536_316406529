@@ -2,23 +2,19 @@ const DButils = require("./DButils");
 
 
 
-async function getAllUsers() {
+async function getAllUsers() {//only for league managment
   const users = await DButils.execQuery(
     'select * from dbo.Users'
   );
   return users;
 }
 
-async function getUserDetails(username) {
+async function getUserDetails(username) {//loged in user
   const user = await DButils.execQuery(
     `select * from dbo.Users WHERE username='${username}'`
   );
   return user;
 }
-
-// async function getUserFavoriteGames(){
-//   return await DButils.execQuery(`select * from dbo.userFavoriteGames`);
-// }
 
 
 exports.getAllUsers = getAllUsers;
