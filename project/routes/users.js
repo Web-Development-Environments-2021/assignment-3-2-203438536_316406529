@@ -59,10 +59,20 @@ router.post("/favoritePlayers", async (req, res, next) => {
   try {
     const username = req.session.username;
     const player_id = req.body.playerId;
-    let status = await favorites_utils.markPlayerAsFavorite(username, player_id);
-    if(status ===true){res.status(200).send("The player successfully saved as favorite");}
-    if(!status){res.status(400).send(`The player id '${player_id}' not exist in DataBase`);}
-    else{res.status(400).send(status);}
+    let status = await favorites_utils.markPlayerAsFavorite(
+      username,
+      player_id
+    );
+    if (status === true) {
+      res.status(200).send("The player successfully saved as favorite");
+    }
+    if (!status) {
+      res
+        .status(400)
+        .send(`The player id '${player_id}' not exist in DataBase`);
+    } else {
+      res.status(400).send(status);
+    }
   } catch (error) {
     next(error);
   }
@@ -89,7 +99,9 @@ router.get("/FavoriteTeams", async (req, res, next) => {
     const favorites_Teams = await favorites_utils.getFavoritesUserTeams(
       username
     );
-    if(favorites_Teams === false){res.status(400).send("your fav list contains a team that not exist");}
+    if (favorites_Teams === false) {
+      res.status(400).send("your fav list contains a team that not exist");
+    }
     res.status(200).send(favorites_Teams);
   } catch (error) {
     next(error);
@@ -101,9 +113,14 @@ router.post("/FavoriteTeams", async (req, res, next) => {
     const username = req.session.username;
     const team_id = req.body.team_id;
     let status = await favorites_utils.markTeamAsFavorite(username, team_id);
-    if (status===true){res.status(200).send("team adding success ");}
-    if(status==false){res.status(400).send(`no team with in '${team_id}' found in database`);}
-    else{res.status(400).send(status);}
+    if (status === true) {
+      res.status(200).send("team adding success ");
+    }
+    if (status == false) {
+      res.status(400).send(`no team with in '${team_id}' found in database`);
+    } else {
+      res.status(400).send(status);
+    }
   } catch (error) {
     next(error);
   }
@@ -126,8 +143,12 @@ router.post("/FavoriteGames", async (req, res, next) => {
     const username = req.session.username;
     const game_id = req.body.game_id;
     let status = await favorites_utils.markGameAsFavorite(username, game_id);
-    if(status ===false){res.status(400).send(`game id '${game_id}' does not exist in DB`);}
-    if(status === true){res.status(200).send("The game successfully saved as favorite");}
+    if (status === false) {
+      res.status(400).send(`game id '${game_id}' does not exist in DB`);
+    }
+    if (status === true) {
+      res.status(200).send("The game successfully saved as favorite");
+    }
     res.status(400).send(status);
   } catch (error) {
     next(error);
