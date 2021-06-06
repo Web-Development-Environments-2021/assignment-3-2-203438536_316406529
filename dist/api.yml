@@ -720,6 +720,9 @@ components:
         common_name:
           type: string
           example: P. Ankersen
+        fullname:
+          type: string
+          example: Peter Ankersen
         nationality:
           type: string
           example: Denmark
