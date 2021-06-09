@@ -47,11 +47,14 @@ function extractRelevantPlayerData(players_info,player_original_name = null){//e
 
   return players_info.map((player_info) => {
     try{
-      let playerPosition, leagueID,team; 
-      const {player_id,fullname, common_name , nationality, birthdate, birthplace, height, weight } = player_info;
+      let playerPosition, leagueID,team,team_id; 
+      const {player_id,fullname, common_name ,position_id, nationality, birthdate, birthplace, height, weight } = player_info;
       try{playerPosition = player_info.position.data.name;}catch{playerPosition=null}
       try{leagueID = player_info.team.data.league.data.id;}catch{leagueID=null}
-      try{team = player_info.team.data.name;}catch{team=null}
+      try{
+        team = player_info.team.data.name;
+        team_id = player_info.team.data.id;
+        }catch{team=null}
       if(player_original_name){if(!fullname.includes(player_original_name)){return false;}}
       return {
         PlayerID: player_id,
@@ -63,7 +66,9 @@ function extractRelevantPlayerData(players_info,player_original_name = null){//e
         height: height,
         weight: weight,
         playerPosition: playerPosition,
+        position_id: position_id,
         team: team,
+        team_id: team_id,
         leagueID: leagueID,
       }
     }
@@ -74,8 +79,15 @@ function extractRelevantPlayerData(players_info,player_original_name = null){//e
 }
 
 async function getPlayerDetailsById(player_id){  //get player data from Football-API
-
   try{
+    // let playerInfo = await getPlayersInfo([player_id]);
+    // const players = [playerInfo[0].data.data];
+    // let PlayerDetails = extractRelevantPlayerData(players)[0];
+    // const leagueID = PlayerDetails.leagueID;
+    // if(leagueID != 271){
+    //   return "The Player is not in league 271";
+    // }
+    // return PlayerData;
     const player = await axios.get(`${api_domain}/players/${player_id}`, {
       params: {
         include: "team.league",
@@ -84,7 +96,8 @@ async function getPlayerDetailsById(player_id){  //get player data from Football
     });
     const {fullname, image_path, common_name, position_id, nationality, height, 
       weight, birthcountry,  birthdate, id } = player.data.data;
-    const { name } = player.data.data.team.data;
+    const { name} = player.data.data.team.data;
+    const team_id = player.data.data.team.data.id;
     const leagueID = player.data.data.team.data.league.data.id;
     if(leagueID != 271){
       return "The Player is not in league 271";
@@ -100,9 +113,10 @@ async function getPlayerDetailsById(player_id){  //get player data from Football
       birthcountry: birthcountry,
       birthdate: birthdate,
       team_name: name,
+      team_id: team_id,
       weight: weight
     };
-  }catch{return false;}
+  }catch(err){return false;}
   
 }
 
