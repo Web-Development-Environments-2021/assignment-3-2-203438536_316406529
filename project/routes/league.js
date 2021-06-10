@@ -61,7 +61,7 @@ router.get("/getSeachOutoCompleteData", async (req, res, next) => {//for seach p
   let players_names = [];
   try {
     const players_names = await league_utils.getSeachData();
-    res.send(players_names);
+    res.status(200).send(players_names);
   } catch (error) {
     next(error);
   }

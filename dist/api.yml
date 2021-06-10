@@ -748,6 +748,10 @@ components:
         leagueID:
           type: string
           example: 271
+        image_path:
+          type: string
+          example: http://image.co.il
+          
 
     gameDocumentation:
       type: object
