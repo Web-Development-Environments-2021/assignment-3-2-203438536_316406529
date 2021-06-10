@@ -48,7 +48,7 @@ function extractRelevantPlayerData(players_info,player_original_name = null){//e
   return players_info.map((player_info) => {
     try{
       let playerPosition, leagueID,team,team_id; 
-      const {player_id,fullname, common_name ,position_id, nationality, birthdate, birthplace, height, weight } = player_info;
+      const {player_id,fullname, common_name ,position_id, nationality, birthdate, birthplace, height, weight,image_path } = player_info;
       try{playerPosition = player_info.position.data.name;}catch{playerPosition=null}
       try{leagueID = player_info.team.data.league.data.id;}catch{leagueID=null}
       try{
@@ -70,6 +70,7 @@ function extractRelevantPlayerData(players_info,player_original_name = null){//e
         team: team,
         team_id: team_id,
         leagueID: leagueID,
+        image_path:image_path,
       }
     }
     catch{
