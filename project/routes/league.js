@@ -12,7 +12,7 @@ router.get("/LeagueData", async (req, res, next) => {//all league data
       //there is a user in the system
       let currentDate = new Date().toISOString();
       const userFavoriteGames =
-        await DButils.execQuery(`select top 3 game_date, home_team, away_team, field from dbo.userFavoriteGames
+        await DButils.execQuery(`select top 3 game_id, game_date, home_team, away_team, home_team_id, away_team_id, field from dbo.userFavoriteGames
         where game_date >= ${currentDate}`);
       //show preview of each game that hasnt occur yet
       let promises = [];

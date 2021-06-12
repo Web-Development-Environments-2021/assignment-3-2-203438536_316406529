@@ -26,11 +26,11 @@ async function getLeagueData() {//return league data with games, league_name, cu
   let currentDate = new Date().toISOString();
   //need to fix this query
   const nextGame =
-    await DButils.execQuery(`select top 1 game_date, game_hour, home_team, away_team, field \
+    await DButils.execQuery(`select top 1 game_id, home_team_id, away_team_id, game_date, game_hour, home_team, away_team, field \
   from dbo.games WHERE game_date >= '${currentDate}'  ORDER BY game_date ASC, game_hour ASC`);
   let nextGameInfo;
   if (nextGame[0]) {
-    const { game_hour, game_date, home_team, away_team, field } = nextGame[0];
+    const { game_hour, game_date, home_team, away_team, field,game_id, home_team_id, away_team_id } = nextGame[0];
 
     let game_hour_split = String(game_hour).slice(16, 25);
     let game_date_split = String(game_date).slice(0, 15);
@@ -40,6 +40,9 @@ async function getLeagueData() {//return league data with games, league_name, cu
       home_team: home_team,
       away_team: away_team,
       field: field,
+      game_id: game_id,
+      home_team_id: home_team_id,
+      away_team_id: away_team_id,
     };
   } else {
     nextGameInfo = "Not Exist";

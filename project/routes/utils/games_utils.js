@@ -94,6 +94,7 @@ async function getGameDetaildByID(game_id) {
       home_team_goal,
       away_team_goal,
       field,
+      referee_name,
     } = game[0];
     let game_hour_split = String(game_hour).slice(16, 25);
     let game_date_split = String(game_date).slice(0, 15);
@@ -112,6 +113,7 @@ async function getGameDetaildByID(game_id) {
       away_team_goal: away_team_goal,
       field: field,
       eventSchedule: gameEventsLits,
+      referee_name: referee_name,
     };
   } else {
     return "Game does not exist in DB";
