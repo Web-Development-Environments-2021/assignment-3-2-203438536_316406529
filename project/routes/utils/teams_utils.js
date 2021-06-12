@@ -5,7 +5,8 @@ const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 const players_utils = require("./players_utils");
 const DButils = require("./DButils");
 
-async function getPlayersByTeam(team_id) {//get all players data by team ID
+async function getPlayersByTeam(team_id) {
+  //get all players data by team ID
   let player_ids_list = await getPlayerIdsByTeam(team_id);
   let players_info = await players_utils.getPlayersInfo(player_ids_list);
   return players_utils.extractDetailsForTeamPage(players_info);
@@ -33,9 +34,14 @@ async function getCoachNameByTeam(team_id) {
       api_token: process.env.api_token,
     },
   });
-  coach_name = team.data.data.coach.data.fullname;
-  coach_id = team.data.data.coach.data.coach_id;
-  return { coach_name, coach_id };
+  // coach_name = team.data.data.coach.data.fullname;
+  // coach_id = team.data.data.coach.data.coach_id;
+  const { fullname, coach_id, image_path } = team.data.data.coach.data;
+  return {
+    coach_name: fullname,
+    coach_id: coach_id,
+    image: image_path,
+  };
 }
 
 async function getTeamsInfo(teams_ids_list) {
@@ -62,7 +68,8 @@ async function getTeamsInfo(teams_ids_list) {
   return teams_info;
 }
 
-function extractTeamDetails(teams_info) {//get details from team info- filtering relevant data
+function extractTeamDetails(teams_info) {
+  //get details from team info- filtering relevant data
   const teamData = teams_info.map((teams_info) => {
     const { id, name, logo_path, founded, national_team } =
       teams_info.data.data;
@@ -105,7 +112,8 @@ async function getTeamGames(team_id) {
   return TeamGames;
 }
 
-async function checkIfTeamExist(team_id) {//check if team exist for add game, add fav
+async function checkIfTeamExist(team_id) {
+  //check if team exist for add game, add fav
   try {
     const team = await axios.get(`${api_domain}/teams/${team_id}`, {
       params: {
@@ -165,17 +173,22 @@ async function getTeamNameById(team_id) {
   return team.data.data.name;
 }
 
-async function checkPlayerInTeam(player_id,home_team_id,away_team_id){//find players in team for game add
-  try{
+async function checkPlayerInTeam(player_id, home_team_id, away_team_id) {
+  //find players in team for game add
+  try {
     const squad_team1 = await getPlayerIdsByTeam(home_team_id);
     const squad_team2 = await getPlayerIdsByTeam(away_team_id);
-    if((squad_team1).find((x)=> x === player_id)){return true;}
-    if((squad_team2).find((x)=> x === player_id)){return true;}
+    if (squad_team1.find((x) => x === player_id)) {
+      return true;
+    }
+    if (squad_team2.find((x) => x === player_id)) {
+      return true;
+    }
+    return false;
+  } catch {
     return false;
   }
-  catch{return false;}
 }
-
 
 exports.getPlayersByTeam = getPlayersByTeam;
 exports.getCoachNameByTeam = getCoachNameByTeam;
