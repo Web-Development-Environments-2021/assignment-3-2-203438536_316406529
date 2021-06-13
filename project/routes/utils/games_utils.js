@@ -102,7 +102,7 @@ async function getGameDetaildByID(game_id) {
     //   .toLocaleDateString()
     //   .split(",")[0];
     return {
-      game_id: game_id,
+      game_id: Number(game_id),
       game_date: game_date_split,
       game_hour: game_hour_split,
       home_team: home_team,
