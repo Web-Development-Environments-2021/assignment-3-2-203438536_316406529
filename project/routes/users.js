@@ -144,6 +144,7 @@ router.post("/FavoriteGames", async (req, res, next) => {//set a loged in user f
     let status = await favorites_utils.markGameAsFavorite(username, game_id);
     if (status === false) {
       res.status(400).send(`game id '${game_id}' does not exist in DB`);
+      return;
     }
     if (status === true) {
       res.status(200).send("The game successfully saved as favorite");
