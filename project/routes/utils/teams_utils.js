@@ -85,7 +85,6 @@ function extractTeamDetails(teams_info) {
       national_team: national_team,
       leagueID: leagueID,
       coach_name: coach_name,
-
     };
   });
   return (filterdteamsData = teamData.filter((team) => {
@@ -110,8 +109,8 @@ async function getTeamGames(team_id) {
 
   const { name } = team.data.data;
   const TeamGames =
-    await DButils.execQuery(`select game_date, game_hour, home_team, away_team, field \
-  from dbo.games WHERE home_team = '${name}' AND away_team = '${name}'  ORDER BY game_date ASC`);
+    await DButils.execQuery(`select game_id,game_date, game_hour, home_team, away_team, home_team_id, away_team_id, field \
+  from dbo.games WHERE home_team = '${name}' OR away_team = '${name}'  ORDER BY game_date ASC`);
   return TeamGames;
 }
 
