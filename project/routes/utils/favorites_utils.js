@@ -60,7 +60,7 @@ async function getFavoritesUserTeams(username){
     let teams_ids_list = await getFavoritesUserTeams_ids(username);
     let teams_info = await teams_utils.getTeamsInfo(teams_ids_list);
     if (teams_info === false){return false;}
-    return teams_utils.extractTeamDetails(teams_info);
+    return await teams_utils.extractTeamDetails(teams_info);
 
 }
 

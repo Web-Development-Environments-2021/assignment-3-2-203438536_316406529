@@ -51,7 +51,7 @@ async function getTeamsInfo(teams_ids_list) {
       promises.push(
         axios.get(`${api_domain}/teams/${row.teamID}`, {
           params: {
-            include: "league, country",
+            include: "league, country, coach",
             api_token: process.env.api_token,
           },
         })
@@ -75,6 +75,7 @@ function extractTeamDetails(teams_info) {
       teams_info.data.data;
     const county_name = teams_info.data.data.country.data.name;
     const leagueID = teams_info.data.data.league.data.id;
+    const coach_name = teams_info.data.data.coach.data.fullname;
     return {
       teamID: id,
       name: name,
@@ -83,6 +84,8 @@ function extractTeamDetails(teams_info) {
       founded: founded,
       national_team: national_team,
       leagueID: leagueID,
+      coach_name: coach_name,
+
     };
   });
   return (filterdteamsData = teamData.filter((team) => {
