@@ -133,13 +133,15 @@ async function checkIfTeamExist(team_id) {
 }
 
 async function getTeamByName(teamName) {
-  const teams = await axios.get(`${api_domain}/teams/search/${teamName}`, {
-    params: {
-      include: "league",
-      api_token: process.env.api_token,
-    },
-  });
+  const query = `${api_domain}/teams/search/${teamName}`;
   try {
+    const teams = await axios.get(query, 
+      {
+      params: {
+        include: "league",
+        api_token: process.env.api_token,
+      },
+    });
     const teamsData = teams.data.data.map((team) => {
       const { name, logo_path, id } = team;
       const leagueID = team.league.data.id;
@@ -162,7 +164,7 @@ async function getTeamByName(teamName) {
     });
     return filterdteamsData;
   } catch {
-    return "team not found";
+    return false;
   }
 }
 

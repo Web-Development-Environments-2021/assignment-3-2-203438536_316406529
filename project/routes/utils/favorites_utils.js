@@ -81,8 +81,23 @@ async function markTeamAsFavorite(username, teamID){//add (username,team_id) to 
 }
 
 async function getFavoritesUserGames(username){
+  const today = new Date();
   let games_ids_list = await getFavoritesUserGames_ids(username);
-  return games_info = await games_utils.getGamesInfo(games_ids_list);
+  let games_info = await games_utils.getGamesInfo(games_ids_list);
+  let filterdGames = games_info.filter((game)=> {
+    try{
+      let gameDate = Date.parse(game.game_date);
+      if(gameDate> today){
+        return true;
+      }
+      return false;
+    }
+    catch{
+      return false;
+    }
+  });
+  return filterdGames;
+
 
 }
 
