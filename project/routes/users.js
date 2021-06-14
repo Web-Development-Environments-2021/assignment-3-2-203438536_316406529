@@ -65,9 +65,10 @@ router.post("/favoritePlayers", async (req, res, next) => {//set a loged in user
     );
     if (status === true) {
       res.status(200).send("The player successfully saved as favorite");
+      return;
     }
     if (!status) {
-      res.status(400).send(`The player id '${player_id}' not exist in DataBase`);
+      res.status(401).send(`The player id '${player_id}' not exist in DataBase`);
     } else {
       res.status(400).send(status);
     }
@@ -82,7 +83,10 @@ router.get("/favoritePlayers", async (req, res, next) => {//return the loged in 
     const favorites_Players = await favorites_utils.getFavoritePlayers(
       username
     );
-    if (!favorites_Players){res.status(400).send('faild to load data')}
+    if (!favorites_Players){
+      res.status(400).send('faild to load data');
+      return;
+    }
     res.status(200).send(favorites_Players);
   } catch (error) {
     next(error);
