@@ -86,14 +86,15 @@ function extractRelevantPlayerData(players_info, player_original_name = null) {
       } catch {
         team = null;
       }
-      const hasLastname = player_original_name[1];
-      if(hasLastname && !fullname.includes(player_original_name[1])){//full name contains last name
-        return false;
+      if(player_original_name){
+        const hasLastname = player_original_name[1];
+        if(hasLastname && !fullname.includes(player_original_name[1])){//full name contains last name
+          return false;
+        }
+        if (!fullname.includes(player_original_name[0])) {
+          return false;
+        }
       }
-      if (!fullname.includes(player_original_name[0])) {
-        return false;
-      }
-      
       return {
         PlayerID: player_id,
         common_name: common_name,
