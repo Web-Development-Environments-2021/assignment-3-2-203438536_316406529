@@ -17,15 +17,18 @@ router.get("/teamFullDetails/:teamId", async (req, res, next) => {
     }
     let promises = [];
     promises.push(teams_utils.getPlayersByTeam(req.params.teamId));
-    promises.push(teams_utils.getCoachNameByTeam(req.params.teamId));
+    // promises.push(teams_utils.getCoachNameByTeam(req.params.teamId));
     promises.push(teams_utils.getTeamGames(req.params.teamId));
-    promises.push(teams_utils.getTeamNameById(req.params.teamId));
+    // promises.push(teams_utils.getTeamNameById(req.params.teamId));
+    promises.push(teams_utils.getTeamsInfo([{teamID: req.params.teamId}]));
+
     let fulfill = await Promise.all(promises);
     res.send({
-      team_name: fulfill[3],
+      // team_name: fulfill[3],
       team_players: fulfill[0],
-      team_coach: fulfill[1],
-      team_games: fulfill[2],
+      // team_coach: fulfill[1],
+      team_games: fulfill[1],
+      team_details: teams_utils.extractTeamDetails(fulfill[2]),
     });
   } catch (error) {
     next(error);
