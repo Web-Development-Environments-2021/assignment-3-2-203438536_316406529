@@ -264,6 +264,9 @@ paths:
             application/jason:
               schema:
                 $ref: "#/components/schemas/TeamSearchResults"
+        "201":
+          description: Search no Reasaults
+
         "400":
           description: Term not found
 

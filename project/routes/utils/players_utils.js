@@ -52,7 +52,9 @@ function extractDetailsForTeamPage(players_info) {
 
 function extractRelevantPlayerData(players_info, player_original_name = null) {
   //extract the relevant data from player api get data
-
+  if (player_original_name) {
+    player_original_name = player_original_name.split(" ");
+  }
   return players_info.map((player_info) => {
     try {
       let playerPosition, leagueID, team, team_id;
@@ -84,11 +86,14 @@ function extractRelevantPlayerData(players_info, player_original_name = null) {
       } catch {
         team = null;
       }
-      if (player_original_name) {
-        if (!fullname.includes(player_original_name)) {
-          return false;
-        }
+      const hasLastname = player_original_name[1];
+      if(hasLastname && !fullname.includes(player_original_name[1])){//full name contains last name
+        return false;
       }
+      if (!fullname.includes(player_original_name[0])) {
+        return false;
+      }
+      
       return {
         PlayerID: player_id,
         common_name: common_name,
@@ -167,8 +172,8 @@ async function getPlayerDetailsById(player_id) {
 
 async function getPlayerByName(playerName) {
   //seach by name only
-  const players = await axios.get(
-    `${api_domain}/players/search/${playerName}`,
+  const query = `${api_domain}/players/search/${playerName}`;
+  const players = await axios.get(query,
     {
       params: {
         include: "team.league",

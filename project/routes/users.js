@@ -148,6 +148,7 @@ router.post("/FavoriteGames", async (req, res, next) => {//set a loged in user f
     }
     if (status === true) {
       res.status(200).send("The game successfully saved as favorite");
+      return;
     }
     res.status(400).send(status);
   } catch (error) {
