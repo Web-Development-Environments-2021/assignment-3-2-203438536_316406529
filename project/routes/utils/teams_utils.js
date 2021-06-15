@@ -108,10 +108,41 @@ async function getTeamGames(team_id) {
   // const team = await axios.get(`${api_domain}/teams/${team_id}`);
 
   const { name } = team.data.data;
-  const TeamGames =
+  const currentDate = new Date();
+  // const futureTeamGamesID = await DButils.execQuery(
+  //   `select game_id from dbo.games WHERE game_date >= '${currentDate}'  ORDER BY game_date ASC`
+  // );
+  let allTeamGames = [];
+
+  const teamGames =
     await DButils.execQuery(`select game_id,game_date, game_hour, home_team, away_team, home_team_id, away_team_id, field \
-  from dbo.games WHERE home_team = '${name}' OR away_team = '${name}'  ORDER BY game_date ASC`);
-  return TeamGames;
+  from dbo.games WHERE home_team = '${name}' OR away_team = '${name}' ORDER BY game_date ASC`);
+  let futureGames = teamGames.filter((game) => {
+    try {
+      let gameDate = Date.parse(game.game_date);
+      if (gameDate >= currentDate) {
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  });
+  let pastGames = teamGames.filter((game) => {
+    try {
+      let gameDate = Date.parse(game.game_date);
+      if (gameDate < currentDate) {
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  });
+  allTeamGames.push(futureGames);
+  allTeamGames.push(pastGames);
+
+  return allTeamGames;
 }
 
 async function checkIfTeamExist(team_id) {
@@ -135,8 +166,7 @@ async function checkIfTeamExist(team_id) {
 async function getTeamByName(teamName) {
   const query = `${api_domain}/teams/search/${teamName}`;
   try {
-    const teams = await axios.get(query, 
-      {
+    const teams = await axios.get(query, {
       params: {
         include: "league",
         api_token: process.env.api_token,
