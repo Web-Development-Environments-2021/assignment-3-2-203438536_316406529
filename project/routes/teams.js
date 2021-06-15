@@ -20,7 +20,7 @@ router.get("/teamFullDetails/:teamId", async (req, res, next) => {
     promises.push(teams_utils.getCoachNameByTeam(req.params.teamId));
     promises.push(teams_utils.getTeamGames(req.params.teamId));
     // promises.push(teams_utils.getTeamNameById(req.params.teamId));
-    promises.push(teams_utils.getTeamsInfo([{teamID: req.params.teamId}]));
+    promises.push(teams_utils.getTeamsInfo([{ teamID: req.params.teamId }]));
 
     let fulfill = await Promise.all(promises);
     res.send({
@@ -39,7 +39,7 @@ router.get("/search/:searchKey", async (req, res, next) => {
   try {
     const search_key = req.params.searchKey;
     const team_details = await teams_utils.getTeamByName(search_key);
-    if(!team_details[0]){
+    if (!team_details[0]) {
       res.status(201).send("no Teams Found");
       return;
     }
