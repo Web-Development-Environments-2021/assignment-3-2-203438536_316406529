@@ -325,11 +325,11 @@ async function checkIfPlayerExist(playerID) {
       },
     });
     if (player.data.data.team.data.league.data.id == 271) {
-      return true;
+      return {status:true, massage: "player added successfuly"};
     }
-    return false;
+    return {status:false, massage: "not in your league"};
   } catch {
-    return false;
+    return {status:false, massage: "not exist in API"};
   }
 }
 
