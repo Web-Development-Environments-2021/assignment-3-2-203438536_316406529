@@ -63,12 +63,12 @@ router.post("/favoritePlayers", async (req, res, next) => {//set a loged in user
       username,
       player_id
     );
-    if (status === true) {
+    if (status.status === true) {
       res.status(200).send("The player successfully saved as favorite");
       return;
     }
-    if (!status) {
-      res.status(401).send(`The player id '${player_id}' not exist in DataBase`);
+    if (!status.status) {
+      res.status(401).send(`The player id '${player_id}'`+status.massage);
     } else {
       res.status(400).send(status);
     }

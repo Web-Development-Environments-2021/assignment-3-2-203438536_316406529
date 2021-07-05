@@ -26,14 +26,14 @@ async function getFavoritePlayers_ids(username) {
 
 async function markPlayerAsFavorite(username, playerID) {
   let playerExist = await players_utils.checkIfPlayerExist(playerID)
-  if(!playerExist){
-    return false;
+  if(!playerExist.status){
+    return playerExist;
   }
   try{
       await DButils.execQuery(
         `insert into userFavoritePlayers values ('${username}',${playerID})`
       );
-      return true;
+      return playerExist;
     } 
     catch(err){
       return err.originalError.message;
