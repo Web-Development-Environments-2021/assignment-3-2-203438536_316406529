@@ -71,8 +71,7 @@ async function getTeamsInfo(teams_ids_list) {
 function extractTeamDetails(teams_info) {
   //get details from team info- filtering relevant data
   const teamData = teams_info.map((teams_info) => {
-    const { id, name, logo_path, founded, national_team } =
-      teams_info.data.data;
+    const { id, name, logo_path, founded } = teams_info.data.data;
     const county_name = teams_info.data.data.country.data.name;
     const leagueID = teams_info.data.data.league.data.id;
     const coach_name = teams_info.data.data.coach.data.fullname;
@@ -82,7 +81,6 @@ function extractTeamDetails(teams_info) {
       logo_path: logo_path,
       county_name: county_name,
       founded: founded,
-      national_team: national_team,
       leagueID: leagueID,
       coach_name: coach_name,
     };

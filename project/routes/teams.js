@@ -14,6 +14,7 @@ router.get("/teamFullDetails/:teamId", async (req, res, next) => {
     if (!checkTeamLeague) {
       //team not in our league
       res.status(400).send("Team not in league No. 271");
+      return;
     }
     let promises = [];
     promises.push(teams_utils.getPlayersByTeam(req.params.teamId));
