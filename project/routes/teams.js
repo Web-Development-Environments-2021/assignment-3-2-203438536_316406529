@@ -31,6 +31,7 @@ router.get("/teamFullDetails/:teamId", async (req, res, next) => {
       team_games: fulfill[2],
       team_details: teams_utils.extractTeamDetails(fulfill[3]),
     });
+    return;
   } catch (error) {
     next(error);
   }
@@ -38,7 +39,7 @@ router.get("/teamFullDetails/:teamId", async (req, res, next) => {
 
 router.get("/search/:searchKey", async (req, res, next) => {
   try {
-    const search_key = req.params.searchKey;
+    const search_key = encodeURI(req.params.searchKey);
     const team_details = await teams_utils.getTeamByName(search_key);
     if (!team_details[0]) {
       res.status(201).send("no Teams Found");
